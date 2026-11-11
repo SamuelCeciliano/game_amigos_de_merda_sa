@@ -1604,6 +1604,740 @@
 			color: var(--pink-shock);
 		}
 
+		/* ================= EVENTOS CAÓTICOS DE RODADA (MODIFICADORES) ================= */
+		.chaos-event-banner {
+			width: 100%;
+			max-width: 480px;
+			border: 3.5px solid var(--ink-black);
+			box-shadow: var(--shadow-hard-sm);
+			border-radius: 18px;
+			padding: 10px 14px;
+			display: none;
+			align-items: center;
+			gap: 12px;
+			background: var(--orange-fire);
+			color: #fff;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.chaos-event-banner.active {
+			display: flex;
+			animation: chaosPopIn 0.45s var(--ease-spring) both, chaosPulseGlow 2.2s ease-in-out infinite;
+		}
+
+		.chaos-event-banner[data-event="double"] {
+			background: linear-gradient(135deg, #ff6b00 0%, #ff2a85 100%);
+			color: #fff;
+		}
+
+		.chaos-event-banner[data-event="silent"] {
+			background: linear-gradient(135deg, #00f5d4 0%, #ffe600 100%);
+			color: var(--ink-black);
+		}
+
+		.chaos-event-banner[data-event="invert"] {
+			background: linear-gradient(135deg, #8b5cf6 0%, #ff2a85 100%);
+			color: #fff;
+		}
+
+		@keyframes chaosPopIn {
+			0% {
+				opacity: 0;
+				transform: translateY(-14px) scale(0.9);
+			}
+
+			100% {
+				opacity: 1;
+				transform: translateY(0) scale(1);
+			}
+		}
+
+		@keyframes chaosPulseGlow {
+
+			0%,
+			100% {
+				box-shadow: 4px 4px 0px var(--ink-black), 0 0 0px rgba(255, 230, 0, 0);
+			}
+
+			50% {
+				box-shadow: 4px 4px 0px var(--ink-black), 0 0 18px rgba(255, 230, 0, 0.45);
+			}
+		}
+
+		.chaos-banner-icon {
+			font-size: 1.75rem;
+			flex-shrink: 0;
+			filter: drop-shadow(2px 2px 0px rgba(15, 7, 30, 0.4));
+		}
+
+		.chaos-banner-info {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			min-width: 0;
+			flex: 1;
+		}
+
+		.chaos-banner-title {
+			font-family: 'Bungee', cursive;
+			font-size: 0.88rem;
+			letter-spacing: 0.6px;
+			line-height: 1.15;
+		}
+
+		.chaos-banner-desc {
+			font-size: 0.76rem;
+			font-weight: 800;
+			line-height: 1.3;
+			opacity: 0.95;
+		}
+
+		/* Selo de Evento Caótico dentro da própria carta */
+		.card-chaos-pill {
+			display: none;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			font-family: 'Bungee', cursive;
+			font-size: 0.72rem;
+			letter-spacing: 0.6px;
+			padding: 4px 12px;
+			border-radius: var(--radius-pill);
+			border: 2.5px solid var(--ink-black);
+			box-shadow: 2px 2px 0px var(--ink-black);
+			margin-bottom: 10px;
+			background: var(--orange-fire);
+			color: #fff;
+		}
+
+		.card-chaos-pill.visible {
+			display: inline-flex;
+		}
+
+		.card-chaos-pill[data-event="double"] {
+			background: var(--orange-fire);
+			color: #fff;
+		}
+
+		.card-chaos-pill[data-event="silent"] {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+		}
+
+		.card-chaos-pill[data-event="invert"] {
+			background: var(--pink-shock);
+			color: #fff;
+		}
+
+		/* Estado de botões de voto durante Eventos Caóticos */
+		.btn-side-increment.mode-double {
+			background: var(--orange-fire);
+			color: #fff;
+		}
+
+		.btn-side-increment.mode-invert {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+		}
+
+		.vote-chip.mode-double {
+			border-color: var(--orange-fire);
+		}
+
+		.vote-chip.mode-invert {
+			border-color: var(--cyan-electric);
+		}
+
+		/* ================= NARRADOR (TTS) & SOUNDBOARD RÁPIDO ================= */
+		.card-header-right {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.btn-tts-card {
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			border: 2.5px solid var(--ink-black);
+			box-shadow: 2px 2px 0px var(--ink-black);
+			border-radius: var(--radius-pill);
+			padding: 4px 10px;
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.74rem;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			transition: transform 0.15s var(--ease-spring), background-color 0.15s ease;
+		}
+
+		.btn-tts-card:hover {
+			background: #ffffff;
+			transform: translateY(-1px);
+		}
+
+		.btn-tts-card.speaking {
+			background: var(--pink-shock);
+			color: #fff;
+			animation: ttsSpeakingPulse 0.9s ease-in-out infinite;
+		}
+
+		@keyframes ttsSpeakingPulse {
+
+			0%,
+			100% {
+				transform: scale(1);
+			}
+
+			50% {
+				transform: scale(1.06);
+			}
+		}
+
+		.soundboard-bar {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			width: 100%;
+			max-width: 480px;
+			flex-wrap: wrap;
+		}
+
+		.btn-soundboard {
+			flex: 1;
+			min-width: 118px;
+			background: rgba(35, 9, 77, 0.9);
+			color: #fff;
+			border: 3px solid var(--ink-black);
+			box-shadow: 3px 3px 0px var(--ink-black);
+			border-radius: var(--radius-pill);
+			padding: 7px 12px;
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.78rem;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			transition: transform 0.2s var(--ease-spring), box-shadow 0.2s ease, background-color 0.15s ease;
+		}
+
+		.btn-soundboard:hover {
+			background: #3b0f7a;
+			transform: translate(-1px, -1px);
+			box-shadow: 4px 4px 0px var(--ink-black);
+		}
+
+		.btn-soundboard:active,
+		.btn-soundboard.playing {
+			transform: translate(2px, 2px);
+			box-shadow: 1px 1px 0px var(--ink-black);
+			background: var(--pink-shock);
+			color: #fff;
+		}
+
+		.btn-soundboard .sb-key {
+			background: rgba(255, 230, 0, 0.2);
+			color: var(--yellow-acid);
+			border: 1px solid rgba(255, 230, 0, 0.45);
+			border-radius: 6px;
+			padding: 1px 5px;
+			font-size: 0.68rem;
+			font-weight: 800;
+		}
+
+		/* ================= ROLETA DO CASTIGO (#modalPunish) ================= */
+		.punish-victim-banner {
+			background: linear-gradient(135deg, #4c119e 0%, #ff2a85 100%);
+			border: 3px solid var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			border-radius: 18px;
+			padding: 12px 16px;
+			margin-bottom: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+		}
+
+		.punish-slot-machine {
+			background: var(--card-cream);
+			color: var(--ink-black);
+			border: 4px solid var(--ink-black);
+			box-shadow: inset 0 6px 14px rgba(15, 7, 30, 0.16), var(--shadow-hard);
+			border-radius: 22px;
+			padding: 22px 18px;
+			min-height: 132px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			margin-bottom: 18px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.punish-slot-machine.spinning {
+			background: #fffbeb;
+		}
+
+		.punish-slot-machine.locked {
+			background: var(--yellow-acid);
+			animation: slotLockedPop 0.42s var(--ease-spring);
+		}
+
+		@keyframes slotLockedPop {
+			0% {
+				transform: scale(0.92);
+			}
+
+			60% {
+				transform: scale(1.04);
+			}
+
+			100% {
+				transform: scale(1);
+			}
+		}
+
+		.punish-slot-label {
+			font-size: 0.72rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			color: #7c3aed;
+			margin-bottom: 6px;
+		}
+
+		.punish-slot-text {
+			font-family: 'Space Grotesk', sans-serif;
+			font-weight: 700;
+			font-size: clamp(1.08rem, 3vw, 1.32rem);
+			line-height: 1.3;
+			color: var(--ink-black);
+		}
+
+		/* ================= DOSSIÊ DA VERGONHA (NO MODAL VENCEDOR) ================= */
+		.dossier-container {
+			background: rgba(15, 7, 30, 0.65);
+			border: 3px solid var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			border-radius: 18px;
+			padding: 14px 16px;
+			margin: 14px 0;
+			text-align: left;
+		}
+
+		.dossier-header {
+			font-family: 'Bungee', cursive;
+			font-size: 0.96rem;
+			color: var(--yellow-acid);
+			margin-bottom: 10px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			border-bottom: 2px dashed rgba(255, 255, 255, 0.18);
+			padding-bottom: 6px;
+		}
+
+		.dossier-list {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.dossier-item {
+			background: rgba(255, 255, 255, 0.07);
+			border-left: 4px solid var(--pink-shock);
+			border-radius: 8px;
+			padding: 8px 10px;
+			font-size: 0.82rem;
+			line-height: 1.35;
+			color: #f3e8ff;
+		}
+
+		.dossier-item strong {
+			color: var(--yellow-acid);
+		}
+
+		/* ================= VOTAÇÃO ESTRUTURADA & URNA DA DISCÓRDIA (#modalBallot) ================= */
+		.stage-vote-row {
+			width: 100%;
+			max-width: 440px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.btn-vote-main {
+			width: 100%;
+			background: var(--pink-shock);
+			color: #fff;
+			border: var(--border-thick);
+			box-shadow: var(--shadow-hard);
+			border-radius: 18px;
+			padding: 14px 20px;
+			font-family: 'Bungee', cursive;
+			font-size: 1.08rem;
+			letter-spacing: 0.6px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			transition: transform 0.14s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.14s ease, background 0.2s ease;
+			user-select: none;
+			text-shadow: 2px 2px 0 var(--ink-black);
+		}
+
+		.btn-vote-main:hover:not(:disabled) {
+			transform: translate(-3px, -3px);
+			box-shadow: var(--shadow-hard-hover);
+			background: #ff479b;
+		}
+
+		.btn-vote-main:active:not(:disabled) {
+			transform: translate(3px, 3px);
+			box-shadow: var(--shadow-hard-active);
+		}
+
+		.btn-vote-main.mode-double:not(.voted-locked) {
+			background: var(--orange-chaos);
+		}
+
+		.btn-vote-main.mode-invert:not(.voted-locked) {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+			text-shadow: none;
+		}
+
+		.btn-vote-main.voted-locked,
+		.btn-vote-main:disabled {
+			background: #1a0933;
+			color: var(--lime-pop);
+			border-color: var(--ink-black);
+			box-shadow: 3px 3px 0 var(--ink-black);
+			cursor: not-allowed;
+			opacity: 0.95;
+			font-size: 0.92rem;
+			text-shadow: none;
+			transform: none;
+		}
+
+		.btn-timer-inline.voted-locked {
+			background: #1a0933;
+			color: var(--lime-pop);
+			cursor: not-allowed;
+			opacity: 0.88;
+		}
+
+		/* Laterais e Barra Inferior em Modo Consulta de Placar + Destaque do Coroado da Rodada */
+		.side-player-card.round-crowned {
+			border-color: var(--lime-pop);
+			box-shadow: 4px 4px 0 var(--lime-pop);
+			background: linear-gradient(135deg, rgba(163, 255, 18, 0.2) 0%, rgba(43, 9, 92, 0.95) 100%);
+		}
+
+		.side-player-status-pill {
+			width: 100%;
+			padding: 6px 10px;
+			border-radius: 10px;
+			border: 2px solid rgba(255, 255, 255, 0.16);
+			background: rgba(15, 7, 30, 0.55);
+			color: #e9d5ff;
+			font-size: 0.72rem;
+			font-weight: 800;
+			text-align: center;
+			letter-spacing: 0.3px;
+		}
+
+		.side-player-status-pill.winner-pill {
+			background: var(--lime-pop);
+			color: var(--ink-black);
+			border-color: var(--ink-black);
+			box-shadow: 2px 2px 0 var(--ink-black);
+			animation: ballotLeaderPulse 1.2s ease-in-out infinite alternate;
+		}
+
+		.vote-chip.readonly-chip {
+			cursor: default;
+		}
+
+		.vote-chip.readonly-chip:hover {
+			transform: none;
+			background: #3d127a;
+			color: #fff;
+		}
+
+		.vote-chip.readonly-chip.round-winner-chip {
+			background: var(--lime-pop);
+			color: var(--ink-black);
+			border-color: var(--ink-black);
+			box-shadow: 3px 3px 0 var(--ink-black);
+		}
+
+		.vote-chip.readonly-chip.round-winner-chip .pts {
+			background: var(--ink-black);
+			color: var(--yellow-acid);
+		}
+
+		/* Banner de Coroado da Rodada na Mesa */
+		.round-crowned-banner {
+			display: none;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			width: 100%;
+			max-width: 440px;
+			padding: 8px 14px;
+			border-radius: 14px;
+			border: var(--border-regular);
+			box-shadow: 4px 4px 0 var(--ink-black);
+			background: linear-gradient(135deg, #a3ff12 0%, #ffe600 100%);
+			color: var(--ink-black);
+			font-size: 0.82rem;
+			font-weight: 900;
+			text-align: center;
+			animation: popBannerIn 0.38s cubic-bezier(.34, 1.56, .64, 1);
+		}
+
+		.round-crowned-banner.visible {
+			display: flex;
+		}
+
+		@keyframes popBannerIn {
+			from {
+				opacity: 0;
+				transform: translateY(-8px) scale(0.92);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0) scale(1);
+			}
+		}
+
+		/* Modal #modalBallot ("URNA DA DISCÓRDIA") */
+		.ballot-modal-box {
+			max-width: 560px;
+		}
+
+		.ballot-subtitle {
+			font-size: 0.88rem;
+			color: #e9d5ff;
+			margin-bottom: 12px;
+			line-height: 1.4;
+		}
+
+		.ballot-chaos-badge {
+			display: none;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			padding: 8px 12px;
+			border-radius: 12px;
+			border: 2.5px solid var(--ink-black);
+			box-shadow: 3px 3px 0 var(--ink-black);
+			font-size: 0.78rem;
+			font-weight: 900;
+			text-transform: uppercase;
+			margin-bottom: 12px;
+			background: var(--orange-chaos);
+			color: #fff;
+		}
+
+		.ballot-chaos-badge.visible {
+			display: flex;
+		}
+
+		.ballot-chaos-badge[data-event="invert"] {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+		}
+
+		.ballot-chaos-badge[data-event="silent"] {
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+		}
+
+		.ballot-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			gap: 10px;
+			max-height: 46vh;
+			overflow-y: auto;
+			padding: 4px 2px 8px;
+			margin-bottom: 12px;
+		}
+
+		.ballot-row {
+			background: #1a0933;
+			border: 3px solid var(--ink-black);
+			box-shadow: 4px 4px 0 var(--ink-black);
+			border-radius: 16px;
+			padding: 10px 12px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 10px;
+			transition: transform 0.14s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+		}
+
+		.ballot-row.leading-fingers {
+			border-color: var(--yellow-acid);
+			box-shadow: 4px 4px 0 var(--yellow-acid);
+			background: linear-gradient(135deg, #4c119e 0%, #75124f 100%);
+			transform: translateY(-2px);
+			animation: ballotLeaderPulse 0.9s ease-in-out infinite alternate;
+		}
+
+		@keyframes ballotLeaderPulse {
+			from {
+				border-color: var(--yellow-acid);
+				box-shadow: 4px 4px 0 var(--yellow-acid);
+			}
+
+			to {
+				border-color: var(--pink-shock);
+				box-shadow: 4px 4px 0 var(--pink-shock), 0 0 14px rgba(255, 230, 0, 0.45);
+			}
+		}
+
+		.ballot-player-meta {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			min-width: 0;
+			flex: 1;
+			text-align: left;
+		}
+
+		.ballot-player-avatar {
+			font-size: 1.45rem;
+			flex-shrink: 0;
+		}
+
+		.ballot-player-text {
+			min-width: 0;
+			flex: 1;
+		}
+
+		.ballot-player-name {
+			font-weight: 900;
+			font-size: 0.92rem;
+			color: #fff;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: block;
+		}
+
+		.ballot-player-pts {
+			font-size: 0.72rem;
+			font-weight: 800;
+			color: var(--cyan-electric);
+			display: block;
+		}
+
+		.ballot-row.leading-fingers .ballot-player-pts {
+			color: var(--yellow-acid);
+		}
+
+		.ballot-counter {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			flex-shrink: 0;
+		}
+
+		.ballot-btn-step {
+			width: 34px;
+			height: 34px;
+			border-radius: 10px;
+			border: 2.5px solid var(--ink-black);
+			box-shadow: 2px 2px 0 var(--ink-black);
+			background: #fff;
+			color: var(--ink-black);
+			font-weight: 900;
+			font-size: 1.1rem;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: transform 0.1s ease, background 0.12s ease;
+			user-select: none;
+		}
+
+		.ballot-btn-step.plus {
+			background: var(--yellow-acid);
+		}
+
+		.ballot-btn-step:hover {
+			transform: translate(-1px, -1px);
+		}
+
+		.ballot-btn-step:active {
+			transform: translate(2px, 2px);
+			box-shadow: 0 0 0 var(--ink-black);
+		}
+
+		.ballot-count-val {
+			min-width: 32px;
+			text-align: center;
+			font-family: 'Bungee', cursive;
+			font-size: 1.15rem;
+			color: #fff;
+		}
+
+		.ballot-row.leading-fingers .ballot-count-val {
+			color: var(--yellow-acid);
+			text-shadow: 2px 2px 0 var(--ink-black);
+		}
+
+		/* Caixa de Desempate da Urna da Discórdia */
+		.ballot-tie-box {
+			display: none;
+			background: #1a0933;
+			border: 3px solid var(--yellow-acid);
+			box-shadow: 5px 5px 0 var(--ink-black);
+			border-radius: 18px;
+			padding: 14px;
+			margin-bottom: 12px;
+			text-align: center;
+			animation: popBannerIn 0.3s cubic-bezier(.34, 1.56, .64, 1);
+		}
+
+		.ballot-tie-box.visible {
+			display: block;
+		}
+
+		.ballot-tie-title {
+			font-family: 'Bungee', cursive;
+			font-size: 1rem;
+			color: var(--yellow-acid);
+			margin-bottom: 6px;
+		}
+
+		.ballot-tie-desc {
+			font-size: 0.82rem;
+			color: #f3e8ff;
+			line-height: 1.38;
+			margin-bottom: 10px;
+		}
+
+		.ballot-tie-actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			justify-content: center;
+		}
+
 		/* Acessibilidade: respeita quem prefere menos movimento */
 		@media (prefers-reduced-motion: reduce) {
 
@@ -1669,6 +2403,30 @@
 			.keyboard-hint {
 				display: none;
 			}
+
+			.btn-soundboard {
+				min-width: 95px;
+				padding: 6px 8px;
+				font-size: 0.72rem;
+			}
+
+			.btn-soundboard .sb-key {
+				display: none;
+			}
+
+			.chaos-event-banner {
+				padding: 8px 10px;
+			}
+
+			.btn-vote-main {
+				padding: 12px 14px;
+				font-size: 0.94rem;
+			}
+
+			.ballot-grid {
+				grid-template-columns: 1fr;
+				max-height: 44vh;
+			}
 		}
 	</style>
 </head>
@@ -1729,7 +2487,7 @@
 				</svg>
 			</div>
 
-			<span class="hero-tag">Edição Digital S.A. • 116+ Cartas</span>
+			<span class="hero-tag">Edição Digital S.A. • 126+ Cartas</span>
 			<h1 class="hero-title">PRONTOS PARA SE OFENDEREM?</h1>
 			<p class="hero-subtitle">
 				Leia a carta em voz alta, conte <strong>3 segundos</strong> e aponte o dedo para o amigo que mais
@@ -1741,7 +2499,7 @@
 				<div class="mode-option selected" data-mode="all">
 					<span class="mode-emoji">🎲</span>
 					<span class="mode-name">Tudo Misturado</span>
-					<span class="mode-desc">Todas as 116 cartas sem censura</span>
+					<span class="mode-desc">Todas as 126 cartas sem censura</span>
 				</div>
 				<div class="mode-option" data-mode="clean">
 					<span class="mode-emoji">😇</span>
@@ -1793,9 +2551,19 @@
 					</div>
 
 					<div class="progress-pill">
-						<span id="deckCounterText">Carta 1 / 116</span>
+						<span id="deckCounterText">Carta 1 / 126</span>
 						<button id="btnResetDeck" title="Reembaralhar tudo do zero"
 							style="background:none;border:none;color:var(--yellow-acid);cursor:pointer;font-weight:800;font-size:0.85rem;">🔄</button>
+					</div>
+				</div>
+
+				<!-- Banner Neon de Eventos Caóticos de Rodada (a cada 6 cartas) -->
+				<div class="chaos-event-banner" id="chaosEventBanner" role="status" aria-live="polite">
+					<span class="chaos-banner-icon" id="chaosBannerIcon">🔥</span>
+					<div class="chaos-banner-info">
+						<span class="chaos-banner-title" id="chaosBannerTitle">EVENTO CAÓTICO: RODADA EM DOBRO</span>
+						<span class="chaos-banner-desc" id="chaosBannerDesc">Os votos desta rodada valem +2 pontos de
+							merda!</span>
 					</div>
 				</div>
 
@@ -1812,10 +2580,17 @@
 
 								<div class="card-header">
 									<span class="card-cat-badge" id="cardCatBadge">💩 TRETA CLÁSSICA</span>
-									<span class="card-number-badge" id="cardNumberBadge">#001</span>
+									<div class="card-header-right">
+										<button class="btn-tts-card" id="btnSpeakCard" type="button"
+											title="Narrador da Discórdia: ler carta em voz alta">
+											🎙️ Ouvir
+										</button>
+										<span class="card-number-badge" id="cardNumberBadge">#001</span>
+									</div>
 								</div>
 
 								<div class="card-body">
+									<div class="card-chaos-pill" id="cardChaosPill">🔥 RODADA EM DOBRO (+2 PTS)</div>
 									<p class="card-question" id="cardQuestionText">
 										Prepare o dedo...
 									</p>
@@ -1856,7 +2631,17 @@
 					</div>
 				</div>
 
-				<!-- Controles Principais de Navegação do Baralho -->
+				<!-- Controles Principais de Votação e Navegação do Baralho -->
+				<div class="stage-vote-row">
+					<button class="btn-vote-main" id="btnVoteCurrentCard" type="button"
+						title="Iniciar contagem regressiva de 3s e abrir a Urna da Discórdia!">
+						<span id="btnVoteCurrentCardText">🗳️ VOTAR NESSA CARTA</span>
+					</button>
+					<div class="round-crowned-banner" id="roundCrownedBanner" role="status" aria-live="polite">
+						<span id="roundCrownedText">👑 Voto computado nesta rodada!</span>
+					</div>
+				</div>
+
 				<div class="stage-controls">
 					<button class="btn-neo dark btn-icon-only" id="btnPrevCard"
 						title="Voltar para a carta anterior (Seta Esquerda)">
@@ -1872,9 +2657,29 @@
 					</button>
 				</div>
 
-				<!-- Barra Rápida de Votação (aparece automaticamente se houver jogadores no placar) -->
+				<!-- Soundboard Rápido da Discórdia (Atalhos 1, 2, 3) -->
+				<div class="soundboard-bar" aria-label="Soundboard Rápido">
+					<button class="btn-soundboard" id="btnSoundBuzzer" type="button"
+						title="Tocar som de Mentira / Erro (Atalho: tecla 1)">
+						<span>🚨 Mentira</span>
+						<span class="sb-key">1</span>
+					</button>
+					<button class="btn-soundboard" id="btnSoundRimshot" type="button"
+						title="Tocar Ba-dum-tss (Atalho: tecla 2)">
+						<span>🥁 Ba-dum-tss</span>
+						<span class="sb-key">2</span>
+					</button>
+					<button class="btn-soundboard" id="btnSoundSuspense" type="button"
+						title="Tocar Acorde de Suspense (Atalho: tecla 3)">
+						<span>🎻 Suspense</span>
+						<span class="sb-key">3</span>
+					</button>
+				</div>
+
+				<!-- Barra de Placar Ao Vivo da Mesa (aparece automaticamente se houver jogadores no placar) -->
 				<div class="quick-vote-bar" id="quickVoteBar">
-					<span class="quick-vote-title">👉 Quem levou mais dedos apontados? (+1 ponto):</span>
+					<span class="quick-vote-title" id="quickVoteTitle">📊 Placar ao Vivo da Roda (use "🗳️ VOTAR NESSA
+						CARTA" para apurar):</span>
 					<div class="quick-vote-chips" id="quickVoteChips"></div>
 				</div>
 
@@ -1898,7 +2703,7 @@
 
 	<div class="keyboard-hint">
 		Dica: Use <kbd>Espaço</kbd> ou <kbd>➔</kbd> para próxima carta • <kbd>⬅</kbd> para anterior • <kbd>T</kbd> para
-		contagem de 3s • <kbd>P</kbd> para abrir o Placar
+		contagem de 3s • <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> Soundboard • <kbd>P</kbd> Placar
 	</div>
 
 	<!-- ================= OVERLAY: CONTAGEM 3, 2, 1... APONTEM! ================= -->
@@ -2034,15 +2839,103 @@
 				<!-- Preenchido via JS -->
 			</div>
 			<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+				<button class="btn-neo cyan" id="btnDownloadShameCard" style="width:100%;justify-content:center;">
+					📸 Baixar Card da Vergonha
+				</button>
 				<button class="btn-neo yellow" id="btnContinuePlaying">Continuar Jogando</button>
 				<button class="btn-neo pink" id="btnNewMatchModal">Nova Partida (Zerar Pontos)</button>
 			</div>
 		</div>
 	</div>
 
+	<!-- ================= MODAL: ROLETA DO CASTIGO (A CADA 5 PONTOS) ================= -->
+	<div class="modal-overlay" id="modalPunish">
+		<div class="modal-box" style="text-align:center;">
+			<div class="modal-title">
+				<span>🎰 ROLETA DO CASTIGO</span>
+				<button class="btn-neo dark btn-icon-only" id="btnClosePunish"
+					style="width:36px;height:36px;">✕</button>
+			</div>
+
+			<div class="punish-victim-banner" id="punishVictimBanner">
+				<span style="font-size:2rem;" id="punishVictimAvatar">😈</span>
+				<div style="text-align:left;">
+					<div
+						style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--yellow-acid);">
+						MARCA DE 5 PONTOS ATINGIDA!
+					</div>
+					<div style="font-family:'Bungee',cursive;font-size:1.15rem;color:#fff;" id="punishVictimName">
+						JOGADOR
+					</div>
+				</div>
+			</div>
+
+			<p style="font-size:0.88rem;color:#e9d5ff;margin-bottom:12px;line-height:1.4;">
+				Quem acumula 5 pontos de merda gira o caça-níquel da discórdia e paga uma prenda na roda agora mesmo!
+			</p>
+
+			<div class="punish-slot-machine" id="punishSlotMachine">
+				<span class="punish-slot-label" id="punishSlotLabel">🎲 SORTEANDO PRENDA...</span>
+				<p class="punish-slot-text" id="punishSlotText">Preparando o caos...</p>
+			</div>
+
+			<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+				<button class="btn-neo cyan" id="btnRespinPunish" type="button">
+					🎰 Sortear Outra
+				</button>
+				<button class="btn-neo yellow" id="btnAcceptPunish" type="button"
+					style="flex:1;justify-content:center;">
+					😈 Prenda Aceita!
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- ================= MODAL: URNA DA DISCÓRDIA (#modalBallot) ================= -->
+	<div class="modal-overlay" id="modalBallot">
+		<div class="modal-box ballot-modal-box">
+			<div class="modal-title">
+				<span>QUEM LEVOU MAIS DEDOS? 👈</span>
+				<button class="btn-neo dark btn-icon-only" id="btnCloseBallot" type="button"
+					style="width:36px;height:36px;">✕</button>
+			</div>
+
+			<p class="ballot-subtitle" id="ballotSubtitleText">
+				Contem os dedos apontados na roda e computem os votos abaixo:
+			</p>
+
+			<div class="ballot-chaos-badge" id="ballotChaosBadge">
+				<span id="ballotChaosBadgeText">🔥 RODADA EM DOBRO (+2 PONTOS)</span>
+			</div>
+
+			<div class="ballot-grid" id="ballotPlayersGrid">
+				<!-- Preenchido via JS -->
+			</div>
+
+			<!-- Painel de Desempate (exibido quando 2 ou mais participantes empatam em 1º lugar) -->
+			<div class="ballot-tie-box" id="ballotTieBox">
+				<div class="ballot-tie-title">⚖️ EMPATE NA RODA!</div>
+				<p class="ballot-tie-desc" id="ballotTieDesc">
+					EMPATE! Pela regra da discórdia, quem tiver cara de mais culpado leva o ponto, ou ambos levam +1!
+				</p>
+				<div class="ballot-tie-actions" id="ballotTieActions">
+					<!-- Botões de desempate injetados via JS -->
+				</div>
+			</div>
+
+			<button class="btn-neo yellow" id="btnConfirmBallot" type="button"
+				style="width:100%;justify-content:center;font-family:'Bungee',cursive;font-size:0.95rem;padding:12px 16px;">
+				CONFIRMAR RESULTADO DA RODA ⚖️
+			</button>
+		</div>
+	</div>
+
+	<!-- Canvas oculto 1080x1920 para exportar o Card da Vergonha (Stories / WhatsApp) -->
+	<canvas id="shameCardCanvas" width="1080" height="1920" style="display:none;"></canvas>
+
 	<script>
 		/* ==========================================================================
-		   1. BASE DE DADOS DAS 116 CARTAS ORIGINAIS (Categorizadas e Revisadas)
+		   1. BASE DE DADOS DAS 116 CARTAS ORIGINAIS + 10 CARTAS DINÂMICAS (126 TOTAL)
 		   ========================================================================== */
 		const BASE_CARDS = [
 			{ id: 1, cat: "treta", text: "Cada um de nós é responsável por uma equipe. Quem maltrata mais os funcionários?" },
@@ -2160,7 +3053,17 @@
 			{ id: 113, cat: "treta", text: "Quem de nós pede dinheiro emprestado sabendo que nunca vai devolver?" },
 			{ id: 114, cat: "picante", text: "Um de nós foi o modelo para produção de brinquedos sexuais. Quem?" },
 			{ id: 115, cat: "picante", text: "Um de nós tem um fetiche super estranho. Quem?" },
-			{ id: 116, cat: "picante", text: "A cara é de santa(o), mas essa pessoa vira o próprio demônio quando está na cama. Quem?" }
+			{ id: 116, cat: "picante", text: "A cara é de santa(o), mas essa pessoa vira o próprio demônio quando está na cama. Quem?" },
+			{ id: 117, cat: "especial", text: "Em uma briga de rua até a morte entre {P1} e {P2}, quem suja as mãos primeiro?" },
+			{ id: 118, cat: "especial", text: "Se {P1} fosse preso hoje, {P2} pagaria a fiança ou riria no grupo?" },
+			{ id: 119, cat: "especial", text: "Se {P1} e {P2} trocassem de corpo por 24 horas, quem destruiria a reputação do outro mais rápido?" },
+			{ id: 120, cat: "especial", text: "Entre {P1} e {P2}, quem tem mais chance de dar em cima do(a) ex do outro no sigilo?" },
+			{ id: 121, cat: "especial", text: "Se {P1} e {P2} abrissem um negócio juntos, quem daria o golpe e fugiria com o dinheiro do caixa?" },
+			{ id: 122, cat: "especial", text: "Num apocalipse zumbi, {P1} empurraria {P2} para a horda só para ganhar 5 segundos de vantagem — ou seria o contrário?" },
+			{ id: 123, cat: "especial", text: "Se o celular de {P1} e o de {P2} fossem desbloqueados na mesa agora, quem seria cancelado mais rápido?" },
+			{ id: 124, cat: "especial", text: "Se {P1} precisasse de um álibi falso para a polícia às 3h da manhã, {P2} sustentaria a mentira ou entregaria tudo no primeiro aperto?" },
+			{ id: 125, cat: "especial", text: "Em um reality show valendo um milhão, quem trairia a aliança primeiro na votação: {P1} ou {P2}?" },
+			{ id: 126, cat: "especial", text: "Se {P1} ganhasse sozinho na Mega da Virada, {P2} continuaria amigo por afeto ou viraria o maior puxa-saco interesseiro?" }
 		];
 
 		const CATEGORY_META = {
@@ -2171,7 +3074,7 @@
 		};
 
 		/* ==========================================================================
-		   2. SINTETIZADOR DE ÁUDIO (Web Audio API - Zero Arquivos Externos)
+		   2. SINTETIZADOR DE ÁUDIO (Web Audio API) & NARRADOR (SpeechSynthesis)
 		   ========================================================================== */
 		const SoundFX = {
 			ctx: null,
@@ -2238,6 +3141,168 @@
 				notes.forEach((n, idx) => {
 					setTimeout(() => this.playBeep(n, 0.22, "triangle"), idx * 110);
 				});
+			},
+
+			// Som grave de erro/mentira (onda sawtooth, 110Hz -> 80Hz)
+			playBuzzer() {
+				if (this.muted) return;
+				this.init();
+				if (!this.ctx) return;
+				const now = this.ctx.currentTime;
+				const duration = 0.48;
+
+				[0, -4].forEach((detuneOffset) => {
+					const osc = this.ctx.createOscillator();
+					const gain = this.ctx.createGain();
+					osc.type = "sawtooth";
+					osc.frequency.setValueAtTime(110 + detuneOffset, now);
+					osc.frequency.linearRampToValueAtTime(80 + detuneOffset, now + duration);
+					gain.gain.setValueAtTime(0.22, now);
+					gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+					osc.connect(gain);
+					gain.connect(this.ctx.destination);
+					osc.start(now);
+					osc.stop(now + duration);
+				});
+			},
+
+			// "Ba-dum-tss" rápido combinando tons percussivos e ruído branco curto
+			playRimshot() {
+				if (this.muted) return;
+				this.init();
+				if (!this.ctx) return;
+				const now = this.ctx.currentTime;
+
+				// 1) "Ba" (tom médio-grave)
+				const playTom = (startTime, startFreq, endFreq, dur) => {
+					const osc = this.ctx.createOscillator();
+					const gain = this.ctx.createGain();
+					osc.type = "triangle";
+					osc.frequency.setValueAtTime(startFreq, startTime);
+					osc.frequency.exponentialRampToValueAtTime(endFreq, startTime + dur);
+					gain.gain.setValueAtTime(0.35, startTime);
+					gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
+					osc.connect(gain);
+					gain.connect(this.ctx.destination);
+					osc.start(startTime);
+					osc.stop(startTime + dur);
+				};
+
+				playTom(now, 165, 68, 0.11);
+				// 2) "Dum" (bumbo grave)
+				playTom(now + 0.13, 125, 48, 0.15);
+
+				// 3) "Tss" (prato com ruído branco filtrado)
+				const noiseStart = now + 0.29;
+				const noiseDur = 0.28;
+				const bufferSize = Math.floor(this.ctx.sampleRate * noiseDur);
+				const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+				const data = buffer.getChannelData(0);
+				for (let i = 0; i < bufferSize; i++) {
+					data[i] = Math.random() * 2 - 1;
+				}
+				const noise = this.ctx.createBufferSource();
+				noise.buffer = buffer;
+
+				const filter = this.ctx.createBiquadFilter();
+				filter.type = "highpass";
+				filter.frequency.setValueAtTime(5500, noiseStart);
+
+				const noiseGain = this.ctx.createGain();
+				noiseGain.gain.setValueAtTime(0.28, noiseStart);
+				noiseGain.gain.exponentialRampToValueAtTime(0.001, noiseStart + noiseDur);
+
+				noise.connect(filter);
+				filter.connect(noiseGain);
+				noiseGain.connect(this.ctx.destination);
+				noise.start(noiseStart);
+				noise.stop(noiseStart + noiseDur);
+			},
+
+			// Acorde dramático crescente de suspense
+			playSuspense() {
+				if (this.muted) return;
+				this.init();
+				if (!this.ctx) return;
+				const now = this.ctx.currentTime;
+				const dur = 0.95;
+				// Acorde diminuto tenso com leve subida de pitch
+				const chordFreqs = [196.0, 233.08, 277.18, 329.63];
+				chordFreqs.forEach((f, i) => {
+					const osc = this.ctx.createOscillator();
+					const gain = this.ctx.createGain();
+					osc.type = i % 2 === 0 ? "sawtooth" : "triangle";
+					osc.frequency.setValueAtTime(f * 0.96, now);
+					osc.frequency.exponentialRampToValueAtTime(f * 1.03, now + dur * 0.85);
+					gain.gain.setValueAtTime(0.005, now);
+					gain.gain.linearRampToValueAtTime(0.12, now + dur * 0.65);
+					gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+					osc.connect(gain);
+					gain.connect(this.ctx.destination);
+					osc.start(now);
+					osc.stop(now + dur);
+				});
+			}
+		};
+
+		/* Narrador da Discórdia (Web Speech API) */
+		const NarratorTTS = {
+			speaking: false,
+
+			cancel() {
+				if ("speechSynthesis" in window) {
+					window.speechSynthesis.cancel();
+				}
+				this.speaking = false;
+				this.updateUI();
+			},
+
+			speak(text) {
+				if (!("speechSynthesis" in window)) return;
+				if (this.speaking && window.speechSynthesis.speaking) {
+					this.cancel();
+					return;
+				}
+				window.speechSynthesis.cancel();
+
+				const cleanText = String(text || "")
+					.replace(/pi\*\*/gi, "pica")
+					.replace(/pik\*/gi, "pica")
+					.replace(/_{2,}/g, "alguém da roda");
+
+				const utter = new SpeechSynthesisUtterance(cleanText);
+				utter.lang = "pt-BR";
+				utter.rate = 1.05;
+				utter.pitch = 1.0;
+
+				const voices = window.speechSynthesis.getVoices();
+				const ptVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("pt-br")) ||
+					voices.find(v => v.lang && v.lang.toLowerCase().startsWith("pt"));
+				if (ptVoice) utter.voice = ptVoice;
+
+				utter.onstart = () => {
+					this.speaking = true;
+					this.updateUI();
+				};
+				utter.onend = () => {
+					this.speaking = false;
+					this.updateUI();
+				};
+				utter.onerror = () => {
+					this.speaking = false;
+					this.updateUI();
+				};
+
+				this.speaking = true;
+				this.updateUI();
+				window.speechSynthesis.speak(utter);
+			},
+
+			updateUI() {
+				const btn = document.getElementById("btnSpeakCard");
+				if (!btn) return;
+				btn.classList.toggle("speaking", this.speaking);
+				btn.innerHTML = this.speaking ? "⏹️ Parar" : "🎙️ Ouvir";
 			}
 		};
 
@@ -2410,9 +3475,62 @@
 		};
 
 		/* ==========================================================================
-		   4. ESTADO DO JOGO & PERSISTÊNCIA (localStorage)
+		   4. ESTADO DO JOGO, AVATARES, TÍTULOS & PERSISTÊNCIA (localStorage)
 		   ========================================================================== */
 		const STORAGE_KEY = "amigos_de_merda_state_v2";
+
+		const PLAYER_AVATARS = ["😈", "🤡", "🤠", "👽", "🐸", "🦊", "🐼", "🦁"];
+
+		const CHAOS_EVENTS = {
+			double: {
+				id: "double",
+				icon: "🔥",
+				title: "🔥 RODADA EM DOBRO",
+				pill: "🔥 RODADA EM DOBRO (+2 PTS)",
+				desc: "Clicar em +1 PONTO nos jogadores (ou nos chips rápidos) soma +2 pontos nesta rodada!"
+			},
+			silent: {
+				id: "silent",
+				icon: "🤫",
+				title: "🤫 VOTO SILENCIOSO",
+				pill: "🤫 VOTO SILENCIOSO",
+				desc: "Proibido falar ou rir até o fim da contagem de 3s! Quem quebrar a regra leva +1 ponto imediato"
+			},
+			invert: {
+				id: "invert",
+				icon: "🔄",
+				title: "🔄 INVERSÃO MORAL",
+				pill: "🔄 INVERSÃO MORAL (-1 PT)",
+				desc: "Apontem para quem JAMAIS faria isso! O mais votado PERDE 1 ponto de merda"
+			}
+		};
+
+		const PUNISHMENTS_LIST = [
+			"Fale com sotaque até a próxima rodada!",
+			"Compartilhe a tela (ou mande no grupo da call) a foto mais antiga salva na galeria do seu celular sem explicar nada!",
+			"Imite um participante da roda até alguém adivinhar quem é!",
+			"Imite o jeito de falar ou um bordão clássico de alguém da chamada até alguém acertar quem é!",
+			"Mostre a última foto tirada na galeria do seu celular para a roda sem dar contexto!",
+			"Faça uma declaração de amor dramática de novela mexicana para a última pessoa que falou na call!",
+			"Leia em voz alta a última mensagem que você enviou no WhatsApp como se fosse um poema trágico!",
+			"A roda escolhe uma palavra proibida: se você disser ela até o fim do jogo, vai ser lixado!",
+			"Conte em 20 segundos o maior mico que você já pagou!",
+			"Imite o Lula para ler a próxima carta!",
+			"Mande uma mensagem privada para alguém que não está no jogo dizendo: 'Sonhei com você comendo um pastel e lembrei de mandar um abraço', sem explicar nada depois e mostre o print da resposta.",
+			"Leia a próxima carta do jogo gemendo, sussurrando em tom de ASMR macabro ou com voz de narrador do Fantástico.",
+			"Defenda o seu pior defeito por 20 segundos como se fosse a sua maior virtude numa entrevista!",
+			"Digite no chat da chamada: 'Gente, eu preciso confessar que...' e complete a frase clicando apenas na palavra central do corretor automático por 10 vezes.",
+			"Mantenha o microfone bem perto e beba um gole d'água fazendo o som de deglutição mais alto e dramático possível!"
+		];
+
+		function getPlayerTitle(score) {
+			if (score <= 0) return "😇 Alma Pura";
+			if (score <= 2) return "🤨 Suspeito(a)";
+			if (score <= 4) return "🗑️ Passando Pano";
+			if (score <= 7) return "☢️ Tóxico(a) Assumido";
+			if (score <= 10) return "💩 Esse(a) É Merda Mesmo";
+			return "💩👑 Réu Primário no Inferno";
+		}
 
 		let state = {
 			mode: "all", // 'all' | 'clean' | 'spicy'
@@ -2420,8 +3538,18 @@
 			currentIndex: -1, // Posição atual em deckOrder
 			customCards: [], // Cartas criadas pelos jogadores
 			blankCardCustomText: "", // Texto customizado da carta #53
-			players: [], // [{ id, name, score }]
-			muted: false
+			players: [], // [{ id, name, score, avatar, votedCards: [] }]
+			muted: false,
+			cardsAdvancedCount: 0,
+			activeChaosEvent: null, // null | 'double' | 'silent' | 'invert'
+			currentCardVoted: false, // Trava de voto único por carta na rodada atual
+			votedCardsByCardId: {} // Mapa { [cardId]: { winnerIds: [], winnerNames: [], delta: 1 } }
+		};
+
+		// Cache do texto resolvido da carta atual (para manter {P1} e {P2} consistentes na rodada)
+		let currentDynamicCache = {
+			key: "",
+			resolvedText: ""
 		};
 
 		function loadState() {
@@ -2434,6 +3562,39 @@
 			} catch (e) {
 				console.warn("Não foi possível carregar estado salvo:", e);
 			}
+
+			// Garante retrocompatibilidade dos jogadores salvos (avatar + votedCards)
+			if (Array.isArray(state.players)) {
+				state.players = state.players.map((p, idx) => ({
+					...p,
+					score: typeof p.score === "number" ? p.score : 0,
+					avatar: p.avatar || PLAYER_AVATARS[idx % PLAYER_AVATARS.length],
+					votedCards: Array.isArray(p.votedCards) ? p.votedCards : []
+				}));
+			} else {
+				state.players = [];
+			}
+
+			if (!state.votedCardsByCardId || typeof state.votedCardsByCardId !== "object") {
+				state.votedCardsByCardId = {};
+			}
+			state.currentCardVoted = !!state.currentCardVoted;
+
+			// Se o baralho salvo era da versão de 116 cartas, injeta as novas cartas 117..126 compatíveis com o modo
+			if (Array.isArray(state.deckOrder) && state.deckOrder.length > 0) {
+				const allowedPool = getFilteredCards(state.mode || "all");
+				const existingSet = new Set(state.deckOrder);
+				allowedPool.forEach(c => {
+					if (!existingSet.has(c.id)) {
+						const randPos = Math.min(
+							state.deckOrder.length,
+							Math.max(state.currentIndex + 1, Math.floor(Math.random() * (state.deckOrder.length + 1)))
+						);
+						state.deckOrder.splice(randPos, 0, c.id);
+					}
+				});
+			}
+
 			SoundFX.muted = !!state.muted;
 			updateSoundButtonUI();
 		}
@@ -2467,6 +3628,7 @@
 		}
 
 		function buildShuffledDeck(mode) {
+			NarratorTTS.cancel();
 			const pool = getFilteredCards(mode);
 			const ids = pool.map(c => c.id);
 			// Fisher-Yates shuffle
@@ -2477,11 +3639,16 @@
 			state.mode = mode;
 			state.deckOrder = ids;
 			state.currentIndex = 0;
+			state.cardsAdvancedCount = 0;
+			state.activeChaosEvent = null;
+			state.currentCardVoted = false;
+			state.votedCardsByCardId = {};
+			currentDynamicCache.key = "";
 			saveState();
 		}
 
 		/* ==========================================================================
-		   5. RENDERIZAÇÃO DA CARTA E TRANSIÇÕES 3D
+		   5. RENDERIZAÇÃO DA CARTA, PLACEHOLDERS DINÂMICOS E EVENTOS CAÓTICOS
 		   ========================================================================== */
 		const card3dEl = document.getElementById("card3d");
 		const cardFrontEl = document.getElementById("cardFront");
@@ -2493,6 +3660,11 @@
 		const blankCardInputEl = document.getElementById("blankCardInput");
 		const cardTiltEl = document.getElementById("cardTilt");
 		const deckLayerEls = document.querySelectorAll(".deck-stack-bg");
+		const chaosEventBannerEl = document.getElementById("chaosEventBanner");
+		const chaosBannerIconEl = document.getElementById("chaosBannerIcon");
+		const chaosBannerTitleEl = document.getElementById("chaosBannerTitle");
+		const chaosBannerDescEl = document.getElementById("chaosBannerDesc");
+		const cardChaosPillEl = document.getElementById("cardChaosPill");
 		const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		let isAnimatingCard = false;
 		let cardAnimToken = 0;
@@ -2503,12 +3675,70 @@
 			return getAllCards().find(c => c.id === cardId) || null;
 		}
 
+		function resolveCardText(card) {
+			if (!card) return "";
+			const rawText = card.text || "";
+			if (!rawText.includes("{P1}") && !rawText.includes("{P2}")) {
+				currentDynamicCache = { key: `${card.id}_${state.currentIndex}`, resolvedText: rawText };
+				return rawText;
+			}
+
+			const playerKey = state.players.map(p => p.id).join(",");
+			const cacheKey = `${card.id}_${state.currentIndex}_${playerKey}`;
+			if (currentDynamicCache.key === cacheKey && currentDynamicCache.resolvedText) {
+				return currentDynamicCache.resolvedText;
+			}
+
+			let p1Name = "a pessoa à sua esquerda";
+			let p2Name = "a pessoa à sua direita";
+
+			if (state.players.length >= 2) {
+				const indices = state.players.map((_, idx) => idx);
+				const firstIdx = indices.splice(Math.floor(Math.random() * indices.length), 1)[0];
+				const secondIdx = indices[Math.floor(Math.random() * indices.length)];
+				p1Name = state.players[firstIdx].name;
+				p2Name = state.players[secondIdx].name;
+			}
+
+			const resolved = rawText
+				.replace(/\{P1\}/g, p1Name)
+				.replace(/\{P2\}/g, p2Name);
+
+			currentDynamicCache = { key: cacheKey, resolvedText: resolved };
+			return resolved;
+		}
+
+		function updateChaosBannerUI() {
+			const evt = state.activeChaosEvent ? CHAOS_EVENTS[state.activeChaosEvent] : null;
+			if (!evt) {
+				chaosEventBannerEl.classList.remove("active");
+				chaosEventBannerEl.removeAttribute("data-event");
+				cardChaosPillEl.classList.remove("visible");
+				cardChaosPillEl.removeAttribute("data-event");
+				cardFrontEl.removeAttribute("data-chaos");
+				return;
+			}
+
+			chaosEventBannerEl.setAttribute("data-event", evt.id);
+			chaosBannerIconEl.textContent = evt.icon;
+			chaosBannerTitleEl.textContent = `EVENTO CAÓTICO: ${evt.title}`;
+			chaosBannerDescEl.textContent = evt.desc;
+			chaosEventBannerEl.classList.add("active");
+
+			cardChaosPillEl.setAttribute("data-event", evt.id);
+			cardChaosPillEl.textContent = evt.pill;
+			cardChaosPillEl.classList.add("visible");
+			cardFrontEl.setAttribute("data-chaos", evt.id);
+		}
+
 		function updateCardDOM(card) {
 			const meta = CATEGORY_META[card.cat] || CATEGORY_META.treta;
 			cardFrontEl.setAttribute("data-cat", card.cat);
 			cardCatBadgeEl.textContent = meta.label;
 			cardNumberBadgeEl.textContent = `#${String(card.id).padStart(3, "0")}`;
-			cardQuestionTextEl.textContent = card.text;
+
+			const finalQuestion = resolveCardText(card);
+			cardQuestionTextEl.textContent = finalQuestion;
 
 			if (card.id === 53) {
 				blankCardEditorEl.classList.add("visible");
@@ -2518,6 +3748,8 @@
 			}
 
 			deckCounterTextEl.textContent = `Carta ${state.currentIndex + 1} de ${state.deckOrder.length}`;
+			updateChaosBannerUI();
+			syncCurrentCardVoteLock();
 			syncModeButtonsUI();
 		}
 
@@ -2582,6 +3814,7 @@
 		}
 
 		function nextCard(opts) {
+			NarratorTTS.cancel();
 			if (state.currentIndex + 1 >= state.deckOrder.length) {
 				// Fim do baralho!
 				ConfettiFX.burst(65);
@@ -2595,15 +3828,39 @@
 				}
 				return;
 			}
+
 			state.currentIndex++;
+			state.cardsAdvancedCount = (state.cardsAdvancedCount || 0) + 1;
+			currentDynamicCache.key = "";
+
+			// A cada 6 cartas avançadas, dispara um Evento Caótico de Rodada!
+			if (state.cardsAdvancedCount > 0 && state.cardsAdvancedCount % 6 === 0) {
+				const eventKeys = Object.keys(CHAOS_EVENTS);
+				const cycleIndex = (Math.floor(state.cardsAdvancedCount / 6) - 1) % eventKeys.length;
+				state.activeChaosEvent = eventKeys[cycleIndex];
+				setTimeout(() => {
+					SoundFX.playSuspense();
+					ConfettiFX.burst(28);
+				}, 220);
+			} else {
+				state.activeChaosEvent = null;
+			}
+
+			syncCurrentCardVoteLock();
 			saveState();
+			renderPlayers();
 			renderCurrentCard(true, 1, opts);
 		}
 
 		function prevCard(opts) {
+			NarratorTTS.cancel();
 			if (state.currentIndex > 0) {
 				state.currentIndex--;
+				state.activeChaosEvent = null;
+				currentDynamicCache.key = "";
+				syncCurrentCardVoteLock();
 				saveState();
+				renderPlayers();
 				renderCurrentCard(true, -1, opts);
 			} else {
 				// Feedback de "não dá pra voltar mais": balançadinha
@@ -2767,12 +4024,13 @@
 		cardSceneEl.addEventListener("pointercancel", (e) => endCardDrag(e, true));
 
 		/* ==========================================================================
-		   7. CONTAGEM REGRESSIVA DE 3 SEGUNDOS ("3, 2, 1... APONTEM!")
+		   7. CONTAGEM REGRESSIVA DE 3 SEGUNDOS ("3, 2, 1... APONTEM!") + URNA
 		   ========================================================================== */
 		const countdownOverlayEl = document.getElementById("countdownOverlay");
 		const countdownValueEl = document.getElementById("countdownValue");
 		const countdownLabelEl = document.getElementById("countdownLabel");
 		let countdownTimer = null;
+		let pendingBallotAfterCountdown = false;
 
 		// Cada número "explode" na tela no exato momento em que muda (sincronizado com o beep)
 		function popCountdown() {
@@ -2789,12 +4047,19 @@
 			], { duration: 360, delay: 80, easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" });
 		}
 
-		function triggerCountdown() {
+		function triggerCountdown(openBallotAfter = false) {
 			if (countdownTimer) clearInterval(countdownTimer);
+			pendingBallotAfterCountdown = !!openBallotAfter;
 			let step = 3;
+			const isSilentRound = state.activeChaosEvent === "silent";
+			const isInvertRound = state.activeChaosEvent === "invert";
+			const isDoubleRound = state.activeChaosEvent === "double";
+
 			countdownOverlayEl.classList.add("active");
 			countdownValueEl.textContent = "3";
-			countdownLabelEl.textContent = "Pensem rápido na resposta...";
+			countdownLabelEl.textContent = isSilentRound
+				? "🤫 SILÊNCIO ABSOLUTO! Proibido falar ou rir..."
+				: "Pensem rápido na resposta...";
 			popCountdown();
 			SoundFX.playBeep(440, 0.18, "triangle");
 			if (navigator.vibrate) navigator.vibrate(70);
@@ -2803,17 +4068,38 @@
 				step--;
 				if (step > 0) {
 					countdownValueEl.textContent = String(step);
-					countdownLabelEl.textContent = step === 2 ? "Preparem o dedo..." : "Ninguém foge!";
+					countdownLabelEl.textContent = isSilentRound
+						? (step === 2 ? "🤫 Quem rir ou falar leva +1 ponto imediato!" : "🤫 Segurem o riso e preparem o dedo!")
+						: (step === 2 ? "Preparem o dedo..." : "Ninguém foge!");
 					popCountdown();
 					SoundFX.playBeep(step === 2 ? 523.25 : 659.25, 0.18, "triangle");
 					if (navigator.vibrate) navigator.vibrate(70);
 				} else if (step === 0) {
 					countdownValueEl.textContent = "👉 APONTEM!";
-					countdownLabelEl.textContent = "Quem levou mais dedos ganha +1 ponto 💩";
+					if (isInvertRound) {
+						countdownLabelEl.textContent = "🔄 INVERSÃO MORAL: O mais votado PERDE 1 ponto!";
+					} else if (isDoubleRound) {
+						countdownLabelEl.textContent = "🔥 RODADA EM DOBRO: O mais votado leva +2 pontos!";
+					} else {
+						countdownLabelEl.textContent = "Quem levou mais dedos ganha +1 ponto 💩";
+					}
 					popCountdown();
 					ConfettiFX.burst(18, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
 					SoundFX.playFanfare();
 					if (navigator.vibrate) navigator.vibrate([120, 60, 180]);
+
+					// Se a contagem veio do fluxo de votação, abre a Urna da Discórdia logo no instante do "👉 APONTEM!"
+					if (pendingBallotAfterCountdown) {
+						clearInterval(countdownTimer);
+						countdownTimer = null;
+						setTimeout(() => {
+							countdownOverlayEl.classList.remove("active");
+							if (pendingBallotAfterCountdown) {
+								pendingBallotAfterCountdown = false;
+								openBallotModal();
+							}
+						}, 580);
+					}
 				} else {
 					clearInterval(countdownTimer);
 					countdownTimer = null;
@@ -2826,37 +4112,140 @@
 			if (countdownTimer) clearInterval(countdownTimer);
 			countdownTimer = null;
 			countdownOverlayEl.classList.remove("active");
+			if (pendingBallotAfterCountdown) {
+				pendingBallotAfterCountdown = false;
+				openBallotModal();
+			}
 		});
 
 		/* ==========================================================================
-		   8. SISTEMA DE PLACAR FLUTUANTE, LATERAIS E VOTAÇÃO RÁPIDA
+		   8. SISTEMA DE PLACAR FLUTUANTE, LATERAIS, TRAVA POR CARTA E URNA (#modalBallot)
 		   ========================================================================== */
 		const playerListContainerEl = document.getElementById("playerListContainer");
 		const topScoreBadgeEl = document.getElementById("topScoreBadge");
 		const quickVoteBarEl = document.getElementById("quickVoteBar");
+		const quickVoteTitleEl = document.getElementById("quickVoteTitle");
 		const quickVoteChipsEl = document.getElementById("quickVoteChips");
 		const cardsPlayersLeftEl = document.getElementById("cardsPlayersLeft");
 		const cardsPlayersRightEl = document.getElementById("cardsPlayersRight");
+		const btnVoteCurrentCardEl = document.getElementById("btnVoteCurrentCard");
+		const btnVoteCurrentCardTextEl = document.getElementById("btnVoteCurrentCardText");
+		const btnTriggerCountdownEl = document.getElementById("btnTriggerCountdown");
+		const roundCrownedBannerEl = document.getElementById("roundCrownedBanner");
+		const roundCrownedTextEl = document.getElementById("roundCrownedText");
 		let knownPlayerIds = null; // null = primeira renderização (sem animar)
+
+		function getActiveRoundVoteDelta() {
+			if (state.activeChaosEvent === "double") return 2;
+			if (state.activeChaosEvent === "invert") return -1;
+			return 1;
+		}
+
+		function getCurrentCardVoteRecord() {
+			const card = getCurrentCardObj();
+			if (!card || !state.votedCardsByCardId) return null;
+			return state.votedCardsByCardId[card.id] || null;
+		}
+
+		function syncCurrentCardVoteLock() {
+			const record = getCurrentCardVoteRecord();
+			state.currentCardVoted = !!record;
+
+			const isDouble = state.activeChaosEvent === "double";
+			const isInvert = state.activeChaosEvent === "invert";
+
+			if (btnVoteCurrentCardEl && btnVoteCurrentCardTextEl) {
+				btnVoteCurrentCardEl.classList.remove("mode-double", "mode-invert", "voted-locked");
+				if (state.currentCardVoted) {
+					btnVoteCurrentCardEl.classList.add("voted-locked");
+					btnVoteCurrentCardEl.disabled = true;
+					btnVoteCurrentCardTextEl.textContent = "✅ Voto Computado nesta Carta 💩";
+				} else {
+					btnVoteCurrentCardEl.disabled = false;
+					if (isDouble) {
+						btnVoteCurrentCardEl.classList.add("mode-double");
+						btnVoteCurrentCardTextEl.textContent = "🗳️ VOTAR NESSA CARTA (🔥 +2 PTS)";
+					} else if (isInvert) {
+						btnVoteCurrentCardEl.classList.add("mode-invert");
+						btnVoteCurrentCardTextEl.textContent = "🗳️ VOTAR NESSA CARTA (🔄 -1 PT)";
+					} else {
+						btnVoteCurrentCardTextEl.textContent = "🗳️ VOTAR NESSA CARTA";
+					}
+				}
+			}
+
+			if (btnTriggerCountdownEl) {
+				if (state.currentCardVoted) {
+					btnTriggerCountdownEl.classList.add("voted-locked");
+					btnTriggerCountdownEl.textContent = "✅ Voto Computado 💩";
+				} else {
+					btnTriggerCountdownEl.classList.remove("voted-locked");
+					btnTriggerCountdownEl.textContent = "⏱️ Contar 3s e Votar!";
+				}
+			}
+
+			if (roundCrownedBannerEl && roundCrownedTextEl) {
+				if (record && Array.isArray(record.winnerNames) && record.winnerNames.length > 0) {
+					const namesStr = record.winnerNames.join(" & ");
+					const deltaStr = record.delta === 2 ? "+2 pontos 🔥" : (record.delta < 0 ? "−1 ponto 😇" : "+1 ponto 💩");
+					roundCrownedTextEl.textContent = `👑 Coroado(s) nesta carta: ${namesStr} (${deltaStr})`;
+					roundCrownedBannerEl.classList.add("visible");
+				} else {
+					roundCrownedBannerEl.classList.remove("visible");
+				}
+			}
+		}
+
+		function startCardVotingFlow(triggerEvent) {
+			syncCurrentCardVoteLock();
+			if (state.currentCardVoted) {
+				SoundFX.playBuzzer();
+				return;
+			}
+			if (state.players.length < 2) {
+				SoundFX.playBuzzer();
+				toggleScoreDrawer(true);
+				const cx = triggerEvent && triggerEvent.clientX ? triggerEvent.clientX : window.innerWidth / 2;
+				const cy = triggerEvent && triggerEvent.clientY ? triggerEvent.clientY : window.innerHeight / 2;
+				FloatFX.pop(cx, cy, "Cadastre 2+ amigos! 👥", true);
+				return;
+			}
+			triggerCountdown(true);
+		}
 
 		function renderPlayers() {
 			const totalPoints = state.players.reduce((acc, p) => acc + p.score, 0);
 			topScoreBadgeEl.textContent = state.players.length > 0 ? `${state.players.length} jog • ${totalPoints} pts` : "0";
 
-			// Barra Rápida de Votação abaixo da carta
+			const record = getCurrentCardVoteRecord();
+			const roundWinnerIds = new Set(record && Array.isArray(record.winnerIds) ? record.winnerIds : []);
+
+			// Barra de Placar ao Vivo abaixo da carta (apenas consulta visual de placar e destaque de vencedor da rodada)
 			if (state.players.length > 0) {
 				quickVoteBarEl.classList.add("visible");
-				quickVoteChipsEl.innerHTML = state.players.map(p => `
-          <button class="vote-chip" data-vote-id="${p.id}" title="Dar +1 ponto para ${escapeHtml(p.name)}">
-            <span>👉 ${escapeHtml(p.name)}</span>
+				if (quickVoteTitleEl) {
+					if (record && Array.isArray(record.winnerNames) && record.winnerNames.length > 0) {
+						const deltaTag = record.delta === 2 ? "+2 pts 🔥" : (record.delta < 0 ? "−1 pt 😇" : "+1 pt 💩");
+						quickVoteTitleEl.textContent = `✅ Voto Computado nesta Carta! Ponto para: ${record.winnerNames.join(", ")} (${deltaTag})`;
+					} else {
+						quickVoteTitleEl.textContent = "📊 Placar ao Vivo da Roda (clique em '🗳️ VOTAR NESSA CARTA' para apurar):";
+					}
+				}
+				quickVoteChipsEl.innerHTML = state.players.map(p => {
+					const avatar = p.avatar || "😈";
+					const isRoundWinner = roundWinnerIds.has(p.id);
+					return `
+          <div class="vote-chip readonly-chip ${isRoundWinner ? "round-winner-chip" : ""}" title="${escapeHtml(p.name)}: ${p.score} ponto(s)">
+            <span>${avatar} ${escapeHtml(p.name)}${isRoundWinner ? " 🎯" : ""}</span>
             <span class="pts">${p.score} 💩</span>
-          </button>
-        `).join("");
+          </div>
+        `;
+				}).join("");
 			} else {
 				quickVoteBarEl.classList.remove("visible");
 			}
 
-			// Renderização das Laterais Visíveis da Tela (Esquerda e Direita)
+			// Renderização das Laterais Visíveis da Tela (Esquerda e Direita) — Modo Consulta de Placar
 			if (cardsPlayersLeftEl && cardsPlayersRightEl) {
 				if (state.players.length === 0) {
 					const emptySideHtml = `
@@ -2864,7 +4253,7 @@
 							<div style="font-size:1.6rem;margin-bottom:4px;">💩</div>
 							<strong style="display:block;font-size:0.88rem;">Sem participantes</strong>
 							<p style="font-size:0.75rem;opacity:0.85;margin:4px 0 10px;line-height:1.35;">
-								Adicione a galera para os botões de +1 ponto ficarem aqui na lateral!
+								Adicione ao menos 2 amigos para habilitar a votação estruturada da rodada!
 							</p>
 							<button class="btn-side-add-player" style="font-size:0.78rem;padding:6px 12px;">+ Adicionar Amigos</button>
 						</div>
@@ -2873,33 +4262,38 @@
 					cardsPlayersRightEl.innerHTML = emptySideHtml;
 				} else {
 					const maxScore = Math.max(...state.players.map(p => p.score));
-					const minScore = Math.min(...state.players.map(p => p.score));
 
 					let leftCardsHtml = "";
 					let rightCardsHtml = "";
 
 					state.players.forEach((p, idx) => {
 						const isTopMerda = p.score > 0 && p.score === maxScore;
-						const isSaint = totalPoints > 0 && p.score === minScore && maxScore !== minScore;
-						let statusTag = "";
-						if (isTopMerda) statusTag = "👑 Amigo de Merda";
-						else if (isSaint) statusTag = "😇 Alma Pura";
+						const isRoundWinner = roundWinnerIds.has(p.id);
+						const avatar = p.avatar || "😈";
+						const evoTitle = getPlayerTitle(p.score);
+
+						let statusPillText = "🗳️ Aguardando Urna";
+						if (isRoundWinner) {
+							const d = record ? record.delta : 1;
+							statusPillText = d === 2 ? "👑 Coroado (+2 pts 🔥)" : (d < 0 ? "😇 Salvo (−1 pt 🔄)" : "👑 Coroado (+1 pt 💩)");
+						} else if (state.currentCardVoted) {
+							statusPillText = "📊 Placar Atualizado";
+						}
 
 						const cardMarkup = `
-							<div class="side-player-card ${isTopMerda ? "leader-merda" : ""}" id="sideCard_${p.id}">
+							<div class="side-player-card ${isTopMerda ? "leader-merda" : ""} ${isRoundWinner ? "round-crowned" : ""}" id="sideCard_${p.id}">
 								<div class="side-player-top">
 									<div class="side-player-name-wrap">
-										<span class="side-player-icon">${isTopMerda ? "💩👑" : (isSaint ? "😇" : "👤")}</span>
+										<span class="side-player-icon">${avatar}${isTopMerda ? "👑" : ""}</span>
 										<span class="side-player-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
 									</div>
 									<div class="side-player-score">${p.score} <span style="font-size:0.72rem;">💩</span></div>
 								</div>
-								${statusTag ? `<div class="side-player-tag">${statusTag}</div>` : ""}
+								<div class="side-player-tag">${evoTitle}</div>
 								<div class="side-player-actions">
-									<button class="btn-side-decrement" data-action="side-minus" data-id="${p.id}" title="Remover 1 ponto">−</button>
-									<button class="btn-side-increment" data-action="side-plus" data-id="${p.id}" title="Mais dedos apontados para ${escapeHtml(p.name)}! (+1 ponto)">
-										<span>👉 +1 PONTO</span>
-									</button>
+									<div class="side-player-status-pill ${isRoundWinner ? "winner-pill" : ""}">
+										${statusPillText}
+									</div>
 								</div>
 							</div>
 						`;
@@ -2936,44 +4330,41 @@
 			}
 			knownPlayerIds = new Set(state.players.map(p => p.id));
 
-			// Lista na Gaveta Lateral (Menu Completo de Gerenciamento)
+			// Lista na Gaveta Lateral (Menu Completo de Gerenciamento e Ajuste Manual)
 			if (state.players.length === 0) {
 				playerListContainerEl.innerHTML = `
           <div class="empty-players">
             <div style="font-size:2rem;margin-bottom:8px;">💩</div>
             <strong>Nenhum amigo cadastrado ainda!</strong><br>
-            Adicione os nomes acima para anotar os pontos aqui na tela e liberar os botões de incremento nas laterais.
+            Adicione ao menos 2 participantes acima para liberar a <strong>Urna da Discórdia</strong> na mesa!
           </div>
         `;
 				return;
 			}
 
 			const maxScore = Math.max(...state.players.map(p => p.score));
-			const minScore = Math.min(...state.players.map(p => p.score));
 
 			// Ordena do maior pontuador (Mais Amigo de Merda) para o menor na gaveta
 			const sorted = [...state.players].sort((a, b) => b.score - a.score);
 
 			playerListContainerEl.innerHTML = sorted.map(p => {
 				const isTopMerda = p.score > 0 && p.score === maxScore;
-				const isSaint = totalPoints > 0 && p.score === minScore && maxScore !== minScore;
-				let statusTag = "";
-				if (isTopMerda) statusTag = "👑 Líder Amigo de Merda";
-				else if (isSaint) statusTag = "😇 Alma Pura (Vencendo)";
+				const avatar = p.avatar || "😈";
+				const evoTitle = getPlayerTitle(p.score);
 
 				return `
           <div class="player-row ${isTopMerda ? "leader-merda" : ""}">
             <div class="player-info">
               <div class="player-name">
-                <span>${isTopMerda ? "💩" : (isSaint ? "😇" : "👤")}</span>
+                <span>${avatar}${isTopMerda ? "👑" : ""}</span>
                 <span>${escapeHtml(p.name)}</span>
               </div>
-              ${statusTag ? `<span class="player-status-tag">${statusTag}</span>` : ""}
+              <span class="player-status-tag">${evoTitle}</span>
             </div>
             <div class="player-controls">
-              <button class="btn-score-step" data-action="minus" data-id="${p.id}" title="Remover 1 ponto">−</button>
+              <button class="btn-score-step" data-action="minus" data-id="${p.id}" title="Remover 1 ponto (ajuste manual)">−</button>
               <span class="player-score-val">${p.score}</span>
-              <button class="btn-score-step plus" data-action="plus" data-id="${p.id}" title="Adicionar 1 ponto">+</button>
+              <button class="btn-score-step plus" data-action="plus" data-id="${p.id}" title="Adicionar 1 ponto (ajuste manual)">+</button>
               <button class="btn-score-step remove" data-action="delete" data-id="${p.id}" title="Excluir jogador">✕</button>
             </div>
           </div>
@@ -2984,28 +4375,60 @@
 		function addPlayer(name) {
 			const clean = name.trim();
 			if (!clean) return;
+			const randomAvatar = PLAYER_AVATARS[Math.floor(Math.random() * PLAYER_AVATARS.length)];
 			state.players.push({
 				id: "p_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
 				name: clean,
-				score: 0
+				score: 0,
+				avatar: randomAvatar,
+				votedCards: []
 			});
 			saveState();
 			renderPlayers();
+			// Atualiza a carta atual caso ela use {P1} e {P2} e estivesse com menos de 2 jogadores
+			const currentCard = getCurrentCardObj();
+			if (currentCard && (currentCard.text.includes("{P1}") || currentCard.text.includes("{P2}"))) {
+				updateCardDOM(currentCard);
+			}
 		}
 
 		function changeScore(playerId, delta) {
 			const p = state.players.find(item => item.id === playerId);
 			if (!p) return;
+			if (!Array.isArray(p.votedCards)) p.votedCards = [];
+
+			const prevScore = p.score;
 			p.score = Math.max(0, p.score + delta);
+
 			if (delta > 0) {
+				const currentCard = getCurrentCardObj();
+				if (currentCard) {
+					const cardText = resolveCardText(currentCard);
+					p.votedCards.push({
+						id: currentCard.id,
+						text: cardText
+					});
+				}
+
 				SoundFX.playPoint();
-				if (p.score === 5 || p.score === 10) {
+
+				// Verifica se atingiu ou cruzou um múltiplo de 5 (5, 10, 15...)
+				const crossedFiveMultiple = p.score > 0 && (
+					p.score % 5 === 0 ||
+					Math.floor(prevScore / 5) < Math.floor(p.score / 5)
+				);
+
+				if (crossedFiveMultiple) {
 					const card = document.getElementById(`sideCard_${playerId}`);
 					const r = card ? card.getBoundingClientRect() : null;
 					ConfettiFX.burst(55, r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : undefined);
 					SoundFX.playFanfare();
+					openPunishModal(p);
 				}
+			} else if (delta < 0 && prevScore > 0) {
+				p.votedCards.pop();
 			}
+
 			saveState();
 			renderPlayers();
 
@@ -3013,7 +4436,7 @@
 			if (!prefersReducedMotion) {
 				const targets = [
 					document.querySelector(`#sideCard_${playerId} .side-player-score`),
-					document.querySelector(`.vote-chip[data-vote-id="${playerId}"] .pts`)
+					document.querySelector(`.vote-chip.round-winner-chip .pts`)
 				];
 				targets.forEach(el => {
 					if (!el) return;
@@ -3034,6 +4457,182 @@
 			}
 		}
 
+		/* ==========================================================================
+		   8.2 URNA DA DISCÓRDIA (#modalBallot — Apuração Formal e Desempate)
+		   ========================================================================== */
+		const modalBallotEl = document.getElementById("modalBallot");
+		const ballotChaosBadgeEl = document.getElementById("ballotChaosBadge");
+		const ballotChaosBadgeTextEl = document.getElementById("ballotChaosBadgeText");
+		const ballotPlayersGridEl = document.getElementById("ballotPlayersGrid");
+		const ballotTieBoxEl = document.getElementById("ballotTieBox");
+		const ballotTieDescEl = document.getElementById("ballotTieDesc");
+		const ballotTieActionsEl = document.getElementById("ballotTieActions");
+		const btnConfirmBallotEl = document.getElementById("btnConfirmBallot");
+		let currentBallotCounts = {}; // { [playerId]: number }
+
+		function openBallotModal() {
+			if (state.currentCardVoted) return;
+			if (state.players.length < 2) {
+				toggleScoreDrawer(true);
+				return;
+			}
+
+			currentBallotCounts = {};
+			state.players.forEach(p => {
+				currentBallotCounts[p.id] = 0;
+			});
+
+			// Exibe aviso se houver evento caótico ativo na rodada
+			const evt = state.activeChaosEvent ? CHAOS_EVENTS[state.activeChaosEvent] : null;
+			if (evt) {
+				ballotChaosBadgeEl.setAttribute("data-event", evt.id);
+				ballotChaosBadgeTextEl.textContent = `${evt.icon} ${evt.title}: ${evt.desc}`;
+				ballotChaosBadgeEl.classList.add("visible");
+			} else {
+				ballotChaosBadgeEl.classList.remove("visible");
+				ballotChaosBadgeEl.removeAttribute("data-event");
+			}
+
+			ballotTieBoxEl.classList.remove("visible");
+			renderBallotRows();
+			modalBallotEl.classList.add("open");
+		}
+
+		function renderBallotRows() {
+			const counts = Object.values(currentBallotCounts);
+			const maxVotes = counts.length > 0 ? Math.max(...counts) : 0;
+
+			ballotPlayersGridEl.innerHTML = state.players.map(p => {
+				const votes = currentBallotCounts[p.id] || 0;
+				const isLeading = maxVotes > 0 && votes === maxVotes;
+				const avatar = p.avatar || "😈";
+
+				return `
+					<div class="ballot-row ${isLeading ? "leading-fingers" : ""}" data-ballot-row="${p.id}">
+						<div class="ballot-player-meta">
+							<span class="ballot-player-avatar">${avatar}</span>
+							<div class="ballot-player-text">
+								<span class="ballot-player-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
+								<span class="ballot-player-pts">${p.score} pt(s) na partida ${isLeading ? "👈 LÍDER DA URNA" : ""}</span>
+							</div>
+						</div>
+						<div class="ballot-counter">
+							<button class="ballot-btn-step minus" type="button" data-ballot-action="minus" data-id="${p.id}" title="Diminuir dedos">−</button>
+							<span class="ballot-count-val">${votes}</span>
+							<button class="ballot-btn-step plus" type="button" data-ballot-action="plus" data-id="${p.id}" title="Aumentar dedos">+</button>
+						</div>
+					</div>
+				`;
+			}).join("");
+		}
+
+		function changeBallotCount(playerId, delta) {
+			if (!(playerId in currentBallotCounts)) currentBallotCounts[playerId] = 0;
+			const prev = currentBallotCounts[playerId];
+			const next = Math.max(0, prev + delta);
+			if (next === prev) return;
+
+			currentBallotCounts[playerId] = next;
+			if (delta > 0) {
+				SoundFX.playPoint();
+			} else {
+				SoundFX.playBeep(320, 0.08, "triangle");
+			}
+
+			// Se mexeu nos votos, esconde o painel de empate até clicar em Confirmar novamente
+			ballotTieBoxEl.classList.remove("visible");
+			renderBallotRows();
+		}
+
+		function applyRoundWinners(winnerIds) {
+			if (!Array.isArray(winnerIds) || winnerIds.length === 0) return;
+			const card = getCurrentCardObj();
+			const delta = getActiveRoundVoteDelta();
+			const winnerNames = [];
+
+			winnerIds.forEach(id => {
+				const pl = state.players.find(p => p.id === id);
+				if (pl) {
+					winnerNames.push(pl.name);
+					changeScore(id, delta);
+				}
+			});
+
+			if (card) {
+				if (!state.votedCardsByCardId || typeof state.votedCardsByCardId !== "object") {
+					state.votedCardsByCardId = {};
+				}
+				state.votedCardsByCardId[card.id] = {
+					winnerIds: [...winnerIds],
+					winnerNames,
+					delta
+				};
+			}
+
+			state.currentCardVoted = true;
+			modalBallotEl.classList.remove("open");
+			ballotTieBoxEl.classList.remove("visible");
+
+			syncCurrentCardVoteLock();
+			saveState();
+			renderPlayers();
+
+			// Festa de Coroado da Rodada!
+			ConfettiFX.burst(55, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+			SoundFX.playFanfare();
+			const popLabel = delta === 2 ? `👑 +2 🔥 ${winnerNames.join(", ")}` : (delta < 0 ? `😇 −1 🔄 ${winnerNames.join(", ")}` : `👑 +1 💩 ${winnerNames.join(", ")}`);
+			FloatFX.pop(window.innerWidth / 2, window.innerHeight / 2, popLabel, delta < 0);
+		}
+
+		function confirmBallotResult() {
+			const counts = Object.values(currentBallotCounts);
+			const maxVotes = counts.length > 0 ? Math.max(...counts) : 0;
+
+			if (maxVotes <= 0) {
+				SoundFX.playBuzzer();
+				FloatFX.pop(
+					window.innerWidth / 2,
+					window.innerHeight / 2,
+					"Adicione ao menos 1 dedo na urna! 👈",
+					true
+				);
+				return;
+			}
+
+			const leaders = state.players.filter(p => (currentBallotCounts[p.id] || 0) === maxVotes);
+			if (leaders.length === 1) {
+				applyRoundWinners([leaders[0].id]);
+				return;
+			}
+
+			// Empate entre 2 ou mais participantes em 1º lugar!
+			SoundFX.playSuspense();
+			const delta = getActiveRoundVoteDelta();
+			const deltaLabel = delta === 2 ? "+2 pontos" : (delta < 0 ? "−1 ponto" : "+1 ponto");
+			const tiedNames = leaders.map(p => p.name).join(" e ");
+
+			ballotTieDescEl.textContent = `EMPATE entre ${tiedNames} (${maxVotes} dedo(s) cada)! Pela regra da discórdia, quem tiver cara de mais culpado leva ${deltaLabel}, ou ambos levam!`;
+
+			const allIdsJson = escapeHtml(JSON.stringify(leaders.map(p => p.id)));
+			const singleButtonsHtml = leaders.map(p => `
+				<button class="btn-neo cyan" type="button" data-tie-mode="single" data-winner-id="${p.id}" style="font-size:0.78rem;padding:8px 12px;">
+					👉 Só ${escapeHtml(p.name)}
+				</button>
+			`).join("");
+
+			ballotTieActionsEl.innerHTML = `
+				<button class="btn-neo pink" type="button" data-tie-mode="all" data-winner-ids="${allIdsJson}" style="font-size:0.8rem;padding:8px 14px;">
+					💥 Pontuar TODOS os Empatados (${leaders.length})
+				</button>
+				${singleButtonsHtml}
+				<button class="btn-neo yellow" type="button" data-tie-mode="random" data-winner-ids="${allIdsJson}" style="font-size:0.78rem;padding:8px 12px;">
+					🎲 Sorteio do Destino
+				</button>
+			`;
+
+			ballotTieBoxEl.classList.add("visible");
+		}
+
 		function escapeHtml(str) {
 			return String(str).replace(/[&<>"']/g, m => ({
 				"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -3041,13 +4640,86 @@
 		}
 
 		/* ==========================================================================
-		   9. MODAL DE COROAÇÃO / PÓDIO FINAL
+		   8.5 ROLETA DO CASTIGO (#modalPunish — Caça-Níquel de Prendas a cada 5 pts)
 		   ========================================================================== */
+		const modalPunishEl = document.getElementById("modalPunish");
+		const punishVictimAvatarEl = document.getElementById("punishVictimAvatar");
+		const punishVictimNameEl = document.getElementById("punishVictimName");
+		const punishSlotMachineEl = document.getElementById("punishSlotMachine");
+		const punishSlotLabelEl = document.getElementById("punishSlotLabel");
+		const punishSlotTextEl = document.getElementById("punishSlotText");
+		let punishSpinTimer = null;
+
+		function spinPunishSlot() {
+			if (punishSpinTimer) clearTimeout(punishSpinTimer);
+			punishSlotMachineEl.classList.remove("locked");
+			punishSlotMachineEl.classList.add("spinning");
+			punishSlotLabelEl.textContent = "🎰 GIRANDO ROLETA DO CASTIGO...";
+
+			const totalSteps = 16;
+			let currentStep = 0;
+			let lastIndex = -1;
+
+			const stepTick = () => {
+				let idx = Math.floor(Math.random() * PUNISHMENTS_LIST.length);
+				if (idx === lastIndex) idx = (idx + 1) % PUNISHMENTS_LIST.length;
+				lastIndex = idx;
+
+				punishSlotTextEl.textContent = PUNISHMENTS_LIST[idx];
+				currentStep++;
+
+				if (currentStep < totalSteps) {
+					SoundFX.playBeep(260 + currentStep * 22, 0.05, "triangle");
+					const delay = 55 + Math.pow(currentStep, 1.75) * 2.2;
+					punishSpinTimer = setTimeout(stepTick, delay);
+				} else {
+					punishSlotMachineEl.classList.remove("spinning");
+					punishSlotMachineEl.classList.add("locked");
+					punishSlotLabelEl.textContent = "😈 PRENDA OFICIAL SORTEADA:";
+					SoundFX.playFanfare();
+					ConfettiFX.burst(32);
+					punishSpinTimer = null;
+				}
+			};
+
+			stepTick();
+		}
+
+		function openPunishModal(player) {
+			if (!player) return;
+			punishVictimAvatarEl.textContent = player.avatar || "😈";
+			punishVictimNameEl.textContent = `${player.name} (${player.score} pts)`;
+			modalPunishEl.classList.add("open");
+			spinPunishSlot();
+		}
+
+		/* ==========================================================================
+		   9. MODAL DE COROAÇÃO / DOSSIÊ DA VERGONHA & EXPORTADOR PNG (1080x1920)
+		   ========================================================================== */
+		function getPlayerDossierItems(player, maxItems = 5) {
+			if (!player || !Array.isArray(player.votedCards) || player.votedCards.length === 0) return [];
+			const seen = new Set();
+			const unique = [];
+			for (let i = player.votedCards.length - 1; i >= 0; i--) {
+				const entry = player.votedCards[i];
+				const text = typeof entry === "string" ? entry : (entry && entry.text ? entry.text : "");
+				if (text && !seen.has(text)) {
+					seen.add(text);
+					unique.push(text);
+					if (unique.length >= maxItems) break;
+				}
+			}
+			return unique;
+		}
+
 		function openWinnerModal() {
+			NarratorTTS.cancel();
 			const modal = document.getElementById("modalWinner");
 			const content = document.getElementById("winnerModalContent");
+			const btnDownload = document.getElementById("btnDownloadShameCard");
 
 			if (state.players.length === 0) {
+				if (btnDownload) btnDownload.style.display = "none";
 				content.innerHTML = `
           <div style="font-size:3.5rem;margin-bottom:8px;">💩👑</div>
           <h3 style="font-family:'Bungee',cursive;font-size:1.4rem;color:var(--yellow-acid);margin-bottom:8px;">
@@ -3058,23 +4730,51 @@
           </p>
         `;
 			} else {
+				if (btnDownload) btnDownload.style.display = "inline-flex";
 				const sorted = [...state.players].sort((a, b) => b.score - a.score);
 				const topMerda = sorted[0];
 				const topSaint = sorted[sorted.length - 1];
+				const dossierItems = getPlayerDossierItems(topMerda, 5);
+
+				const dossierHtml = `
+          <div class="dossier-container">
+            <div class="dossier-header">
+              <span>📂 Dossiê da Vergonha</span>
+            </div>
+            ${dossierItems.length > 0 ? `
+              <ul class="dossier-list">
+                ${dossierItems.map(txt => `
+                  <li class="dossier-item">
+                    <strong>Levou pontos por:</strong> "${escapeHtml(txt)}"
+                  </li>
+                `).join("")}
+              </ul>
+            ` : `
+              <p style="font-size:0.82rem;color:#e9d5ff;opacity:0.85;">
+                Nenhuma carta registrada no histórico de votos desta partida ainda!
+              </p>
+            `}
+          </div>
+        `;
 
 				content.innerHTML = `
           <div style="background:#3b0f7a;border:3px solid var(--ink-black);box-shadow:4px 4px 0 var(--ink-black);border-radius:20px;padding:18px;margin-bottom:14px;">
-            <div style="font-size:2.8rem;">💩👑</div>
+            <div style="font-size:2.8rem;">${topMerda.avatar || "💩"}👑</div>
             <div style="font-size:0.76rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--pink-shock);margin-top:4px;">
               O MAIOR AMIGO DE MERDA DA RODADA
             </div>
             <div style="font-family:'Bungee',cursive;font-size:1.7rem;color:var(--yellow-acid);margin:4px 0;">
               ${escapeHtml(topMerda.name)}
             </div>
+            <div style="font-size:0.78rem;font-weight:800;color:var(--cyan-electric);margin-bottom:4px;">
+              ${getPlayerTitle(topMerda.score)}
+            </div>
             <div style="font-weight:800;font-size:0.9rem;color:#fff;">
               Acumulou ${topMerda.score} ponto(s) de pura discórdia!
             </div>
           </div>
+
+          ${dossierHtml}
 
           ${sorted.length > 1 ? `
             <div style="background:rgba(0,245,212,0.12);border:2.5px solid var(--ink-black);border-radius:16px;padding:12px;">
@@ -3082,7 +4782,7 @@
                 😇 VENCEDOR(A) MORAL (MENOS PONTOS)
               </div>
               <div style="font-weight:800;font-size:1.1rem;color:#fff;margin-top:2px;">
-                ${escapeHtml(topSaint.name)} (${topSaint.score} pts)
+                ${topSaint.avatar || "😇"} ${escapeHtml(topSaint.name)} (${topSaint.score} pts)
               </div>
             </div>
           ` : ""}
@@ -3094,8 +4794,228 @@
 			modal.classList.add("open");
 		}
 
+		// Utilitário de quebra de linhas para Canvas 2D
+		function wrapCanvasText(ctx, text, maxWidth) {
+			const words = String(text || "").split(" ");
+			const lines = [];
+			let currentLine = "";
+
+			for (let i = 0; i < words.length; i++) {
+				const testLine = currentLine ? currentLine + " " + words[i] : words[i];
+				const metrics = ctx.measureText(testLine);
+				if (metrics.width > maxWidth && currentLine) {
+					lines.push(currentLine);
+					currentLine = words[i];
+				} else {
+					currentLine = testLine;
+				}
+			}
+			if (currentLine) lines.push(currentLine);
+			return lines;
+		}
+
+		function drawRoundedRect(ctx, x, y, w, h, r) {
+			ctx.beginPath();
+			ctx.moveTo(x + r, y);
+			ctx.lineTo(x + w - r, y);
+			ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+			ctx.lineTo(x + w, y + h - r);
+			ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+			ctx.lineTo(x + r, y + h);
+			ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+			ctx.lineTo(x, y + r);
+			ctx.quadraticCurveTo(x, y, x + r, y);
+			ctx.closePath();
+		}
+
+		function downloadShameCard() {
+			if (state.players.length === 0) return;
+			const sorted = [...state.players].sort((a, b) => b.score - a.score);
+			const winner = sorted[0];
+			const dossierItems = getPlayerDossierItems(winner, 5);
+
+			const canvas = document.getElementById("shameCardCanvas");
+			const ctx = canvas.getContext("2d");
+			const W = 1080;
+			const H = 1920;
+
+			// 1. Fundo roxo #23094d com luzes Pop-Art e padrão de pontinhos
+			ctx.fillStyle = "#23094d";
+			ctx.fillRect(0, 0, W, H);
+
+			const gradPink = ctx.createRadialGradient(180, 280, 20, 180, 280, 520);
+			gradPink.addColorStop(0, "rgba(255, 42, 133, 0.35)");
+			gradPink.addColorStop(1, "rgba(255, 42, 133, 0)");
+			ctx.fillStyle = gradPink;
+			ctx.fillRect(0, 0, W, H);
+
+			const gradYellow = ctx.createRadialGradient(900, 1620, 20, 900, 1620, 540);
+			gradYellow.addColorStop(0, "rgba(255, 230, 0, 0.24)");
+			gradYellow.addColorStop(1, "rgba(255, 230, 0, 0)");
+			ctx.fillStyle = gradYellow;
+			ctx.fillRect(0, 0, W, H);
+
+			ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+			for (let gx = 40; gx < W; gx += 48) {
+				for (let gy = 40; gy < H; gy += 48) {
+					ctx.beginPath();
+					ctx.arc(gx, gy, 2.5, 0, Math.PI * 2);
+					ctx.fill();
+				}
+			}
+
+			// 2. Moldura Neo-Brutalista Principal
+			ctx.fillStyle = "#0f071e";
+			drawRoundedRect(ctx, 74, 78, W - 120, H - 140, 48);
+			ctx.fill();
+
+			ctx.fillStyle = "#2b095c";
+			ctx.strokeStyle = "#0f071e";
+			ctx.lineWidth = 10;
+			drawRoundedRect(ctx, 56, 60, W - 120, H - 140, 48);
+			ctx.fill();
+			ctx.stroke();
+
+			// 3. Tag Superior da Marca
+			ctx.fillStyle = "#ffe600";
+			drawRoundedRect(ctx, 220, 118, W - 440, 68, 34);
+			ctx.fill();
+			ctx.stroke();
+
+			ctx.fillStyle = "#0f071e";
+			ctx.font = "900 28px 'Plus Jakarta Sans', sans-serif";
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			ctx.fillText("💩 AMIGOS DE MERDA (S.A.)", W / 2, 152);
+
+			// 4. Título Principal em Amarelo #ffe600
+			ctx.font = "900 62px 'Bungee', 'Plus Jakarta Sans', sans-serif";
+			ctx.fillStyle = "#0f071e";
+			ctx.fillText("MAIOR AMIGO DE MERDA", W / 2 + 6, 268 + 6);
+			ctx.fillStyle = "#ffe600";
+			ctx.fillText("MAIOR AMIGO DE MERDA", W / 2, 268);
+
+			// 5. Box de Destaque do Vencedor
+			const heroX = 110;
+			const heroY = 330;
+			const heroW = W - 220;
+			const heroH = 380;
+
+			ctx.fillStyle = "#0f071e";
+			drawRoundedRect(ctx, heroX + 12, heroY + 12, heroW, heroH, 36);
+			ctx.fill();
+
+			ctx.fillStyle = "#4c119e";
+			ctx.strokeStyle = "#ffe600";
+			ctx.lineWidth = 8;
+			drawRoundedRect(ctx, heroX, heroY, heroW, heroH, 36);
+			ctx.fill();
+			ctx.stroke();
+
+			ctx.font = "88px 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif";
+			ctx.fillText(`${winner.avatar || "💩"}👑`, W / 2, heroY + 92);
+
+			ctx.font = "900 64px 'Bungee', 'Plus Jakarta Sans', sans-serif";
+			ctx.fillStyle = "#0f071e";
+			ctx.fillText(winner.name.toUpperCase(), W / 2 + 5, heroY + 195 + 5);
+			ctx.fillStyle = "#ffe600";
+			ctx.fillText(winner.name.toUpperCase(), W / 2, heroY + 195);
+
+			ctx.font = "800 32px 'Plus Jakarta Sans', sans-serif";
+			ctx.fillStyle = "#00f5d4";
+			ctx.fillText(getPlayerTitle(winner.score).toUpperCase(), W / 2, heroY + 265);
+
+			ctx.fillStyle = "#ff2a85";
+			ctx.strokeStyle = "#0f071e";
+			ctx.lineWidth = 6;
+			drawRoundedRect(ctx, W / 2 - 220, heroY + 302, 440, 56, 28);
+			ctx.fill();
+			ctx.stroke();
+
+			ctx.font = "800 28px 'Plus Jakarta Sans', sans-serif";
+			ctx.fillStyle = "#ffffff";
+			ctx.fillText(`${winner.score} PONTO(S) DE PURA DISCÓRDIA`, W / 2, heroY + 330);
+
+			// 6. Seção: 📂 DOSSIÊ DA VERGONHA
+			ctx.textAlign = "left";
+			ctx.font = "900 40px 'Bungee', 'Plus Jakarta Sans', sans-serif";
+			ctx.fillStyle = "#ffe600";
+			ctx.fillText("📂 DOSSIÊ DA VERGONHA", 116, 785);
+
+			let curY = 830;
+			const cardX = 110;
+			const cardW = W - 220;
+
+			if (dossierItems.length === 0) {
+				ctx.fillStyle = "#fffdf7";
+				ctx.strokeStyle = "#0f071e";
+				ctx.lineWidth = 7;
+				drawRoundedRect(ctx, cardX, curY, cardW, 150, 24);
+				ctx.fill();
+				ctx.stroke();
+
+				ctx.fillStyle = "#0f071e";
+				ctx.font = "800 30px 'Plus Jakarta Sans', sans-serif";
+				ctx.textAlign = "center";
+				ctx.fillText("Eleito(a) por unanimidade moral da roda! 💩", W / 2, curY + 75);
+			} else {
+				dossierItems.forEach((phrase, idx) => {
+					ctx.font = "700 28px 'Space Grotesk', 'Plus Jakarta Sans', sans-serif";
+					const fullText = `Levou pontos por: "${phrase}"`;
+					const lines = wrapCanvasText(ctx, fullText, cardW - 76).slice(0, 3);
+					const boxH = Math.max(118, 46 + lines.length * 36);
+
+					if (curY + boxH > 1680) return;
+
+					// Sombra dura do item
+					ctx.fillStyle = "#0f071e";
+					drawRoundedRect(ctx, cardX + 8, curY + 8, cardW, boxH, 22);
+					ctx.fill();
+
+					// Corpo creme do item
+					ctx.fillStyle = idx % 2 === 0 ? "#fffdf7" : "#fef9c3";
+					ctx.strokeStyle = "#0f071e";
+					ctx.lineWidth = 6;
+					drawRoundedRect(ctx, cardX, curY, cardW, boxH, 22);
+					ctx.fill();
+					ctx.stroke();
+
+					// Faixa lateral rosa choque
+					ctx.fillStyle = "#ff2a85";
+					drawRoundedRect(ctx, cardX + 14, curY + 16, 12, boxH - 32, 6);
+					ctx.fill();
+
+					ctx.fillStyle = "#0f071e";
+					ctx.textAlign = "left";
+					lines.forEach((line, lineIdx) => {
+						ctx.fillText(line, cardX + 44, curY + 42 + lineIdx * 36);
+					});
+
+					curY += boxH + 22;
+				});
+			}
+
+			// 7. Rodapé do Story
+			ctx.textAlign = "center";
+			ctx.font = "800 26px 'Plus Jakarta Sans', sans-serif";
+			ctx.fillStyle = "#e9d5ff";
+			ctx.fillText("Jogue com seus amigos • AMIGOS DE MERDA (S.A.) 🎲💩", W / 2, 1765);
+
+			// Download automático como .png
+			const safeName = winner.name.toLowerCase().replace(/[^a-z0-9]/gi, "_") || "vencedor";
+			const link = document.createElement("a");
+			link.download = `card-da-vergonha-${safeName}.png`;
+			link.href = canvas.toDataURL("image/png");
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+
+			SoundFX.playFanfare();
+			ConfettiFX.burst(40);
+		}
+
 		/* ==========================================================================
-		   10. EVENTOS DE INTERFACE E ATALHOS
+		   10. EVENTOS DE INTERFACE, SOUNDBOARD E ATALHOS
 		   ========================================================================== */
 		const screenHomeEl = document.getElementById("screenHome");
 		const screenGameEl = document.getElementById("screenGame");
@@ -3131,6 +5051,7 @@
 		}
 
 		function showHomeScreen() {
+			NarratorTTS.cancel();
 			screenGameEl.classList.remove("active");
 			screenHomeEl.classList.add("active");
 			syncModeButtonsUI();
@@ -3166,6 +5087,7 @@
 				const newMode = el.dataset.mode;
 				if (newMode !== state.mode) {
 					buildShuffledDeck(newMode);
+					renderPlayers();
 					renderCurrentCard(true);
 				}
 			});
@@ -3183,11 +5105,17 @@
 		// Voltar à Home clicando no Logo
 		document.getElementById("btnHomeLogo").addEventListener("click", showHomeScreen);
 
-		// Botões do Palco
+		// Botões do Palco e Votação Estruturada
+		document.getElementById("btnVoteCurrentCard").addEventListener("click", (e) => {
+			e.stopPropagation();
+			startCardVotingFlow(e);
+		});
 		document.getElementById("btnNextCard").addEventListener("click", nextCard);
 		document.getElementById("btnPrevCard").addEventListener("click", prevCard);
 		document.getElementById("btnResetDeck").addEventListener("click", () => {
 			buildShuffledDeck(state.mode);
+			syncCurrentCardVoteLock();
+			renderPlayers();
 			renderCurrentCard(true);
 		});
 		document.getElementById("btnRandomReaction").addEventListener("click", () => {
@@ -3196,14 +5124,82 @@
 		});
 		document.getElementById("btnTriggerCountdown").addEventListener("click", (e) => {
 			e.stopPropagation();
-			triggerCountdown();
+			if (state.currentCardVoted) {
+				SoundFX.playBuzzer();
+				return;
+			}
+			if (state.players.length >= 2) {
+				startCardVotingFlow(e);
+			} else {
+				triggerCountdown(false);
+			}
 		});
+
+		// Eventos do Modal Urna da Discórdia (#modalBallot)
+		document.getElementById("btnCloseBallot").addEventListener("click", () => {
+			modalBallotEl.classList.remove("open");
+		});
+		ballotPlayersGridEl.addEventListener("click", (e) => {
+			const btn = e.target.closest("button[data-ballot-action]");
+			if (!btn) return;
+			const id = btn.dataset.id;
+			const action = btn.dataset.ballotAction;
+			if (action === "plus") changeBallotCount(id, 1);
+			else if (action === "minus") changeBallotCount(id, -1);
+		});
+		btnConfirmBallotEl.addEventListener("click", () => {
+			confirmBallotResult();
+		});
+		ballotTieActionsEl.addEventListener("click", (e) => {
+			const btn = e.target.closest("button[data-tie-mode]");
+			if (!btn) return;
+			const mode = btn.dataset.tieMode;
+			if (mode === "single") {
+				applyRoundWinners([btn.dataset.winnerId]);
+			} else if (mode === "all") {
+				try {
+					const ids = JSON.parse(btn.dataset.winnerIds || "[]");
+					applyRoundWinners(ids);
+				} catch (err) { }
+			} else if (mode === "random") {
+				try {
+					const ids = JSON.parse(btn.dataset.winnerIds || "[]");
+					if (ids.length > 0) {
+						const luckyId = ids[Math.floor(Math.random() * ids.length)];
+						applyRoundWinners([luckyId]);
+					}
+				} catch (err) { }
+			}
+		});
+
+		// Botão Narrador da Discórdia (Text-to-Speech)
+		document.getElementById("btnSpeakCard").addEventListener("click", (e) => {
+			e.stopPropagation();
+			const card = getCurrentCardObj();
+			const textToRead = cardQuestionTextEl.textContent || (card ? card.text : "");
+			NarratorTTS.speak(textToRead);
+		});
+
+		// Botões do Soundboard Rápido
+		function triggerSoundboardBtn(btnId, soundMethod) {
+			const btn = document.getElementById(btnId);
+			SoundFX[soundMethod]();
+			if (btn) {
+				btn.classList.add("playing");
+				setTimeout(() => btn.classList.remove("playing"), 260);
+			}
+		}
+
+		document.getElementById("btnSoundBuzzer").addEventListener("click", () => triggerSoundboardBtn("btnSoundBuzzer", "playBuzzer"));
+		document.getElementById("btnSoundRimshot").addEventListener("click", () => triggerSoundboardBtn("btnSoundRimshot", "playRimshot"));
+		document.getElementById("btnSoundSuspense").addEventListener("click", () => triggerSoundboardBtn("btnSoundSuspense", "playSuspense"));
 
 		// Salvar texto na Carta em Branco (#53)
 		document.getElementById("btnApplyBlankCard").addEventListener("click", () => {
 			const val = blankCardInputEl.value.trim();
 			if (!val) return;
 			state.blankCardCustomText = val;
+			currentDynamicCache.key = "";
 			saveState();
 			renderCurrentCard(false);
 			SoundFX.playPoint();
@@ -3213,6 +5209,7 @@
 		document.getElementById("btnToggleSound").addEventListener("click", () => {
 			SoundFX.muted = !SoundFX.muted;
 			state.muted = SoundFX.muted;
+			if (SoundFX.muted) NarratorTTS.cancel();
 			saveState();
 			updateSoundButtonUI();
 		});
@@ -3256,32 +5253,8 @@
 			}
 		});
 
-		quickVoteChipsEl.addEventListener("click", (e) => {
-			const chip = e.target.closest("button[data-vote-id]");
-			if (!chip) return;
-			FloatFX.pop(e.clientX, e.clientY, "+1 💩");
-			changeScore(chip.dataset.voteId, 1);
-		});
-
-		// Eventos das Laterais da Tela (Incremento, Decremento e Adicionar Amigo)
+		// Eventos das Laterais da Tela (Adicionar Amigo)
 		document.addEventListener("click", (e) => {
-			const incBtn = e.target.closest("button[data-action='side-plus']");
-			if (incBtn) {
-				const id = incBtn.dataset.id;
-				FloatFX.pop(e.clientX || incBtn.getBoundingClientRect().left + 40, e.clientY || incBtn.getBoundingClientRect().top, "+1 💩");
-				changeScore(id, 1);
-				return;
-			}
-
-			const decBtn = e.target.closest("button[data-action='side-minus']");
-			if (decBtn) {
-				const id = decBtn.dataset.id;
-				const pl = state.players.find(x => x.id === id);
-				if (pl && pl.score > 0) FloatFX.pop(e.clientX || decBtn.getBoundingClientRect().left, e.clientY || decBtn.getBoundingClientRect().top, "−1", true);
-				changeScore(id, -1);
-				return;
-			}
-
 			const addBtn = e.target.closest(".btn-side-add-player");
 			if (addBtn) {
 				toggleScoreDrawer(true);
@@ -3290,13 +5263,22 @@
 		});
 
 		document.getElementById("btnResetScores").addEventListener("click", () => {
-			state.players.forEach(p => p.score = 0);
+			state.players.forEach(p => {
+				p.score = 0;
+				p.votedCards = [];
+			});
+			state.currentCardVoted = false;
+			state.votedCardsByCardId = {};
+			syncCurrentCardVoteLock();
 			saveState();
 			renderPlayers();
 		});
 
 		document.getElementById("btnClearPlayers").addEventListener("click", () => {
 			state.players = [];
+			state.currentCardVoted = false;
+			state.votedCardsByCardId = {};
+			syncCurrentCardVoteLock();
 			saveState();
 			renderPlayers();
 		});
@@ -3327,7 +5309,11 @@
 			const text = textInput.value.trim();
 			if (!text) return;
 
-			const newId = 117 + state.customCards.length;
+			const maxExistingId = Math.max(
+				BASE_CARDS.length,
+				...state.customCards.map(c => c.id || 0)
+			);
+			const newId = maxExistingId + 1;
 			const newCard = {
 				id: newId,
 				cat: catSelect.value,
@@ -3339,6 +5325,7 @@
 			const insertPos = Math.max(0, state.currentIndex + 1);
 			state.deckOrder.splice(insertPos, 0, newId);
 			state.currentIndex = insertPos;
+			currentDynamicCache.key = "";
 			saveState();
 
 			textInput.value = "";
@@ -3348,14 +5335,32 @@
 			ConfettiFX.burst(25);
 		});
 
-		// Modal de Vencedor
+		// Modal da Roleta do Castigo (#modalPunish)
+		document.getElementById("btnClosePunish").addEventListener("click", () => {
+			if (punishSpinTimer) clearTimeout(punishSpinTimer);
+			modalPunishEl.classList.remove("open");
+		});
+		document.getElementById("btnAcceptPunish").addEventListener("click", () => {
+			if (punishSpinTimer) clearTimeout(punishSpinTimer);
+			modalPunishEl.classList.remove("open");
+		});
+		document.getElementById("btnRespinPunish").addEventListener("click", () => {
+			spinPunishSlot();
+		});
+
+		// Modal de Vencedor e Download do Card da Vergonha
 		const modalWinnerEl = document.getElementById("modalWinner");
+		document.getElementById("btnDownloadShameCard").addEventListener("click", downloadShameCard);
 		document.getElementById("btnContinuePlaying").addEventListener("click", () => {
 			modalWinnerEl.classList.remove("open");
 		});
 		document.getElementById("btnNewMatchModal").addEventListener("click", () => {
-			state.players.forEach(p => p.score = 0);
+			state.players.forEach(p => {
+				p.score = 0;
+				p.votedCards = [];
+			});
 			buildShuffledDeck(state.mode);
+			syncCurrentCardVoteLock();
 			saveState();
 			renderPlayers();
 			modalWinnerEl.classList.remove("open");
@@ -3364,30 +5369,45 @@
 		});
 
 		// Fechar modais clicando fora
-		[modalRulesEl, modalCustomEl, modalWinnerEl].forEach(modal => {
+		[modalRulesEl, modalCustomEl, modalWinnerEl, modalPunishEl, modalBallotEl].forEach(modal => {
 			modal.addEventListener("click", (e) => {
-				if (e.target === modal) modal.classList.remove("open");
+				if (e.target === modal) {
+					if (modal === modalPunishEl && punishSpinTimer) clearTimeout(punishSpinTimer);
+					modal.classList.remove("open");
+				}
 			});
 		});
 
-		// Atalhos de Teclado
+		// Atalhos de Teclado (incluindo 1, 2, 3 para o Soundboard e V/T para Votação)
 		window.addEventListener("keydown", (e) => {
 			const tag = document.activeElement ? document.activeElement.tagName : "";
 			if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
 
 			if (e.code === "Space" || e.code === "ArrowRight") {
-				if (screenGameEl.classList.contains("active")) {
+				if (screenGameEl.classList.contains("active") && !modalBallotEl.classList.contains("open")) {
 					e.preventDefault();
 					nextCard();
 				}
 			} else if (e.code === "ArrowLeft") {
-				if (screenGameEl.classList.contains("active")) {
+				if (screenGameEl.classList.contains("active") && !modalBallotEl.classList.contains("open")) {
 					e.preventDefault();
 					prevCard();
 				}
-			} else if (e.key === "t" || e.key === "T") {
+			} else if (e.key === "t" || e.key === "T" || e.key === "v" || e.key === "V") {
+				if (screenGameEl.classList.contains("active") && !modalBallotEl.classList.contains("open")) {
+					startCardVotingFlow();
+				}
+			} else if (e.key === "1") {
 				if (screenGameEl.classList.contains("active")) {
-					triggerCountdown();
+					triggerSoundboardBtn("btnSoundBuzzer", "playBuzzer");
+				}
+			} else if (e.key === "2") {
+				if (screenGameEl.classList.contains("active")) {
+					triggerSoundboardBtn("btnSoundRimshot", "playRimshot");
+				}
+			} else if (e.key === "3") {
+				if (screenGameEl.classList.contains("active")) {
+					triggerSoundboardBtn("btnSoundSuspense", "playSuspense");
 				}
 			} else if (e.key === "p" || e.key === "P") {
 				toggleScoreDrawer();
@@ -3396,6 +5416,8 @@
 				modalRulesEl.classList.remove("open");
 				modalCustomEl.classList.remove("open");
 				modalWinnerEl.classList.remove("open");
+				modalPunishEl.classList.remove("open");
+				modalBallotEl.classList.remove("open");
 			}
 		});
 
@@ -3405,6 +5427,7 @@
 			buildShuffledDeck(state.mode || "all");
 		}
 		syncModeButtonsUI();
+		syncCurrentCardVoteLock();
 		renderPlayers();
 	</script>
 </body>

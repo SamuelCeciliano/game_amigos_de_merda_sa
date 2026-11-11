@@ -1,0 +1,3412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>AMIGOS DE MERDA (S.A.) — O Jogo da Discórdia</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Bungee&family=Plus+Jakarta+Sans:wght@500;700;800&family=Space+Grotesk:wght@700&display=swap"
+		rel="stylesheet">
+	<style>
+		:root {
+			--bg-deep: #14052b;
+			--bg-purple: #2b095c;
+			--bg-accent: #4c119e;
+			--yellow-acid: #ffe600;
+			--pink-shock: #ff2a85;
+			--cyan-electric: #00f5d4;
+			--orange-fire: #ff6b00;
+			--purple-vivid: #8b5cf6;
+			--card-cream: #fffdf7;
+			--ink-black: #0f071e;
+			--border-thick: 4px solid #0f071e;
+			--shadow-hard: 6px 6px 0px #0f071e;
+			--shadow-hard-lg: 10px 10px 0px #0f071e;
+			--shadow-hard-sm: 3px 3px 0px #0f071e;
+			--radius-lg: 24px;
+			--radius-md: 16px;
+			--radius-pill: 999px;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			-webkit-tap-highlight-color: transparent;
+			user-select: none;
+		}
+
+		html,
+		body {
+			width: 100%;
+			min-height: 100dvh;
+			overflow-x: hidden;
+			font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+			background-color: var(--bg-deep);
+			color: #ffffff;
+		}
+
+		/* Fundo Pop-Art com Padrão Geométrico e Luzes */
+		body {
+			background-image:
+				radial-gradient(circle at 15% 20%, rgba(255, 42, 133, 0.25) 0%, transparent 40%),
+				radial-gradient(circle at 85% 80%, rgba(255, 230, 0, 0.18) 0%, transparent 40%),
+				radial-gradient(circle at 50% 50%, rgba(98, 22, 209, 0.45) 0%, rgba(20, 5, 43, 0.98) 100%),
+				radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+			background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			position: relative;
+		}
+
+		/* Canvas de Confete / Chuva de Merda */
+		#fxCanvas {
+			position: fixed;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: 999;
+		}
+
+		/* ================= TOPBAR ================= */
+		.topbar {
+			width: 100%;
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 14px 20px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			z-index: 20;
+			flex-wrap: wrap;
+		}
+
+		.brand-badge {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			padding: 8px 16px;
+			border-radius: var(--radius-pill);
+			border: var(--border-thick);
+			box-shadow: var(--shadow-hard-sm);
+			cursor: pointer;
+			transition: transform 0.15s ease, box-shadow 0.15s ease;
+		}
+
+		.brand-badge:hover {
+			transform: translate(-2px, -2px);
+			box-shadow: 5px 5px 0px #0f071e;
+		}
+
+		.brand-badge:active {
+			transform: translate(2px, 2px);
+			box-shadow: 1px 1px 0px #0f071e;
+		}
+
+		.brand-badge span {
+			font-family: 'Bungee', cursive;
+			font-size: 0.95rem;
+			letter-spacing: 0.5px;
+			line-height: 1;
+		}
+
+		.top-actions {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			flex-wrap: wrap;
+		}
+
+		.btn-neo {
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.9rem;
+			padding: 10px 16px;
+			border-radius: var(--radius-pill);
+			border: var(--border-thick);
+			box-shadow: var(--shadow-hard-sm);
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+			background: #ffffff;
+			color: var(--ink-black);
+			text-decoration: none;
+			white-space: nowrap;
+		}
+
+		.btn-neo:hover {
+			transform: translate(-2px, -2px);
+			box-shadow: 5px 5px 0px var(--ink-black);
+		}
+
+		.btn-neo:active {
+			transform: translate(2px, 2px);
+			box-shadow: 1px 1px 0px var(--ink-black);
+		}
+
+		.btn-neo.yellow {
+			background: var(--yellow-acid);
+		}
+
+		.btn-neo.pink {
+			background: var(--pink-shock);
+			color: #fff;
+		}
+
+		.btn-neo.cyan {
+			background: var(--cyan-electric);
+		}
+
+		.btn-neo.orange {
+			background: var(--orange-fire);
+			color: #fff;
+		}
+
+		.btn-neo.dark {
+			background: #261247;
+			color: #fff;
+		}
+
+		.btn-icon-only {
+			width: 44px;
+			height: 44px;
+			padding: 0;
+			justify-content: center;
+			font-size: 1.15rem;
+		}
+
+		.score-pill-badge {
+			background: var(--ink-black);
+			color: var(--yellow-acid);
+			border-radius: var(--radius-pill);
+			padding: 2px 8px;
+			font-size: 0.78rem;
+			font-weight: 800;
+		}
+
+		/* ================= TELAS (HOME vs JOGO) ================= */
+		.screen {
+			flex: 1;
+			display: none;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 12px 20px 24px;
+			width: 100%;
+			max-width: 1100px;
+			margin: 0 auto;
+			z-index: 10;
+		}
+
+		.screen#screenGame {
+			max-width: 1450px;
+			padding: 8px 16px 20px;
+		}
+
+		.screen.active {
+			display: flex;
+			animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		}
+
+		@keyframes popIn {
+			0% {
+				opacity: 0;
+				transform: scale(0.92) translateY(12px);
+			}
+
+			100% {
+				opacity: 1;
+				transform: scale(1) translateY(0);
+			}
+		}
+
+		/* ================= TELA INICIAL (LOBBY) ================= */
+		.hero-card {
+			background: #23094d;
+			border: var(--border-thick);
+			box-shadow: var(--shadow-hard-lg);
+			border-radius: 32px;
+			padding: 36px 28px;
+			max-width: 680px;
+			width: 100%;
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.hero-card::before {
+			content: "S.A.";
+			position: absolute;
+			top: -20px;
+			right: -10px;
+			font-family: 'Bungee', cursive;
+			font-size: 7rem;
+			color: rgba(255, 255, 255, 0.04);
+			pointer-events: none;
+			transform: rotate(12deg);
+		}
+
+		.mascot-hero {
+			width: 115px;
+			height: 115px;
+			margin: 0 auto 14px;
+			filter: drop-shadow(5px 5px 0px #0f071e);
+			animation: floatMascot 3s ease-in-out infinite;
+		}
+
+		@keyframes floatMascot {
+
+			0%,
+			100% {
+				transform: translateY(0px) rotate(-3deg);
+			}
+
+			50% {
+				transform: translateY(-8px) rotate(3deg);
+			}
+		}
+
+		.hero-tag {
+			display: inline-block;
+			background: var(--pink-shock);
+			color: #fff;
+			font-weight: 800;
+			font-size: 0.8rem;
+			text-transform: uppercase;
+			letter-spacing: 1.5px;
+			padding: 5px 14px;
+			border-radius: var(--radius-pill);
+			border: 3px solid var(--ink-black);
+			box-shadow: 3px 3px 0px var(--ink-black);
+			margin-bottom: 14px;
+			transform: rotate(-2deg);
+		}
+
+		.hero-title {
+			font-family: 'Bungee', cursive;
+			font-size: clamp(2.1rem, 6vw, 3.6rem);
+			line-height: 1.05;
+			color: var(--yellow-acid);
+			text-shadow: 4px 4px 0px var(--ink-black), -2px -2px 0px var(--ink-black), 2px -2px 0px var(--ink-black), -2px 2px 0px var(--ink-black);
+			margin-bottom: 12px;
+		}
+
+		.hero-subtitle {
+			font-size: clamp(1rem, 2.5vw, 1.2rem);
+			color: #e9d5ff;
+			max-width: 520px;
+			margin: 0 auto 26px;
+			line-height: 1.45;
+			font-weight: 500;
+		}
+
+		/* Seletor de Modo de Baralho na Home */
+		.mode-selector-label {
+			font-size: 0.82rem;
+			text-transform: uppercase;
+			letter-spacing: 1.2px;
+			color: #c4b5fd;
+			font-weight: 800;
+			margin-bottom: 10px;
+			display: block;
+		}
+
+		.mode-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 10px;
+			margin-bottom: 26px;
+		}
+
+		.mode-option {
+			background: rgba(255, 255, 255, 0.06);
+			border: 3px solid var(--ink-black);
+			border-radius: var(--radius-md);
+			padding: 12px 10px;
+			cursor: pointer;
+			transition: all 0.15s ease;
+			text-align: center;
+			color: #fff;
+		}
+
+		.mode-option:hover {
+			background: rgba(255, 255, 255, 0.14);
+			transform: translateY(-2px);
+		}
+
+		.mode-option.selected {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			transform: translate(-2px, -2px);
+		}
+
+		.mode-option .mode-emoji {
+			font-size: 1.5rem;
+			display: block;
+			margin-bottom: 4px;
+		}
+
+		.mode-option .mode-name {
+			font-weight: 800;
+			font-size: 0.88rem;
+			display: block;
+		}
+
+		.mode-option .mode-desc {
+			font-size: 0.72rem;
+			opacity: 0.85;
+			display: block;
+			margin-top: 2px;
+		}
+
+		.hero-cta-group {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 14px;
+			justify-content: center;
+		}
+
+		.btn-cta-big {
+			font-family: 'Bungee', cursive;
+			font-size: clamp(1.1rem, 3vw, 1.4rem);
+			padding: 16px 32px;
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			border: var(--border-thick);
+			border-radius: var(--radius-pill);
+			box-shadow: var(--shadow-hard);
+			cursor: pointer;
+			transition: transform 0.15s ease, box-shadow 0.15s ease;
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.btn-cta-big:hover {
+			transform: translate(-3px, -3px) scale(1.02);
+			box-shadow: 9px 9px 0px var(--ink-black);
+		}
+
+		.btn-cta-big:active {
+			transform: translate(3px, 3px);
+			box-shadow: 2px 2px 0px var(--ink-black);
+		}
+
+		/* ================= LAYOUT DO JOGO COM LATERAIS DE PARTICIPANTES ================= */
+		.game-layout {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: flex-start;
+			gap: 20px;
+			position: relative;
+		}
+
+		/* Trilhos Laterais de Participantes */
+		.side-players-rail {
+			width: 260px;
+			flex-shrink: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			position: sticky;
+			top: 14px;
+		}
+
+		.side-rail-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 4px 6px 8px;
+			border-bottom: 2px dashed rgba(255, 255, 255, 0.22);
+		}
+
+		.side-rail-title {
+			font-family: 'Bungee', cursive;
+			font-size: 0.82rem;
+			color: var(--yellow-acid);
+			letter-spacing: 0.5px;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.btn-side-add-player {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+			border: 2px solid var(--ink-black);
+			border-radius: var(--radius-pill);
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.72rem;
+			padding: 4px 10px;
+			cursor: pointer;
+			box-shadow: 2px 2px 0px var(--ink-black);
+			transition: all 0.12s ease;
+		}
+
+		.btn-side-add-player:hover {
+			background: #ffffff;
+			transform: translateY(-1px);
+			box-shadow: 3px 3px 0px var(--ink-black);
+		}
+
+		.btn-side-add-player:active {
+			transform: translate(1px, 1px);
+			box-shadow: 1px 1px 0px var(--ink-black);
+		}
+
+		.side-rail-cards {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			max-height: calc(100dvh - 140px);
+			overflow-y: auto;
+			padding-right: 2px;
+		}
+
+		/* Card de Participante na Lateral */
+		.side-player-card {
+			background: #23084d;
+			border: 3.5px solid var(--ink-black);
+			border-radius: 18px;
+			box-shadow: 4px 4px 0px var(--ink-black);
+			padding: 10px 12px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			position: relative;
+			transition: transform 0.12s ease, box-shadow 0.12s ease;
+		}
+
+		.side-player-card:hover {
+			transform: translate(-2px, -2px);
+			box-shadow: 6px 6px 0px var(--ink-black);
+		}
+
+		.side-player-card.leader-merda {
+			background: linear-gradient(135deg, #440d8f 0%, #75124f 100%);
+			border-color: var(--yellow-acid);
+			box-shadow: 4px 4px 0px #ffe600;
+		}
+
+		.side-player-card.score-bump {
+			animation: scoreBumpPop 0.28s ease-out;
+		}
+
+		@keyframes scoreBumpPop {
+			0% {
+				transform: scale(1);
+			}
+
+			50% {
+				transform: scale(1.07);
+			}
+
+			100% {
+				transform: scale(1);
+			}
+		}
+
+		.side-player-top {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+		}
+
+		.side-player-name-wrap {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			min-width: 0;
+			flex: 1;
+		}
+
+		.side-player-icon {
+			font-size: 1.15rem;
+			flex-shrink: 0;
+		}
+
+		.side-player-name {
+			font-weight: 800;
+			font-size: 0.95rem;
+			color: #fff;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.side-player-score {
+			font-family: 'Bungee', cursive;
+			font-size: 1.18rem;
+			color: var(--yellow-acid);
+			background: var(--ink-black);
+			padding: 2px 8px;
+			border-radius: 8px;
+			white-space: nowrap;
+			border: 1.5px solid rgba(255, 230, 0, 0.35);
+			line-height: 1.1;
+		}
+
+		.side-player-tag {
+			font-size: 0.68rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: var(--yellow-acid);
+			margin-top: -3px;
+		}
+
+		.side-player-actions {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.btn-side-decrement {
+			width: 32px;
+			height: 36px;
+			background: rgba(255, 255, 255, 0.12);
+			color: #ffffff;
+			border: 2px solid var(--ink-black);
+			border-radius: 10px;
+			font-weight: 800;
+			font-size: 1.1rem;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background 0.12s ease;
+		}
+
+		.btn-side-decrement:hover {
+			background: var(--pink-shock);
+		}
+
+		/* Botão de Incremento Principal nas Laterais */
+		.btn-side-increment {
+			flex: 1;
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			border: 2.5px solid var(--ink-black);
+			box-shadow: 3px 3px 0px var(--ink-black);
+			border-radius: 12px;
+			padding: 8px 10px;
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.92rem;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.12s ease;
+		}
+
+		.btn-side-increment:hover {
+			background: #ffffff;
+			transform: translateY(-2px);
+			box-shadow: 4px 4px 0px var(--ink-black);
+		}
+
+		.btn-side-increment:active {
+			transform: translate(2px, 2px);
+			box-shadow: 1px 1px 0px var(--ink-black);
+		}
+
+		.side-empty-card {
+			background: rgba(255, 255, 255, 0.05);
+			border: 2px dashed rgba(255, 255, 255, 0.22);
+			border-radius: 16px;
+			padding: 18px 12px;
+			text-align: center;
+			color: #e9d5ff;
+		}
+
+		/* ================= PALCO DO JOGO (CARTA 3D) ================= */
+		.game-stage {
+			flex: 1;
+			max-width: 520px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 18px;
+		}
+
+		/* Barra de Status do Baralho + Filtros Rápidos */
+		.deck-Hud {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			flex-wrap: wrap;
+			width: 100%;
+		}
+
+		.filter-chips {
+			display: inline-flex;
+			background: rgba(15, 7, 30, 0.65);
+			padding: 5px;
+			border-radius: var(--radius-pill);
+			border: 3px solid var(--ink-black);
+			gap: 4px;
+		}
+
+		.chip-btn {
+			border: none;
+			background: transparent;
+			color: #d8b4fe;
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.78rem;
+			padding: 6px 12px;
+			border-radius: var(--radius-pill);
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+
+		.chip-btn.active {
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			box-shadow: 2px 2px 0px var(--ink-black);
+		}
+
+		.progress-pill {
+			background: rgba(15, 7, 30, 0.75);
+			border: 3px solid var(--ink-black);
+			padding: 6px 14px;
+			border-radius: var(--radius-pill);
+			font-weight: 800;
+			font-size: 0.82rem;
+			color: var(--cyan-electric);
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		/* Container 3D da Pilha de Cartas */
+		.card-scene {
+			width: 100%;
+			max-width: 440px;
+			height: 450px;
+			perspective: 1200px;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 4px 0;
+			touch-action: pan-y;
+		}
+
+		/* Cartas de fundo para simular pilha de baralho */
+		.deck-stack-bg {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			border-radius: 28px;
+			border: var(--border-thick);
+			background: #3b0f7a;
+			pointer-events: none;
+			transition: transform 0.25s ease;
+		}
+
+		.deck-stack-bg.layer-1 {
+			transform: rotate(-3.5deg) translate(-6px, 6px);
+			background: var(--pink-shock);
+			box-shadow: var(--shadow-hard);
+		}
+
+		.deck-stack-bg.layer-2 {
+			transform: rotate(3deg) translate(6px, 8px);
+			background: var(--yellow-acid);
+			box-shadow: var(--shadow-hard);
+		}
+
+		/* Objeto Carta 3D */
+		.card-3d {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			transform-style: preserve-3d;
+			transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+			cursor: grab;
+		}
+
+		.card-3d:active {
+			cursor: grabbing;
+		}
+
+		.card-3d.is-flipped {
+			transform: rotateY(180deg);
+		}
+
+		.card-face {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			border-radius: 28px;
+			border: 5px solid var(--ink-black);
+			box-shadow: var(--shadow-hard-lg);
+			backface-visibility: hidden;
+			-webkit-backface-visibility: hidden;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 24px 24px 20px;
+			overflow: hidden;
+		}
+
+		/* Brilho Holográfico Suave */
+		.card-glare {
+			position: absolute;
+			inset: 0;
+			background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 30%), rgba(255, 255, 255, 0.28) 0%, transparent 60%);
+			pointer-events: none;
+			z-index: 5;
+		}
+
+		/* Frente da Carta (Pergunta) */
+		.card-front {
+			background: var(--card-cream);
+			color: var(--ink-black);
+		}
+
+		/* Temas Visuais por Categoria de Carta */
+		.card-front[data-cat="treta"] {
+			background: #fffdf7;
+		}
+
+		.card-front[data-cat="picante"] {
+			background: #fff0f6;
+			border-color: var(--ink-black);
+		}
+
+		.card-front[data-cat="especial"] {
+			background: #ecfeff;
+		}
+
+		.card-front[data-cat="branco"] {
+			background: #fffbeb;
+		}
+
+		/* Topo da Carta */
+		.card-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+			z-index: 2;
+			border-bottom: 3px dashed rgba(15, 7, 30, 0.15);
+			padding-bottom: 12px;
+		}
+
+		.card-cat-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-weight: 800;
+			font-size: 0.76rem;
+			text-transform: uppercase;
+			letter-spacing: 0.8px;
+			padding: 5px 12px;
+			border-radius: var(--radius-pill);
+			border: 3px solid var(--ink-black);
+			box-shadow: 2px 2px 0px var(--ink-black);
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+		}
+
+		.card-front[data-cat="picante"] .card-cat-badge {
+			background: var(--pink-shock);
+			color: #fff;
+		}
+
+		.card-front[data-cat="especial"] .card-cat-badge {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+		}
+
+		.card-front[data-cat="branco"] .card-cat-badge {
+			background: var(--orange-fire);
+			color: #fff;
+		}
+
+		.card-number-badge {
+			font-family: 'Bungee', cursive;
+			font-size: 1rem;
+			color: var(--ink-black);
+			background: rgba(15, 7, 30, 0.08);
+			padding: 4px 10px;
+			border-radius: 10px;
+			border: 2px solid var(--ink-black);
+		}
+
+		/* Corpo da Pergunta da Carta */
+		.card-body {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			padding: 12px 4px;
+			z-index: 2;
+			overflow-y: auto;
+		}
+
+		.card-question {
+			font-family: 'Space Grotesk', sans-serif;
+			font-weight: 700;
+			font-size: clamp(1.35rem, 3.7vw, 1.78rem);
+			line-height: 1.25;
+			color: var(--ink-black);
+			letter-spacing: -0.3px;
+		}
+
+		/* Input para Carta em Branco (#53) */
+		.blank-card-editor {
+			width: 100%;
+			margin-top: 14px;
+			display: none;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.blank-card-editor.visible {
+			display: flex;
+		}
+
+		.blank-card-input {
+			width: 100%;
+			padding: 10px 12px;
+			border: 3px solid var(--ink-black);
+			border-radius: 12px;
+			font-family: inherit;
+			font-size: 0.95rem;
+			font-weight: 700;
+			resize: none;
+			background: #ffffff;
+			color: var(--ink-black);
+			user-select: text;
+		}
+
+		/* Rodapé da Carta */
+		.card-footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-top: 3px dashed rgba(15, 7, 30, 0.15);
+			padding-top: 12px;
+			z-index: 2;
+			font-size: 0.78rem;
+			font-weight: 800;
+			color: rgba(15, 7, 30, 0.65);
+		}
+
+		.card-brand-mini {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			text-transform: uppercase;
+			letter-spacing: 0.6px;
+		}
+
+		.btn-timer-inline {
+			background: var(--ink-black);
+			color: var(--yellow-acid);
+			border: none;
+			padding: 6px 12px;
+			border-radius: var(--radius-pill);
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.78rem;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			transition: transform 0.12s ease, background-color 0.15s ease;
+		}
+
+		.btn-timer-inline:hover {
+			transform: scale(1.05);
+			background: #2b095c;
+		}
+
+		/* Verso da Carta (Mostrado durante o Flip 3D) */
+		.card-back {
+			background: linear-gradient(135deg, #1e063d 0%, #3d0c7a 100%);
+			color: var(--yellow-acid);
+			transform: rotateY(180deg);
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+		}
+
+		.card-back-pattern {
+			border: 4px dashed rgba(255, 230, 0, 0.35);
+			border-radius: 20px;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 12px;
+			padding: 20px;
+		}
+
+		.card-back-title {
+			font-family: 'Bungee', cursive;
+			font-size: 1.8rem;
+			line-height: 1.1;
+			color: var(--yellow-acid);
+			text-shadow: 3px 3px 0px var(--ink-black);
+		}
+
+		/* ================= BARRA DE AÇÕES ABAIXO DA CARTA ================= */
+		.stage-controls {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 12px;
+			width: 100%;
+			max-width: 480px;
+		}
+
+		.btn-draw-main {
+			flex: 1;
+			font-family: 'Bungee', cursive;
+			font-size: clamp(1rem, 2.8vw, 1.22rem);
+			padding: 15px 22px;
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			border: var(--border-thick);
+			border-radius: var(--radius-pill);
+			box-shadow: var(--shadow-hard);
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			transition: transform 0.12s ease, box-shadow 0.12s ease;
+		}
+
+		.btn-draw-main:hover {
+			transform: translate(-2px, -2px);
+			box-shadow: 8px 8px 0px var(--ink-black);
+		}
+
+		.btn-draw-main:active {
+			transform: translate(2px, 2px);
+			box-shadow: 2px 2px 0px var(--ink-black);
+		}
+
+		/* Barra Rápida de Pontuação dos Jogadores (se houver jogadores no placar) */
+		.quick-vote-bar {
+			width: 100%;
+			max-width: 540px;
+			background: rgba(15, 7, 30, 0.72);
+			border: 3px solid var(--ink-black);
+			border-radius: 18px;
+			padding: 10px 14px;
+			display: none;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.quick-vote-bar.visible {
+			display: flex;
+		}
+
+		.quick-vote-title {
+			font-size: 0.75rem;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			color: #e9d5ff;
+			font-weight: 800;
+		}
+
+		.quick-vote-chips {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 8px;
+		}
+
+		.vote-chip {
+			background: #2b095c;
+			color: #fff;
+			border: 2.5px solid var(--ink-black);
+			box-shadow: 2px 2px 0px var(--ink-black);
+			border-radius: var(--radius-pill);
+			padding: 5px 12px;
+			font-size: 0.82rem;
+			font-weight: 800;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			transition: all 0.12s ease;
+		}
+
+		.vote-chip:hover {
+			background: var(--pink-shock);
+			transform: translateY(-2px);
+		}
+
+		.vote-chip:active {
+			transform: scale(0.95);
+		}
+
+		.vote-chip .pts {
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			padding: 1px 6px;
+			border-radius: 99px;
+			font-size: 0.72rem;
+		}
+
+		/* Dica de Atalhos Rodapé */
+		.keyboard-hint {
+			font-size: 0.76rem;
+			color: rgba(233, 213, 255, 0.65);
+			text-align: center;
+			padding-bottom: 10px;
+			z-index: 10;
+		}
+
+		.keyboard-hint kbd {
+			background: rgba(255, 255, 255, 0.12);
+			border: 1px solid rgba(255, 255, 255, 0.25);
+			border-radius: 6px;
+			padding: 2px 6px;
+			font-family: inherit;
+			font-weight: 700;
+			color: var(--yellow-acid);
+		}
+
+		/* ================= OVERLAY DE CONTAGEM REGRESSIVA (3, 2, 1... APONTEM!) ================= */
+		.countdown-overlay {
+			position: fixed;
+			inset: 0;
+			background: rgba(15, 7, 30, 0.88);
+			backdrop-filter: blur(6px);
+			z-index: 500;
+			display: none;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			padding: 20px;
+		}
+
+		.countdown-overlay.active {
+			display: flex;
+		}
+
+		.countdown-number {
+			font-family: 'Bungee', cursive;
+			font-size: clamp(5rem, 20vw, 10rem);
+			color: var(--yellow-acid);
+			text-shadow: 8px 8px 0px var(--ink-black), 0 0 40px rgba(255, 230, 0, 0.5);
+			animation: pulseCount 0.85s ease-out infinite;
+			line-height: 1;
+		}
+
+		.countdown-sub {
+			font-family: 'Space Grotesk', sans-serif;
+			font-size: clamp(1.3rem, 4vw, 2rem);
+			font-weight: 700;
+			color: #ffffff;
+			margin-top: 16px;
+		}
+
+		@keyframes pulseCount {
+			0% {
+				transform: scale(0.6);
+				opacity: 0.3;
+			}
+
+			50% {
+				transform: scale(1.12);
+				opacity: 1;
+			}
+
+			100% {
+				transform: scale(1);
+				opacity: 1;
+			}
+		}
+
+		/* ================= GAVETA FLUTUANTE: PLACAR / CONTADOR DE MERDA ================= */
+		.drawer-backdrop {
+			position: fixed;
+			inset: 0;
+			background: rgba(10, 3, 22, 0.65);
+			backdrop-filter: blur(3px);
+			z-index: 200;
+			opacity: 0;
+			pointer-events: none;
+			transition: opacity 0.25s ease;
+		}
+
+		.drawer-backdrop.open {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.score-drawer {
+			position: fixed;
+			top: 0;
+			right: 0;
+			width: 100%;
+			max-width: 400px;
+			height: 100dvh;
+			background: #1f0842;
+			border-left: var(--border-thick);
+			box-shadow: -8px 0px 0px var(--ink-black);
+			z-index: 210;
+			transform: translateX(105%);
+			transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+			display: flex;
+			flex-direction: column;
+			padding: 20px;
+		}
+
+		.score-drawer.open {
+			transform: translateX(0);
+		}
+
+		.drawer-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-bottom: 3px dashed rgba(255, 255, 255, 0.15);
+			padding-bottom: 14px;
+			margin-bottom: 16px;
+		}
+
+		.drawer-title {
+			font-family: 'Bungee', cursive;
+			font-size: 1.25rem;
+			color: var(--yellow-acid);
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.add-player-form {
+			display: flex;
+			gap: 8px;
+			margin-bottom: 16px;
+		}
+
+		.input-neo {
+			flex: 1;
+			background: #ffffff;
+			color: var(--ink-black);
+			border: 3px solid var(--ink-black);
+			border-radius: 14px;
+			padding: 10px 14px;
+			font-family: inherit;
+			font-size: 0.95rem;
+			font-weight: 700;
+			outline: none;
+			user-select: text;
+		}
+
+		.input-neo:focus {
+			box-shadow: 0 0 0 3px var(--yellow-acid);
+		}
+
+		.player-list {
+			flex: 1;
+			overflow-y: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			padding-right: 4px;
+		}
+
+		.empty-players {
+			text-align: center;
+			padding: 32px 16px;
+			color: #c4b5fd;
+			font-size: 0.92rem;
+			line-height: 1.5;
+			background: rgba(255, 255, 255, 0.04);
+			border-radius: 16px;
+			border: 2px dashed rgba(255, 255, 255, 0.18);
+		}
+
+		.player-row {
+			background: #2f0d63;
+			border: 3px solid var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			border-radius: 16px;
+			padding: 10px 12px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+			transition: transform 0.15s ease;
+		}
+
+		.player-row.leader-merda {
+			background: linear-gradient(90deg, #4c119e 0%, #6b1452 100%);
+			border-color: var(--yellow-acid);
+		}
+
+		.player-info {
+			display: flex;
+			flex-direction: column;
+			min-width: 0;
+			flex: 1;
+		}
+
+		.player-name {
+			font-weight: 800;
+			font-size: 0.98rem;
+			color: #fff;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.player-status-tag {
+			font-size: 0.7rem;
+			font-weight: 800;
+			color: var(--yellow-acid);
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.player-controls {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.btn-score-step {
+			width: 34px;
+			height: 34px;
+			border-radius: 10px;
+			border: 2.5px solid var(--ink-black);
+			box-shadow: 2px 2px 0px var(--ink-black);
+			font-weight: 800;
+			font-size: 1.1rem;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: #fff;
+			color: var(--ink-black);
+		}
+
+		.btn-score-step.plus {
+			background: var(--yellow-acid);
+		}
+
+		.btn-score-step.remove {
+			background: transparent;
+			border-color: transparent;
+			box-shadow: none;
+			color: rgba(255, 255, 255, 0.45);
+			font-size: 0.95rem;
+			width: 26px;
+		}
+
+		.btn-score-step.remove:hover {
+			color: var(--pink-shock);
+		}
+
+		.player-score-val {
+			font-family: 'Bungee', cursive;
+			font-size: 1.15rem;
+			min-width: 32px;
+			text-align: center;
+			color: #fff;
+		}
+
+		.drawer-footer {
+			border-top: 3px dashed rgba(255, 255, 255, 0.15);
+			padding-top: 14px;
+			margin-top: 14px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		/* ================= MODAIS (REGRAS, CRIAR CARTA, FIM DE JOGO) ================= */
+		.modal-overlay {
+			position: fixed;
+			inset: 0;
+			background: rgba(10, 3, 22, 0.8);
+			backdrop-filter: blur(5px);
+			z-index: 300;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+		}
+
+		.modal-overlay.open {
+			display: flex;
+			animation: popIn 0.25s ease-out;
+		}
+
+		.modal-box {
+			background: #23094d;
+			border: var(--border-thick);
+			box-shadow: var(--shadow-hard-lg);
+			border-radius: 28px;
+			padding: 28px 24px;
+			max-width: 520px;
+			width: 100%;
+			max-height: 90dvh;
+			overflow-y: auto;
+			color: #fff;
+		}
+
+		.modal-title {
+			font-family: 'Bungee', cursive;
+			font-size: 1.5rem;
+			color: var(--yellow-acid);
+			margin-bottom: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.rules-steps {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			margin-bottom: 20px;
+		}
+
+		.rule-item {
+			background: rgba(255, 255, 255, 0.06);
+			border: 2.5px solid var(--ink-black);
+			border-radius: 16px;
+			padding: 12px 14px;
+			display: flex;
+			gap: 12px;
+			align-items: flex-start;
+		}
+
+		.rule-num {
+			font-family: 'Bungee', cursive;
+			background: var(--pink-shock);
+			color: #fff;
+			width: 32px;
+			height: 32px;
+			border-radius: 10px;
+			border: 2px solid var(--ink-black);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+			font-size: 0.9rem;
+		}
+
+		.rule-text {
+			font-size: 0.92rem;
+			line-height: 1.45;
+			color: #f3e8ff;
+		}
+
+		/* ================= MOTION POLISH (fluidez e suavidade) ================= */
+		:root {
+			--ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+			--ease-out-expo: cubic-bezier(.16, 1, .3, 1);
+			--ease-smooth: cubic-bezier(.22, 1, .36, 1);
+		}
+
+		/* Micro-interações com mola em todos os botões e cards clicáveis */
+		.btn-neo,
+		.btn-draw-main,
+		.btn-cta-big,
+		.brand-badge,
+		.vote-chip,
+		.btn-side-increment,
+		.btn-side-decrement,
+		.btn-side-add-player,
+		.btn-score-step,
+		.btn-timer-inline,
+		.chip-btn,
+		.mode-option,
+		.side-player-card {
+			transition:
+				transform .28s var(--ease-spring),
+				box-shadow .28s var(--ease-smooth),
+				background-color .25s ease,
+				color .25s ease,
+				border-color .25s ease;
+		}
+
+		/* Ao pressionar: resposta instantânea */
+		.btn-neo:active,
+		.btn-draw-main:active,
+		.btn-cta-big:active,
+		.brand-badge:active,
+		.vote-chip:active,
+		.btn-side-increment:active,
+		.btn-side-decrement:active,
+		.btn-side-add-player:active,
+		.btn-score-step:active,
+		.btn-timer-inline:active,
+		.chip-btn:active,
+		.mode-option:active {
+			transition-duration: .08s;
+		}
+
+		/* Camada de tilt/arrasto (física via requestAnimationFrame) separada da camada de flip (Web Animations) */
+		.card-tilt {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			transform-style: preserve-3d;
+			will-change: transform;
+		}
+
+		.card-3d {
+			transition: none;
+			will-change: transform, opacity;
+		}
+
+		.card-scene {
+			user-select: none;
+			-webkit-user-select: none;
+		}
+
+		/* Baralho de fundo se abre levemente ao passar o mouse */
+		.deck-stack-bg {
+			transition: transform .5s var(--ease-spring);
+		}
+
+		.card-scene:hover .deck-stack-bg.layer-1 {
+			transform: rotate(-5.5deg) translate(-14px, 8px);
+		}
+
+		.card-scene:hover .deck-stack-bg.layer-2 {
+			transform: rotate(5deg) translate(14px, 10px);
+		}
+
+		/* Transição entre telas sem "quique" exagerado */
+		.screen.active {
+			animation: screenIn .6s var(--ease-out-expo) both;
+		}
+
+		@keyframes screenIn {
+			from {
+				opacity: 0;
+				transform: translateY(22px) scale(.985);
+			}
+
+			to {
+				opacity: 1;
+				transform: none;
+			}
+		}
+
+		/* Gaveta do placar com curva estilo iOS */
+		.score-drawer {
+			transition: transform .55s var(--ease-out-expo);
+			will-change: transform;
+		}
+
+		.drawer-backdrop {
+			transition: opacity .4s ease;
+		}
+
+		/* Modais: entram E saem suavemente (antes sumiam de uma vez) */
+		.modal-overlay {
+			display: flex;
+			opacity: 0;
+			visibility: hidden;
+			pointer-events: none;
+			transition: opacity .3s ease, visibility 0s linear .3s;
+		}
+
+		.modal-overlay.open {
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+			animation: none;
+			transition: opacity .3s ease, visibility 0s;
+		}
+
+		.modal-overlay .modal-box {
+			transform: translateY(36px) scale(.94);
+			transition: transform .5s var(--ease-spring);
+		}
+
+		.modal-overlay.open .modal-box {
+			transform: none;
+		}
+
+		/* Contagem regressiva: overlay com fade e números sincronizados via JS */
+		.countdown-overlay {
+			display: flex;
+			opacity: 0;
+			visibility: hidden;
+			pointer-events: none;
+			transition: opacity .28s ease, visibility 0s linear .28s;
+		}
+
+		.countdown-overlay.active {
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+			transition: opacity .28s ease, visibility 0s;
+		}
+
+		.countdown-number {
+			animation: none;
+			will-change: transform, opacity;
+		}
+
+		/* "+1 💩" flutuante */
+		.float-pop {
+			position: fixed;
+			left: 0;
+			top: 0;
+			pointer-events: none;
+			z-index: 1000;
+			font-family: 'Bungee', cursive;
+			font-size: 1.35rem;
+			color: var(--yellow-acid);
+			white-space: nowrap;
+			text-shadow: 3px 3px 0 var(--ink-black), -1.5px -1.5px 0 var(--ink-black), 1.5px -1.5px 0 var(--ink-black), -1.5px 1.5px 0 var(--ink-black);
+			will-change: transform, opacity;
+		}
+
+		.float-pop.neg {
+			color: var(--pink-shock);
+		}
+
+		/* Acessibilidade: respeita quem prefere menos movimento */
+		@media (prefers-reduced-motion: reduce) {
+
+			*,
+			*::before,
+			*::after {
+				animation-duration: .01ms !important;
+				animation-iteration-count: 1 !important;
+				transition-duration: .01ms !important;
+			}
+		}
+
+		/* Responsividade das Laterais e Mobile */
+		@media (max-width: 950px) {
+			.game-layout {
+				flex-direction: column;
+				align-items: center;
+				gap: 16px;
+			}
+
+			.side-players-rail {
+				width: 100%;
+				max-width: 500px;
+				position: static;
+			}
+
+			.side-rail-cards {
+				max-height: none;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+				gap: 10px;
+			}
+		}
+
+		/* Responsividade Mobile */
+		@media (max-width: 640px) {
+			.topbar {
+				padding: 10px 14px;
+			}
+
+			.brand-badge span {
+				font-size: 0.82rem;
+			}
+
+			.btn-neo {
+				padding: 8px 12px;
+				font-size: 0.8rem;
+			}
+
+			.mode-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.card-scene {
+				height: 390px;
+				max-width: 94vw;
+			}
+
+			.hero-card {
+				padding: 24px 18px;
+			}
+
+			.keyboard-hint {
+				display: none;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- Canvas para chuva de emojis e confete -->
+	<canvas id="fxCanvas"></canvas>
+
+	<!-- ================= BARRA SUPERIOR ================= -->
+	<header class="topbar">
+		<div class="brand-badge" id="btnHomeLogo" title="Voltar ao Início">
+			<span style="font-size: 1.25rem;">💩</span>
+			<span>AMIGOS DE MERDA</span>
+		</div>
+
+		<div class="top-actions">
+			<button class="btn-neo cyan" id="btnOpenCustomModal" title="Criar nova carta personalizada">
+				✏️ +Carta
+			</button>
+			<button class="btn-neo white" id="btnOpenRules" title="Ver regras do jogo">
+				📜 Regras
+			</button>
+			<button class="btn-neo yellow" id="btnOpenScore" title="Abrir Contador de Pontos">
+				💩 Placar <span class="score-pill-badge" id="topScoreBadge">0</span>
+			</button>
+			<button class="btn-neo dark btn-icon-only" id="btnToggleSound" title="Ativar/Desativar Sons">
+				🔊
+			</button>
+		</div>
+	</header>
+
+	<!-- ================= TELA 1: INÍCIO / LOBBY ================= -->
+	<main class="screen active" id="screenHome">
+		<div class="hero-card">
+			<!-- Mascote SVG Exclusivo Pop-Art -->
+			<div class="mascot-hero">
+				<svg viewBox="0 0 120 120" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+					<!-- Coroa -->
+					<polygon points="35,28 48,10 60,24 72,10 85,28" fill="#ffe600" stroke="#0f071e" stroke-width="4"
+						stroke-linejoin="round" />
+					<!-- Corpo do Mascote -->
+					<path
+						d="M60 24 C42 24 38 38 45 44 C28 44 24 62 34 68 C16 70 14 96 34 100 L86 100 C106 96 104 70 86 68 C96 62 92 44 75 44 C82 38 78 24 60 24 Z"
+						fill="#8b4513" stroke="#0f071e" stroke-width="5" stroke-linejoin="round" />
+					<!-- Brilho Cartoon -->
+					<path d="M46 36 C42 40 42 44 45 46" stroke="#c67d43" stroke-width="3.5" stroke-linecap="round"
+						fill="none" />
+					<!-- Óculos Escuros Debochados -->
+					<rect x="32" y="52" width="24" height="15" rx="4" fill="#0f071e" />
+					<rect x="64" y="52" width="24" height="15" rx="4" fill="#0f071e" />
+					<line x1="56" y1="57" x2="64" y2="57" stroke="#0f071e" stroke-width="4" />
+					<line x1="36" y1="56" x2="44" y2="62" stroke="#00f5d4" stroke-width="2.5" stroke-linecap="round" />
+					<line x1="68" y1="56" x2="76" y2="62" stroke="#00f5d4" stroke-width="2.5" stroke-linecap="round" />
+					<!-- Sorriso Sarcástico -->
+					<path d="M44 78 Q60 90 78 76" fill="#ffffff" stroke="#0f071e" stroke-width="4"
+						stroke-linejoin="round" />
+				</svg>
+			</div>
+
+			<span class="hero-tag">Edição Digital S.A. • 116+ Cartas</span>
+			<h1 class="hero-title">PRONTOS PARA SE OFENDEREM?</h1>
+			<p class="hero-subtitle">
+				Leia a carta em voz alta, conte <strong>3 segundos</strong> e aponte o dedo para o amigo que mais
+				combina com a frase. Quem acumular mais pontos é coroado o <strong>Amigo de Merda</strong>!
+			</p>
+
+			<span class="mode-selector-label">Escolha o Modo do Baralho:</span>
+			<div class="mode-grid" id="homeModeGrid">
+				<div class="mode-option selected" data-mode="all">
+					<span class="mode-emoji">🎲</span>
+					<span class="mode-name">Tudo Misturado</span>
+					<span class="mode-desc">Todas as 116 cartas sem censura</span>
+				</div>
+				<div class="mode-option" data-mode="clean">
+					<span class="mode-emoji">😇</span>
+					<span class="mode-name">Sem +18</span>
+					<span class="mode-desc">Só tretas e caos (sem sexo)</span>
+				</div>
+				<div class="mode-option" data-mode="spicy">
+					<span class="mode-emoji">🔥</span>
+					<span class="mode-name">Só Proibidão +18</span>
+					<span class="mode-desc">Apenas as cartas mais pesadas</span>
+				</div>
+			</div>
+
+			<div class="hero-cta-group">
+				<button class="btn-cta-big" id="btnStartGame">
+					<span>COMEÇAR O JOGO</span>
+					<span>👉</span>
+				</button>
+			</div>
+		</div>
+	</main>
+
+	<!-- ================= TELA 2: MESA DE JOGO ================= -->
+	<main class="screen" id="screenGame">
+		<div class="game-layout">
+
+			<!-- Trilho Lateral Esquerdo de Participantes -->
+			<aside class="side-players-rail side-left" id="railPlayersLeft"
+				aria-label="Participantes do Jogo - Lado Esquerdo">
+				<div class="side-rail-header">
+					<span class="side-rail-title">👈 PARTICIPANTES</span>
+					<button class="btn-side-add-player" id="btnAddPlayerLeft" title="Adicionar novo amigo à partida">+
+						Amigo</button>
+				</div>
+				<div class="side-rail-cards" id="cardsPlayersLeft">
+					<!-- Injetado via JavaScript -->
+				</div>
+			</aside>
+
+			<!-- Palco Central (CARTA 3D & CONTROLES) -->
+			<div class="game-stage">
+
+				<!-- HUD Superior: Filtro de Modo e Progresso -->
+				<div class="deck-Hud">
+					<div class="filter-chips" id="gameFilterChips">
+						<button class="chip-btn active" data-mode="all">🎲 Tudo</button>
+						<button class="chip-btn" data-mode="clean">😇 Sem +18</button>
+						<button class="chip-btn" data-mode="spicy">🔥 Só +18</button>
+					</div>
+
+					<div class="progress-pill">
+						<span id="deckCounterText">Carta 1 / 116</span>
+						<button id="btnResetDeck" title="Reembaralhar tudo do zero"
+							style="background:none;border:none;color:var(--yellow-acid);cursor:pointer;font-weight:800;font-size:0.85rem;">🔄</button>
+					</div>
+				</div>
+
+				<!-- Cena da Carta 3D -->
+				<div class="card-scene" id="cardScene">
+					<div class="deck-stack-bg layer-1"></div>
+					<div class="deck-stack-bg layer-2"></div>
+
+					<div class="card-tilt" id="cardTilt">
+						<div class="card-3d" id="card3d">
+							<!-- FRENTE DA CARTA -->
+							<div class="card-face card-front" id="cardFront" data-cat="treta">
+								<div class="card-glare" id="cardGlare"></div>
+
+								<div class="card-header">
+									<span class="card-cat-badge" id="cardCatBadge">💩 TRETA CLÁSSICA</span>
+									<span class="card-number-badge" id="cardNumberBadge">#001</span>
+								</div>
+
+								<div class="card-body">
+									<p class="card-question" id="cardQuestionText">
+										Prepare o dedo...
+									</p>
+
+									<!-- Editor ao vivo caso caia a Carta #53 (Carta em Branco) -->
+									<div class="blank-card-editor" id="blankCardEditor">
+										<textarea class="blank-card-input" id="blankCardInput" rows="2"
+											placeholder="Digite aqui a pergunta que você inventou..."></textarea>
+										<button class="btn-neo yellow" id="btnApplyBlankCard"
+											style="justify-content:center;padding:6px 12px;font-size:0.8rem;">
+											✨ Exibir na Carta e Salvar
+										</button>
+									</div>
+								</div>
+
+								<div class="card-footer">
+									<div class="card-brand-mini">
+										<span>💩 AMIGOS DE MERDA S.A.</span>
+									</div>
+									<button class="btn-timer-inline" id="btnTriggerCountdown"
+										title="Contagem regressiva de 3 segundos para apontar!">
+										⏱️ Contar 3s e Apontar!
+									</button>
+								</div>
+							</div>
+
+							<!-- VERSO DA CARTA (Visível no giro 3D) -->
+							<div class="card-face card-back">
+								<div class="card-back-pattern">
+									<div style="font-size: 3.4rem;">💩</div>
+									<div class="card-back-title">AMIGOS<br>DE MERDA</div>
+									<span
+										style="font-size:0.75rem;letter-spacing:2px;color:#fff;opacity:0.8;font-weight:800;">SOCIEDADE
+										ANÔNIMA</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Controles Principais de Navegação do Baralho -->
+				<div class="stage-controls">
+					<button class="btn-neo dark btn-icon-only" id="btnPrevCard"
+						title="Voltar para a carta anterior (Seta Esquerda)">
+						⏮️
+					</button>
+					<button class="btn-draw-main" id="btnNextCard">
+						<span>PRÓXIMA CARTA</span>
+						<span>🎲</span>
+					</button>
+					<button class="btn-neo pink btn-icon-only" id="btnRandomReaction"
+						title="Soltar Chuva de Merda na tela!">
+						🎉
+					</button>
+				</div>
+
+				<!-- Barra Rápida de Votação (aparece automaticamente se houver jogadores no placar) -->
+				<div class="quick-vote-bar" id="quickVoteBar">
+					<span class="quick-vote-title">👉 Quem levou mais dedos apontados? (+1 ponto):</span>
+					<div class="quick-vote-chips" id="quickVoteChips"></div>
+				</div>
+
+			</div>
+
+			<!-- Trilho Lateral Direito de Participantes -->
+			<aside class="side-players-rail side-right" id="railPlayersRight"
+				aria-label="Participantes do Jogo - Lado Direito">
+				<div class="side-rail-header">
+					<span class="side-rail-title">PARTICIPANTES 👉</span>
+					<button class="btn-side-add-player" id="btnAddPlayerRight" title="Adicionar novo amigo à partida">+
+						Amigo</button>
+				</div>
+				<div class="side-rail-cards" id="cardsPlayersRight">
+					<!-- Injetado via JavaScript -->
+				</div>
+			</aside>
+
+		</div>
+	</main>
+
+	<div class="keyboard-hint">
+		Dica: Use <kbd>Espaço</kbd> ou <kbd>➔</kbd> para próxima carta • <kbd>⬅</kbd> para anterior • <kbd>T</kbd> para
+		contagem de 3s • <kbd>P</kbd> para abrir o Placar
+	</div>
+
+	<!-- ================= OVERLAY: CONTAGEM 3, 2, 1... APONTEM! ================= -->
+	<div class="countdown-overlay" id="countdownOverlay">
+		<div class="countdown-number" id="countdownValue">3</div>
+		<div class="countdown-sub" id="countdownLabel">Pensem rápido...</div>
+	</div>
+
+	<!-- ================= GAVETA FLUTUANTE: CONTADOR DE PONTOS ================= -->
+	<div class="drawer-backdrop" id="drawerBackdrop"></div>
+	<aside class="score-drawer" id="scoreDrawer" aria-label="Placar de Jogadores">
+		<div class="drawer-header">
+			<div class="drawer-title">
+				<span>💩</span>
+				<span>CONTADOR DE MERDA</span>
+			</div>
+			<button class="btn-neo dark btn-icon-only" id="btnCloseScore" style="width:36px;height:36px;">✕</button>
+		</div>
+
+		<form class="add-player-form" id="addPlayerForm">
+			<input type="text" class="input-neo" id="playerNameInput" placeholder="Nome do amigo(a)..." maxlength="22"
+				autocomplete="off">
+			<button type="submit" class="btn-neo yellow">+ Adicionar</button>
+		</form>
+
+		<div class="player-list" id="playerListContainer">
+			<!-- Renderizado via JS -->
+		</div>
+
+		<div class="drawer-footer">
+			<button class="btn-neo pink" id="btnCrownWinner" style="justify-content:center;width:100%;">
+				👑 Encerrar e Coroar o Amigo de Merda
+			</button>
+			<div style="display:flex;gap:8px;">
+				<button class="btn-neo dark" id="btnResetScores"
+					style="flex:1;justify-content:center;font-size:0.78rem;">
+					Zerar Pontos
+				</button>
+				<button class="btn-neo dark" id="btnClearPlayers"
+					style="flex:1;justify-content:center;font-size:0.78rem;">
+					Limpar Nomes
+				</button>
+			</div>
+		</div>
+	</aside>
+
+	<!-- ================= MODAL: REGRAS DO JOGO ================= -->
+	<div class="modal-overlay" id="modalRules">
+		<div class="modal-box">
+			<div class="modal-title">
+				<span>📜 REGRAS DA DISCÓRDIA</span>
+				<button class="btn-neo dark btn-icon-only" id="btnCloseRules" style="width:36px;height:36px;">✕</button>
+			</div>
+			<div class="rules-steps">
+				<div class="rule-item">
+					<div class="rule-num">1</div>
+					<div class="rule-text">
+						<strong>Preparem o Placar:</strong> Abra o botão <strong>"💩 Placar"</strong> no topo e adicione
+						o nome da galera da roda (ou joguem direto só tirando as cartas!).
+					</div>
+				</div>
+				<div class="rule-item">
+					<div class="rule-num">2</div>
+					<div class="rule-text">
+						<strong>Leitura Dramática:</strong> A cada rodada, um jogador sorteia e lê a carta em voz alta
+						para todo mundo.
+					</div>
+				</div>
+				<div class="rule-item">
+					<div class="rule-num">3</div>
+					<div class="rule-text">
+						<strong>3 Segundos e APONTEM!</strong> Pensem por 3 segundos (você pode clicar em <em>"⏱️ Contar
+							3s"</em> na carta) e, ao mesmo tempo, todos apontam o dedo para o amigo que mais combina com
+						a frase!
+					</div>
+				</div>
+				<div class="rule-item">
+					<div class="rule-num">4</div>
+					<div class="rule-text">
+						<strong>Pontuação e Coroação:</strong> A pessoa com mais dedos apontados ganha <strong>+1
+							ponto</strong>. No fim (ou ao bater 5 pontos), quem tiver <strong>menos pontos</strong> é a
+						alma pura vencedora 😇, e quem tiver <strong>mais pontos</strong> é oficialmente o nosso
+						<strong>AMIGO DE MERDA! 💩👑</strong>
+					</div>
+				</div>
+			</div>
+			<button class="btn-neo yellow" id="btnGotItRules" style="width:100%;justify-content:center;">
+				Bora causar discórdia! 🔥
+			</button>
+		</div>
+	</div>
+
+	<!-- ================= MODAL: CRIAR CARTA PERSONALIZADA ================= -->
+	<div class="modal-overlay" id="modalCustomCard">
+		<div class="modal-box">
+			<div class="modal-title">
+				<span>✏️ CRIAR CARTA DA RODA</span>
+				<button class="btn-neo dark btn-icon-only" id="btnCloseCustomModal"
+					style="width:36px;height:36px;">✕</button>
+			</div>
+			<p style="font-size:0.9rem;color:#e9d5ff;margin-bottom:14px;line-height:1.4;">
+				Quer mandar uma indireta bem específica pro seu grupo? Crie uma carta personalizada! Ela entra no
+				baralho desta sessão e fica salva no seu navegador.
+			</p>
+			<form id="customCardForm" style="display:flex;flex-direction:column;gap:12px;">
+				<textarea class="input-neo" id="customCardInput" rows="3"
+					placeholder="Ex: Quem da roda finge que está trabalhando mas está dormindo?" maxlength="220"
+					required></textarea>
+				<div style="display:flex;gap:10px;align-items:center;">
+					<label style="font-size:0.85rem;font-weight:800;">Categoria:</label>
+					<select class="input-neo" id="customCardCategory" style="padding:8px 12px;">
+						<option value="treta">💩 Treta Clássica</option>
+						<option value="picante">🔥 Proibidão +18</option>
+						<option value="especial">⚡ Desafio Especial</option>
+					</select>
+				</div>
+				<div style="display:flex;gap:10px;margin-top:6px;">
+					<button type="submit" class="btn-neo yellow" style="flex:1;justify-content:center;">
+						✨ Salvar e Jogar Carta Agora
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- ================= MODAL: PÓDIO / COROAÇÃO FINAL ================= -->
+	<div class="modal-overlay" id="modalWinner">
+		<div class="modal-box" style="text-align:center;">
+			<div class="modal-title" style="justify-content:center;">
+				<span>👑 RESULTADO OFICIAL</span>
+			</div>
+			<div id="winnerModalContent" style="margin: 16px 0 22px;">
+				<!-- Preenchido via JS -->
+			</div>
+			<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+				<button class="btn-neo yellow" id="btnContinuePlaying">Continuar Jogando</button>
+				<button class="btn-neo pink" id="btnNewMatchModal">Nova Partida (Zerar Pontos)</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		/* ==========================================================================
+		   1. BASE DE DADOS DAS 116 CARTAS ORIGINAIS (Categorizadas e Revisadas)
+		   ========================================================================== */
+		const BASE_CARDS = [
+			{ id: 1, cat: "treta", text: "Cada um de nós é responsável por uma equipe. Quem maltrata mais os funcionários?" },
+			{ id: 2, cat: "treta", text: "Quem convidaria um ex para tomar um café e mentiria descaradamente sobre sua vida atual?" },
+			{ id: 3, cat: "treta", text: "Quem tem mais chance de ser preso por um crime que não cometeu?" },
+			{ id: 4, cat: "treta", text: "Acordamos em uma ilha deserta e sem nenhum alimento. Quem irá propor canibalismo?" },
+			{ id: 5, cat: "treta", text: "Qual de nós você não escolheria para adotar o seu filho?" },
+			{ id: 6, cat: "treta", text: "Somos protagonistas de um filme de suspense. No final, quem é o assassino?" },
+			{ id: 7, cat: "treta", text: "Fui assassinado! Quem me matou?" },
+			{ id: 8, cat: "treta", text: "Precisamos de alguém para comandar as nossas tropas, por favor, que não seja..." },
+			{ id: 9, cat: "picante", text: "Quem gostaria de organizar uma orgia entre nós agora mesmo?" },
+			{ id: 10, cat: "picante", text: "Quem jamais participaria de uma orgia?" },
+			{ id: 11, cat: "treta", text: "Somos todos cúmplices de um crime e estão nos interrogando. Quem é o primeiro a confessar?" },
+			{ id: 12, cat: "treta", text: "Ganhamos mil dólares pra cada colher de merda que comemos. Quem está disposto a ser mais rico?" },
+			{ id: 13, cat: "treta", text: "Viajamos pra Las Vegas, quem volta casado?" },
+			{ id: 14, cat: "treta", text: "Somos os biólogos mais inteligentes do planeta. Quem inventa um vírus pra vender a cura?" },
+			{ id: 15, cat: "picante", text: "Estamos na prisão. Quem é o primeiro a se prostituir em troca de proteção?" },
+			{ id: 16, cat: "treta", text: "Um de nós finge estar de boa, mas está secretamente ressentido pelo resultado de uma carta. Quem?" },
+			{ id: 17, cat: "treta", text: "Quem peidou?" },
+			{ id: 18, cat: "treta", text: "Se todos nós decidirmos virar comediantes, quem é o primeiro a morrer de fome?" },
+			{ id: 19, cat: "treta", text: "Todos temos medo quando o motorista da vez é..." },
+			{ id: 20, cat: "treta", text: "Um de nós tem (ou teria) uma coleção de chicletes mastigados pelo ex. Quem?" },
+			{ id: 21, cat: "treta", text: "Todos temos nossos momentos, mas um de nós é realmente imaturo pra sua idade. Quem?" },
+			{ id: 22, cat: "treta", text: "Um de nós irá morrer sendo vítima de um acerto de contas. Quem?" },
+			{ id: 23, cat: "treta", text: "Estamos todos em quarentena, contaminados por algo incurável. Quem irá escapar e gerar uma epidemia?" },
+			{ id: 24, cat: "treta", text: "Qual de nós você jamais se atreveria a deixar irritado de verdade?" },
+			{ id: 25, cat: "treta", text: "Um de nós está envelhecendo pior que os outros. Quem?" },
+			{ id: 26, cat: "treta", text: "A partir desse ano, irão entregar um Nobel pela falta de higiene pessoal. Quem facilmente seria premiado?" },
+			{ id: 27, cat: "treta", text: "Escalando o monte Everest nós encontramos o Pé Grande. Pra nossa surpresa, ele é muito parecido com..." },
+			{ id: 28, cat: "treta", text: "Quem jamais você iria querer como chefe?" },
+			{ id: 29, cat: "picante", text: "ESCÂNDALO! Vazaram uma foto de uma orgia de octogenários e um de nós estava lá. Quem?" },
+			{ id: 30, cat: "treta", text: "Um de nós pagaria mico em público e envergonharia todo mundo. Quem?" },
+			{ id: 31, cat: "treta", text: "Ganhamos na loteria e dividimos o prêmio entre todos nós. Quem é o primeiro a gastar toda a sua parte?" },
+			{ id: 32, cat: "treta", text: "Acabamos de descobrir um BAITA segredo. Quem é o primeiro a contá-lo?" },
+			{ id: 33, cat: "treta", text: "Estamos participando de um reality show de talentos. Quem é eliminado no primeiro capítulo?" },
+			{ id: 34, cat: "treta", text: "O serviço militar agora é obrigatório para todos e todas. Quem é o primeiro a atirar no próprio pé pra não servir?" },
+			{ id: 35, cat: "treta", text: "Cada um publica um livro com sua própria autobiografia. Qual te interessa menos?" },
+			{ id: 36, cat: "treta", text: "Quem recebe menos votos?" },
+			{ id: 37, cat: "treta", text: "Um de nós não vê graça nesse jogo, mas está rindo apenas pra fingir que não é um amigo de merda." },
+			{ id: 38, cat: "treta", text: "Quem demora mais pra entender as regras?" },
+			{ id: 39, cat: "treta", text: "Trabalhamos em um restaurante de fast food. Quem cospe na comida?" },
+			{ id: 40, cat: "treta", text: "Fomos convidados ao programa do Silvio Santos. Quem discute com ele?" },
+			{ id: 41, cat: "treta", text: "Quem é a pessoa mais insuportável entre nós?" },
+			{ id: 42, cat: "treta", text: "Um de nós acredita ser muito engraçado, mas não é. Quem?" },
+			{ id: 43, cat: "treta", text: "Um de nós sempre compartilha, e acredita, em fake news. Quem?" },
+			{ id: 44, cat: "treta", text: "Vazaram todas as nossas conversas de aplicativo! O primeiro a ser cancelado é..." },
+			{ id: 45, cat: "treta", text: "Estamos naquele reality show famoso do Brasil. Quem sai com a maior rejeição do público?" },
+			{ id: 46, cat: "treta", text: "Todo grupo de amigos tem aquele que se veste muito mal. No nosso grupo é..." },
+			{ id: 47, cat: "treta", text: "Um de nós tem uma vida dupla. Quem?" },
+			{ id: 48, cat: "treta", text: "Atropelamos uma pessoa. Quem dá a ideia de fugirmos do local?" },
+			{ id: 49, cat: "treta", text: "Um amigo em comum necessita de doação de sangue. Quem disse que doou, mas nem apareceu?" },
+			{ id: 50, cat: "treta", text: "Descobriram a fórmula da imortalidade! Para o bem da humanidade, você esconde a fórmula de quem?" },
+			{ id: 51, cat: "treta", text: "Nós éramos apóstolos. Quem era Judas?" },
+			{ id: 52, cat: "treta", text: "Um de nós foi um traficante de escravos na vida passada. Quem?" },
+			{ id: 53, cat: "branco", text: "Carta em branco! Invente uma pergunta absurda agora mesmo para a roda responder." },
+			{ id: 54, cat: "treta", text: "Estamos vivendo em um filme. Quem é o vilão da história?" },
+			{ id: 55, cat: "treta", text: "Ninguém fala nada, mas se pudesse, jogaríamos ______ fora do planeta. Quem?" },
+			{ id: 56, cat: "treta", text: "Quem gosta de se achar pelo que faz ou pelo que tem?" },
+			{ id: 57, cat: "treta", text: "Alguém aqui gosta de humilhar os pobres. Quem?" },
+			{ id: 58, cat: "picante", text: "Quem tem mais chances de ser expulso de um cabaré?" },
+			{ id: 59, cat: "treta", text: "Quem faz amizade com pessoas estranhas na rua?" },
+			{ id: 60, cat: "treta", text: "Alguém entre nós curte talaricar amigos. Essa pessoa é..." },
+			{ id: 61, cat: "treta", text: "Uma pessoa decide discutir com um policial e acaba sendo presa. Quem?" },
+			{ id: 62, cat: "treta", text: "A pessoa mais vaidosa é..." },
+			{ id: 63, cat: "picante", text: '"Caiu na rede é peixe!" Quem é mais rodado(a) na festa?' },
+			{ id: 64, cat: "treta", text: "Agora estamos no mundo dos quadrinhos. Quem seria o super-herói com um poder inútil?" },
+			{ id: 65, cat: "treta", text: "Quem começaria uma guerra por um brigadeiro?" },
+			{ id: 66, cat: "treta", text: "Alguém aqui foi expulso do inferno por ser chato(a) demais! Claramente foi..." },
+			{ id: 67, cat: "treta", text: "Quem trocaria o irmão por um PS5?" },
+			{ id: 68, cat: "picante", text: "Quem seria pago por fazer um bom programa?" },
+			{ id: 69, cat: "treta", text: "O agiota perdeu tudo e agora está sendo cobrado. Por quem?" },
+			{ id: 70, cat: "treta", text: "Caí e quebrei o braço. Quem me empurrou?" },
+			{ id: 71, cat: "treta", text: "Tirei uma foto, quem apareceu boiando?" },
+			{ id: 72, cat: "treta", text: "É inacreditável o quanto ______ é sem noção." },
+			{ id: 73, cat: "picante", text: "Uma folha e um lápis. Quem desenhou uma pi**?" },
+			{ id: 74, cat: "treta", text: "De repente, a terceira guerra mundial começou no Brasil! Quem seria o primeiro(a) a morrer por fazer besteira?" },
+			{ id: 75, cat: "treta", text: "Um de nós é tão azarado que comprou uma placa de vídeo, recebeu um tijolo e depois até seu PC queimou. Quem tem tanto azar?" },
+			{ id: 76, cat: "treta", text: "Essa pessoa ADORA um barraco! Essa pessoa é..." },
+			{ id: 77, cat: "picante", text: "Em uma parede de pi**, quem se engasga?" },
+			{ id: 78, cat: "treta", text: "Quem de vocês colocou a colher no lixo e o danone na pia?" },
+			{ id: 79, cat: "picante", text: "Nem dono de cabaré é tão safado quanto _______." },
+			{ id: 80, cat: "treta", text: "Saiu uma notícia no G1 dizendo que nosso grupo vendeu algum amigo na deep web. Quem foi vendido?" },
+			{ id: 81, cat: "treta", text: "Em uma loja de roupas, quem chegaria pelado?" },
+			{ id: 82, cat: "treta", text: "Quem de nós teria um velório vazio?" },
+			{ id: 83, cat: "treta", text: "Quem trairia por uma paçoca?" },
+			{ id: 84, cat: "treta", text: "Estamos em um posto de gasolina instável e sem luz durante a noite. Quem acenderia um fósforo e mataria todos?" },
+			{ id: 85, cat: "treta", text: "Esse tá lascado. Quem decidiu jogar no jogo do bicho e perdeu?" },
+			{ id: 86, cat: "treta", text: "Alguém entre nós possui grandes tendências de ser psicopata. Quem?" },
+			{ id: 87, cat: "treta", text: "Quem processaria os pais por ser feio?" },
+			{ id: 88, cat: "treta", text: "Quem mataria uma pessoa por comer a última bolacha do pacote?" },
+			{ id: 89, cat: "treta", text: "Estamos em meio a um apocalipse zumbi. Quem seria a primeira pessoa a morrer por estar cagando?" },
+			{ id: 90, cat: "treta", text: "Estamos na sala de aula e o professor discute com a gente. Quem tacaria uma cadeira nele?" },
+			{ id: 91, cat: "treta", text: "Saiu no jornal! Um de nós teve coragem de correr pelado na rua. Quem?" },
+			{ id: 92, cat: "treta", text: "Na consulta médica, quem ligaria pra mãe pra perguntar o que está sentindo?" },
+			{ id: 93, cat: "treta", text: "Quem de nós possível e duvidosamente saberia desovar um corpo?" },
+			{ id: 94, cat: "treta", text: "Quem ofenderia uma nação inteira só com uma frase?" },
+			{ id: 95, cat: "treta", text: "Um de nós entrou numa briga com um anão e levou uma surra. Quem foi?" },
+			{ id: 96, cat: "treta", text: "Quem inocentemente diria pra um cego olhar?" },
+			{ id: 97, cat: "picante", text: "Um de nós subiu a escada, tropeçou e caiu na pik*. Quem?" },
+			{ id: 98, cat: "especial", text: "CARTA ESPECIAL: Quem estiver com as pernas cruzadas agora tá devendo um real de balas (ou leva +1 ponto na hora)!" },
+			{ id: 99, cat: "treta", text: "Sentindo os efeitos até hoje. Quem foi acertado por um tijolo na cabeça quando nasceu?" },
+			{ id: 100, cat: "treta", text: "Um casal está no escuro. Qual de nós seria uma ótima vela?" },
+			{ id: 101, cat: "treta", text: "Quem fala mal dos amigos pelas costas?" },
+			{ id: 102, cat: "treta", text: "Chegou bêbado em casa e acabou bebendo água da privada. Quem foi?" },
+			{ id: 103, cat: "picante", text: "Quem é mais provável de fazer sexo a 3?" },
+			{ id: 104, cat: "picante", text: "Quem abandonaria o rolê pra ir transar?" },
+			{ id: 105, cat: "picante", text: "Quem pagaria um oral escondido em lugar público?" },
+			{ id: 106, cat: "picante", text: "Quem tem um brinquedo sexual extremamente perturbador?" },
+			{ id: 107, cat: "picante", text: "Quem de nós é o mais egoísta na cama?" },
+			{ id: 108, cat: "picante", text: "Quem de nós se sente excitado(a) assistindo o parceiro com outra pessoa?" },
+			{ id: 109, cat: "picante", text: "Um de nós é muito irresponsável na hora do sexo. Quem?" },
+			{ id: 110, cat: "picante", text: "Se o histórico da guia anônima de todo mundo aqui fosse projetado num telão agora, quem iria preso primeiro?" },
+			{ id: 111, cat: "picante", text: "Quem se masturbou mais vezes no ano passado?" },
+			{ id: 112, cat: "picante", text: "A clonagem humana já é possível. Quem se clona pra transar consigo mesmo?" },
+			{ id: 113, cat: "treta", text: "Quem de nós pede dinheiro emprestado sabendo que nunca vai devolver?" },
+			{ id: 114, cat: "picante", text: "Um de nós foi o modelo para produção de brinquedos sexuais. Quem?" },
+			{ id: 115, cat: "picante", text: "Um de nós tem um fetiche super estranho. Quem?" },
+			{ id: 116, cat: "picante", text: "A cara é de santa(o), mas essa pessoa vira o próprio demônio quando está na cama. Quem?" }
+		];
+
+		const CATEGORY_META = {
+			treta: { label: "💩 TRETA CLÁSSICA", color: "#ffe600" },
+			picante: { label: "🔥 PROIBIDÃO +18", color: "#ff2a85" },
+			especial: { label: "⚡ CARTA ESPECIAL", color: "#00f5d4" },
+			branco: { label: "✏️ CARTA EM BRANCO", color: "#ff6b00" }
+		};
+
+		/* ==========================================================================
+		   2. SINTETIZADOR DE ÁUDIO (Web Audio API - Zero Arquivos Externos)
+		   ========================================================================== */
+		const SoundFX = {
+			ctx: null,
+			muted: false,
+
+			init() {
+				if (!this.ctx) {
+					const AudioCtx = window.AudioContext || window.webkitAudioContext;
+					if (AudioCtx) this.ctx = new AudioCtx();
+				}
+				if (this.ctx && this.ctx.state === "suspended") {
+					this.ctx.resume();
+				}
+			},
+
+			playFlip() {
+				if (this.muted) return;
+				this.init();
+				if (!this.ctx) return;
+				const now = this.ctx.currentTime;
+				const osc = this.ctx.createOscillator();
+				const gain = this.ctx.createGain();
+				osc.type = "triangle";
+				osc.frequency.setValueAtTime(180, now);
+				osc.frequency.exponentialRampToValueAtTime(520, now + 0.11);
+				gain.gain.setValueAtTime(0.18, now);
+				gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+				osc.connect(gain);
+				gain.connect(this.ctx.destination);
+				osc.start(now);
+				osc.stop(now + 0.13);
+			},
+
+			playBeep(freq = 440, duration = 0.15, type = "sine") {
+				if (this.muted) return;
+				this.init();
+				if (!this.ctx) return;
+				const now = this.ctx.currentTime;
+				const osc = this.ctx.createOscillator();
+				const gain = this.ctx.createGain();
+				osc.type = type;
+				osc.frequency.setValueAtTime(freq, now);
+				gain.gain.setValueAtTime(0.22, now);
+				gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+				osc.connect(gain);
+				gain.connect(this.ctx.destination);
+				osc.start(now);
+				osc.stop(now + duration);
+			},
+
+			playPoint() {
+				if (this.muted) return;
+				this.init();
+				if (!this.ctx) return;
+				this.playBeep(523.25, 0.09, "square");
+				setTimeout(() => this.playBeep(659.25, 0.14, "square"), 80);
+			},
+
+			playFanfare() {
+				if (this.muted) return;
+				this.init();
+				if (!this.ctx) return;
+				const notes = [392, 523.25, 659.25, 783.99];
+				notes.forEach((n, idx) => {
+					setTimeout(() => this.playBeep(n, 0.22, "triangle"), idx * 110);
+				});
+			}
+		};
+
+		/* ==========================================================================
+		   3. SISTEMA DE PARTÍCULAS (Chuva de 💩 e Confete Pop-Art)
+		   ========================================================================== */
+		const ConfettiFX = {
+			canvas: document.getElementById("fxCanvas"),
+			ctx: null,
+			particles: [],
+			running: false,
+			lastTime: 0,
+			dpr: 1,
+			w: 0,
+			h: 0,
+			sprites: {},
+			GRAVITY: 900, // px/s²
+
+			init() {
+				this.ctx = this.canvas.getContext("2d");
+				this.resize();
+				window.addEventListener("resize", () => this.resize());
+			},
+
+			// Canvas nítido em telas retina (respeita devicePixelRatio)
+			resize() {
+				this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+				this.w = window.innerWidth;
+				this.h = window.innerHeight;
+				this.canvas.width = Math.round(this.w * this.dpr);
+				this.canvas.height = Math.round(this.h * this.dpr);
+				this.canvas.style.width = this.w + "px";
+				this.canvas.style.height = this.h + "px";
+			},
+
+			// Pré-renderiza cada emoji uma única vez (fillText a cada frame é caro)
+			getSprite(emoji) {
+				if (this.sprites[emoji]) return this.sprites[emoji];
+				const size = 72;
+				const c = document.createElement("canvas");
+				c.width = c.height = size;
+				const cx = c.getContext("2d");
+				cx.font = `${size * 0.78}px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif`;
+				cx.textAlign = "center";
+				cx.textBaseline = "middle";
+				cx.fillText(emoji, size / 2, size / 2 + size * 0.04);
+				this.sprites[emoji] = c;
+				return c;
+			},
+
+			/**
+			 * Dispara partículas.
+			 * @param {number} count quantidade
+			 * @param {{x:number,y:number}} [origin] se informado, explode a partir do ponto; senão, chove do topo
+			 */
+			burst(count = 45, origin) {
+				const emojis = ["💩", "👑", "🔥", "👉", "💀", "✨"];
+				const colors = ["#ffe600", "#ff2a85", "#00f5d4", "#8b5cf6", "#ff6b00"];
+
+				for (let i = 0; i < count; i++) {
+					const isEmoji = Math.random() > 0.45;
+					let x, y, vx, vy;
+					if (origin) {
+						const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.1;
+						const speed = 380 + Math.random() * 520;
+						x = origin.x;
+						y = origin.y;
+						vx = Math.cos(angle) * speed;
+						vy = Math.sin(angle) * speed;
+					} else {
+						x = this.w * (0.1 + Math.random() * 0.8);
+						y = -30 - Math.random() * 160;
+						vx = (Math.random() - 0.5) * 380;
+						vy = 120 + Math.random() * 260;
+					}
+					this.particles.push({
+						x, y, vx, vy,
+						size: isEmoji ? 26 + Math.random() * 16 : 9 + Math.random() * 8,
+						rot: Math.random() * Math.PI * 2,
+						vRot: (Math.random() - 0.5) * 7,
+						flip: Math.random() * Math.PI * 2,
+						vFlip: 6 + Math.random() * 8,
+						age: 0,
+						life: 2.6 + Math.random() * 1.4,
+						isEmoji,
+						sprite: isEmoji ? this.getSprite(emojis[Math.floor(Math.random() * emojis.length)]) : null,
+						color: colors[Math.floor(Math.random() * colors.length)]
+					});
+				}
+
+				if (!this.running) {
+					this.running = true;
+					this.lastTime = performance.now();
+					requestAnimationFrame((t) => this.loop(t));
+				}
+			},
+
+			loop(t) {
+				// Delta-time: mesma velocidade em 60Hz, 120Hz ou 144Hz
+				const dt = Math.min((t - this.lastTime) / 1000, 1 / 30);
+				this.lastTime = t;
+				const ctx = this.ctx;
+				const dpr = this.dpr;
+
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+				const drag = Math.pow(0.35, dt); // resistência do ar
+				for (let i = this.particles.length - 1; i >= 0; i--) {
+					const p = this.particles[i];
+					p.age += dt;
+					p.vx *= drag;
+					p.vy = p.vy * drag + this.GRAVITY * dt * (p.isEmoji ? 0.55 : 0.35);
+					p.x += p.vx * dt + Math.sin(p.flip) * (p.isEmoji ? 0 : 0.6);
+					p.y += p.vy * dt;
+					p.rot += p.vRot * dt;
+					p.flip += p.vFlip * dt;
+
+					if (p.y > this.h + 80 || p.age > p.life) {
+						this.particles.splice(i, 1);
+						continue;
+					}
+
+					const fade = Math.min(1, (p.life - p.age) / 0.6, p.age / 0.12);
+					ctx.globalAlpha = fade;
+					const cos = Math.cos(p.rot), sin = Math.sin(p.rot);
+					ctx.setTransform(cos * dpr, sin * dpr, -sin * dpr, cos * dpr, p.x * dpr, p.y * dpr);
+
+					if (p.isEmoji) {
+						ctx.drawImage(p.sprite, -p.size / 2, -p.size / 2, p.size, p.size);
+					} else {
+						// Efeito de papel girando em 3D
+						const sy = Math.cos(p.flip);
+						ctx.scale(1, sy);
+						ctx.fillStyle = p.color;
+						ctx.strokeStyle = "#0f071e";
+						ctx.lineWidth = 2;
+						ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+						ctx.strokeRect(-p.size / 2, -p.size / 2, p.size, p.size);
+					}
+				}
+				ctx.globalAlpha = 1;
+
+				if (this.particles.length > 0) {
+					requestAnimationFrame((tt) => this.loop(tt));
+				} else {
+					ctx.setTransform(1, 0, 0, 1, 0, 0);
+					ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+					this.running = false;
+				}
+			}
+		};
+		ConfettiFX.init();
+
+		/* Textos flutuantes ("+1 💩") que sobem a partir do clique */
+		const FloatFX = {
+			pop(x, y, text, negative = false) {
+				const el = document.createElement("div");
+				el.className = "float-pop" + (negative ? " neg" : "");
+				el.textContent = text;
+				document.body.appendChild(el);
+				const drift = (Math.random() - 0.5) * 50;
+				const anim = el.animate([
+					{ transform: `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(0.4)`, opacity: 0 },
+					{ transform: `translate3d(${x + drift * 0.3}px, ${y - 24}px, 0) translate(-50%, -50%) scale(1.25)`, opacity: 1, offset: 0.25 },
+					{ transform: `translate3d(${x + drift}px, ${y - 90}px, 0) translate(-50%, -50%) scale(1)`, opacity: 0 }
+				], { duration: 900, easing: "cubic-bezier(.16,1,.3,1)" });
+				anim.onfinish = () => el.remove();
+			}
+		};
+
+		/* ==========================================================================
+		   4. ESTADO DO JOGO & PERSISTÊNCIA (localStorage)
+		   ========================================================================== */
+		const STORAGE_KEY = "amigos_de_merda_state_v2";
+
+		let state = {
+			mode: "all", // 'all' | 'clean' | 'spicy'
+			deckOrder: [], // IDs embaralhados do filtro atual
+			currentIndex: -1, // Posição atual em deckOrder
+			customCards: [], // Cartas criadas pelos jogadores
+			blankCardCustomText: "", // Texto customizado da carta #53
+			players: [], // [{ id, name, score }]
+			muted: false
+		};
+
+		function loadState() {
+			try {
+				const raw = localStorage.getItem(STORAGE_KEY);
+				if (raw) {
+					const saved = JSON.parse(raw);
+					state = { ...state, ...saved };
+				}
+			} catch (e) {
+				console.warn("Não foi possível carregar estado salvo:", e);
+			}
+			SoundFX.muted = !!state.muted;
+			updateSoundButtonUI();
+		}
+
+		function saveState() {
+			try {
+				localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+			} catch (e) {
+				console.warn("Não foi possível salvar estado:", e);
+			}
+		}
+
+		function getAllCards() {
+			const cards = [...BASE_CARDS.map(c => ({ ...c })), ...state.customCards];
+			if (state.blankCardCustomText) {
+				const c53 = cards.find(c => c.id === 53);
+				if (c53) c53.text = state.blankCardCustomText;
+			}
+			return cards;
+		}
+
+		function getFilteredCards(mode) {
+			const all = getAllCards();
+			if (mode === "clean") {
+				return all.filter(c => c.cat !== "picante");
+			}
+			if (mode === "spicy") {
+				return all.filter(c => c.cat === "picante");
+			}
+			return all;
+		}
+
+		function buildShuffledDeck(mode) {
+			const pool = getFilteredCards(mode);
+			const ids = pool.map(c => c.id);
+			// Fisher-Yates shuffle
+			for (let i = ids.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[ids[i], ids[j]] = [ids[j], ids[i]];
+			}
+			state.mode = mode;
+			state.deckOrder = ids;
+			state.currentIndex = 0;
+			saveState();
+		}
+
+		/* ==========================================================================
+		   5. RENDERIZAÇÃO DA CARTA E TRANSIÇÕES 3D
+		   ========================================================================== */
+		const card3dEl = document.getElementById("card3d");
+		const cardFrontEl = document.getElementById("cardFront");
+		const cardCatBadgeEl = document.getElementById("cardCatBadge");
+		const cardNumberBadgeEl = document.getElementById("cardNumberBadge");
+		const cardQuestionTextEl = document.getElementById("cardQuestionText");
+		const deckCounterTextEl = document.getElementById("deckCounterText");
+		const blankCardEditorEl = document.getElementById("blankCardEditor");
+		const blankCardInputEl = document.getElementById("blankCardInput");
+		const cardTiltEl = document.getElementById("cardTilt");
+		const deckLayerEls = document.querySelectorAll(".deck-stack-bg");
+		const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		let isAnimatingCard = false;
+		let cardAnimToken = 0;
+
+		function getCurrentCardObj() {
+			if (!state.deckOrder.length || state.currentIndex < 0) return null;
+			const cardId = state.deckOrder[state.currentIndex];
+			return getAllCards().find(c => c.id === cardId) || null;
+		}
+
+		function updateCardDOM(card) {
+			const meta = CATEGORY_META[card.cat] || CATEGORY_META.treta;
+			cardFrontEl.setAttribute("data-cat", card.cat);
+			cardCatBadgeEl.textContent = meta.label;
+			cardNumberBadgeEl.textContent = `#${String(card.id).padStart(3, "0")}`;
+			cardQuestionTextEl.textContent = card.text;
+
+			if (card.id === 53) {
+				blankCardEditorEl.classList.add("visible");
+				blankCardInputEl.value = state.blankCardCustomText || "";
+			} else {
+				blankCardEditorEl.classList.remove("visible");
+			}
+
+			deckCounterTextEl.textContent = `Carta ${state.currentIndex + 1} de ${state.deckOrder.length}`;
+			syncModeButtonsUI();
+		}
+
+		// As cartas do fundo "respiram" quando uma nova carta sai do baralho
+		function animateDeckShuffle(direction = 1) {
+			deckLayerEls.forEach((el, i) => {
+				el.animate([
+					{ transform: "translate(0, 0) rotate(0deg)" },
+					{ transform: `translate(${direction * (i ? 8 : -8)}px, -10px) rotate(${(i ? 2 : -2) * direction}deg)`, offset: 0.4 },
+					{ transform: "translate(0, 0) rotate(0deg)" }
+				], { duration: 560, delay: i * 50, easing: "cubic-bezier(.34,1.56,.64,1)", composite: "add" });
+			});
+		}
+
+		/**
+		 * Troca a carta com animação em duas fases:
+		 * 1) a carta atual é "arremessada" para o lado;
+		 * 2) a próxima sai do topo do baralho virada e gira mostrando a frente.
+		 * Cliques rápidos interrompem a animação em andamento sem travar.
+		 */
+		async function renderCurrentCard(withFlip = true, direction = 1, opts = {}) {
+			const card = getCurrentCardObj();
+			if (!card) return;
+
+			if (!withFlip || prefersReducedMotion) {
+				updateCardDOM(card);
+				return;
+			}
+
+			const token = ++cardAnimToken;
+			const skipOut = !!(opts && opts.skipOut) || isAnimatingCard;
+			isAnimatingCard = true;
+			SoundFX.playFlip();
+
+			let outAnim = null;
+			if (!skipOut) {
+				card3dEl.getAnimations().forEach(a => a.cancel());
+				outAnim = card3dEl.animate([
+					{ transform: "translate3d(0,0,0) rotateZ(0deg) rotateY(0deg)", opacity: 1 },
+					{ transform: `translate3d(${-direction * 120}%, -24px, 0) rotateZ(${-direction * 16}deg) rotateY(${-direction * 28}deg)`, opacity: 0 }
+				], { duration: 240, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" });
+				try { await outAnim.finished; } catch (e) { return; }
+				if (token !== cardAnimToken) return;
+			}
+
+			updateCardDOM(card);
+			resetCardDrag();
+			animateDeckShuffle(direction);
+
+			const prevAnims = card3dEl.getAnimations();
+			const inAnim = card3dEl.animate([
+				{ transform: "translate3d(0, 30px, -160px) rotateY(180deg) scale(0.88)", opacity: 0 },
+				{ opacity: 1, offset: 0.12 },
+				{ transform: "translate3d(0, -8px, 0) rotateY(-9deg) scale(1.03)", offset: 0.68 },
+				{ transform: "translate3d(0, 0, 0) rotateY(0deg) scale(1)", opacity: 1 }
+			], { duration: 640, easing: "cubic-bezier(.22,1,.36,1)" });
+			// Remove animações antigas só depois da nova assumir (evita 1 frame "piscando")
+			prevAnims.forEach(a => a.cancel());
+
+			try { await inAnim.finished; } catch (e) { return; }
+			if (token === cardAnimToken) isAnimatingCard = false;
+		}
+
+		function nextCard(opts) {
+			if (state.currentIndex + 1 >= state.deckOrder.length) {
+				// Fim do baralho!
+				ConfettiFX.burst(65);
+				SoundFX.playFanfare();
+				if (state.players.length > 0) {
+					resetCardDrag(true);
+					openWinnerModal();
+				} else {
+					buildShuffledDeck(state.mode);
+					renderCurrentCard(true, 1, opts);
+				}
+				return;
+			}
+			state.currentIndex++;
+			saveState();
+			renderCurrentCard(true, 1, opts);
+		}
+
+		function prevCard(opts) {
+			if (state.currentIndex > 0) {
+				state.currentIndex--;
+				saveState();
+				renderCurrentCard(true, -1, opts);
+			} else {
+				// Feedback de "não dá pra voltar mais": balançadinha
+				resetCardDrag(true);
+				if (!prefersReducedMotion) {
+					card3dEl.animate([
+						{ transform: "translateX(0)" },
+						{ transform: "translateX(14px) rotateZ(2deg)" },
+						{ transform: "translateX(-10px) rotateZ(-1.5deg)" },
+						{ transform: "translateX(6px)" },
+						{ transform: "translateX(0)" }
+					], { duration: 420, easing: "cubic-bezier(.36,.07,.19,.97)" });
+				}
+			}
+		}
+
+		/* ==========================================================================
+		   6. EFEITO 3D TILT (Mouse) & ARRASTAR CARTA (Touch/Mouse) — física suave
+		   ========================================================================== */
+		const cardSceneEl = document.getElementById("cardScene");
+		const cardGlareEl = document.getElementById("cardGlare");
+
+		// Valores atuais (cur) perseguem os alvos (tgt) com interpolação exponencial por frame
+		const tilt = {
+			cur: { rx: 0, ry: 0, x: 0, gx: 50, gy: 30 },
+			tgt: { rx: 0, ry: 0, x: 0, gx: 50, gy: 30 },
+			raf: null,
+			last: 0
+		};
+		let cardDrag = null;
+		let flyingOut = false;
+
+		function applyTilt() {
+			const c = tilt.cur;
+			cardTiltEl.style.transform =
+				`translate3d(${c.x}px, 0, 0) rotateZ(${c.x * 0.05}deg) rotateX(${c.rx}deg) rotateY(${c.ry + c.x * 0.04}deg)`;
+			cardGlareEl.style.setProperty("--glare-x", `${c.gx}%`);
+			cardGlareEl.style.setProperty("--glare-y", `${c.gy}%`);
+		}
+
+		function tiltLoop(t) {
+			const dt = Math.min((t - tilt.last) / 1000, 1 / 30);
+			tilt.last = t;
+			// Mais "grudado" no dedo durante o arrasto, mais elástico ao soltar
+			const speed = cardDrag ? 30 : (flyingOut ? 14 : 10);
+			const k = 1 - Math.exp(-speed * dt);
+			let moving = false;
+			for (const key in tilt.cur) {
+				const diff = tilt.tgt[key] - tilt.cur[key];
+				if (Math.abs(diff) > 0.01) {
+					tilt.cur[key] += diff * k;
+					moving = true;
+				} else {
+					tilt.cur[key] = tilt.tgt[key];
+				}
+			}
+			applyTilt();
+			tilt.raf = moving || cardDrag ? requestAnimationFrame(tiltLoop) : null;
+		}
+
+		function kickTilt() {
+			if (tilt.raf || prefersReducedMotion) return;
+			tilt.last = performance.now();
+			tilt.raf = requestAnimationFrame(tiltLoop);
+		}
+
+		function resetCardDrag(smooth = false) {
+			flyingOut = false;
+			tilt.tgt.x = 0;
+			if (!smooth) {
+				tilt.cur.x = 0;
+				applyTilt();
+			}
+			kickTilt();
+		}
+
+		cardSceneEl.addEventListener("pointermove", (e) => {
+			const rect = cardSceneEl.getBoundingClientRect();
+			const px = (e.clientX - rect.left) / rect.width;
+			const py = (e.clientY - rect.top) / rect.height;
+
+			if (cardDrag && e.pointerId === cardDrag.id) {
+				const dx = e.clientX - cardDrag.x0;
+				const dy = e.clientY - cardDrag.y0;
+				if (!cardDrag.locked && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+					cardDrag.locked = true;
+				}
+				if (cardDrag.locked) {
+					tilt.tgt.x = dx;
+					tilt.tgt.rx = 0;
+					tilt.tgt.ry = Math.max(-18, Math.min(18, dx * 0.06));
+					// Guarda as últimas posições para calcular a velocidade do "arremesso"
+					cardDrag.samples.push({ x: e.clientX, t: e.timeStamp });
+					if (cardDrag.samples.length > 5) cardDrag.samples.shift();
+				}
+			} else if (e.pointerType === "mouse" && !flyingOut) {
+				tilt.tgt.rx = (py - 0.5) * -18;
+				tilt.tgt.ry = (px - 0.5) * 18;
+			}
+			tilt.tgt.gx = px * 100;
+			tilt.tgt.gy = py * 100;
+			kickTilt();
+		});
+
+		cardSceneEl.addEventListener("pointerleave", (e) => {
+			if (cardDrag) return;
+			tilt.tgt.rx = 0;
+			tilt.tgt.ry = 0;
+			tilt.tgt.gx = 50;
+			tilt.tgt.gy = 30;
+			kickTilt();
+		});
+
+		cardSceneEl.addEventListener("pointerdown", (e) => {
+			if (e.button !== 0 || flyingOut) return;
+			if (e.target.closest("button, textarea, input, select")) return;
+			cardDrag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, locked: false, samples: [{ x: e.clientX, t: e.timeStamp }] };
+			try { cardSceneEl.setPointerCapture(e.pointerId); } catch (err) { }
+			kickTilt();
+		});
+
+		function endCardDrag(e, cancelled = false) {
+			if (!cardDrag || e.pointerId !== cardDrag.id) return;
+			const dx = tilt.tgt.x;
+			const s = cardDrag.samples;
+			const first = s[0], last = s[s.length - 1];
+			const velocity = last.t > first.t ? (last.x - first.x) / (last.t - first.t) : 0; // px/ms
+			const wasLocked = cardDrag.locked;
+			cardDrag = null;
+
+			const isFlick = Math.abs(velocity) > 0.6 && Math.abs(dx) > 30;
+			if (!cancelled && wasLocked && (Math.abs(dx) > 110 || isFlick)) {
+				const dir = dx < 0 ? -1 : 1;
+				const canGoBack = state.currentIndex > 0;
+				if (dir === 1 && !canGoBack) {
+					// Não há carta anterior: volta elástica
+					tilt.tgt.x = 0;
+					tilt.tgt.ry = 0;
+				} else {
+					flyingOut = true;
+					tilt.tgt.x = dir * (window.innerWidth * 0.9);
+					tilt.tgt.ry = dir * 25;
+					setTimeout(() => {
+						tilt.tgt.ry = 0;
+						tilt.cur.ry = 0;
+						if (dir < 0) nextCard({ skipOut: true });
+						else prevCard({ skipOut: true });
+					}, 170);
+				}
+			} else {
+				tilt.tgt.x = 0;
+				if (e.pointerType !== "mouse") {
+					tilt.tgt.rx = 0;
+					tilt.tgt.ry = 0;
+				}
+			}
+			kickTilt();
+		}
+
+		cardSceneEl.addEventListener("pointerup", (e) => endCardDrag(e));
+		cardSceneEl.addEventListener("pointercancel", (e) => endCardDrag(e, true));
+
+		/* ==========================================================================
+		   7. CONTAGEM REGRESSIVA DE 3 SEGUNDOS ("3, 2, 1... APONTEM!")
+		   ========================================================================== */
+		const countdownOverlayEl = document.getElementById("countdownOverlay");
+		const countdownValueEl = document.getElementById("countdownValue");
+		const countdownLabelEl = document.getElementById("countdownLabel");
+		let countdownTimer = null;
+
+		// Cada número "explode" na tela no exato momento em que muda (sincronizado com o beep)
+		function popCountdown() {
+			countdownValueEl.getAnimations().forEach(a => a.cancel());
+			countdownValueEl.animate([
+				{ transform: "scale(2.2)", opacity: 0, filter: "blur(6px)" },
+				{ transform: "scale(0.92)", opacity: 1, filter: "blur(0px)", offset: 0.45 },
+				{ transform: "scale(1.04)", offset: 0.75 },
+				{ transform: "scale(1)", opacity: 1, filter: "blur(0px)" }
+			], { duration: 520, easing: "cubic-bezier(.22,1,.36,1)" });
+			countdownLabelEl.animate([
+				{ transform: "translateY(10px)", opacity: 0 },
+				{ transform: "translateY(0)", opacity: 1 }
+			], { duration: 360, delay: 80, easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" });
+		}
+
+		function triggerCountdown() {
+			if (countdownTimer) clearInterval(countdownTimer);
+			let step = 3;
+			countdownOverlayEl.classList.add("active");
+			countdownValueEl.textContent = "3";
+			countdownLabelEl.textContent = "Pensem rápido na resposta...";
+			popCountdown();
+			SoundFX.playBeep(440, 0.18, "triangle");
+			if (navigator.vibrate) navigator.vibrate(70);
+
+			countdownTimer = setInterval(() => {
+				step--;
+				if (step > 0) {
+					countdownValueEl.textContent = String(step);
+					countdownLabelEl.textContent = step === 2 ? "Preparem o dedo..." : "Ninguém foge!";
+					popCountdown();
+					SoundFX.playBeep(step === 2 ? 523.25 : 659.25, 0.18, "triangle");
+					if (navigator.vibrate) navigator.vibrate(70);
+				} else if (step === 0) {
+					countdownValueEl.textContent = "👉 APONTEM!";
+					countdownLabelEl.textContent = "Quem levou mais dedos ganha +1 ponto 💩";
+					popCountdown();
+					ConfettiFX.burst(18, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+					SoundFX.playFanfare();
+					if (navigator.vibrate) navigator.vibrate([120, 60, 180]);
+				} else {
+					clearInterval(countdownTimer);
+					countdownTimer = null;
+					countdownOverlayEl.classList.remove("active");
+				}
+			}, 900);
+		}
+
+		countdownOverlayEl.addEventListener("click", () => {
+			if (countdownTimer) clearInterval(countdownTimer);
+			countdownTimer = null;
+			countdownOverlayEl.classList.remove("active");
+		});
+
+		/* ==========================================================================
+		   8. SISTEMA DE PLACAR FLUTUANTE, LATERAIS E VOTAÇÃO RÁPIDA
+		   ========================================================================== */
+		const playerListContainerEl = document.getElementById("playerListContainer");
+		const topScoreBadgeEl = document.getElementById("topScoreBadge");
+		const quickVoteBarEl = document.getElementById("quickVoteBar");
+		const quickVoteChipsEl = document.getElementById("quickVoteChips");
+		const cardsPlayersLeftEl = document.getElementById("cardsPlayersLeft");
+		const cardsPlayersRightEl = document.getElementById("cardsPlayersRight");
+		let knownPlayerIds = null; // null = primeira renderização (sem animar)
+
+		function renderPlayers() {
+			const totalPoints = state.players.reduce((acc, p) => acc + p.score, 0);
+			topScoreBadgeEl.textContent = state.players.length > 0 ? `${state.players.length} jog • ${totalPoints} pts` : "0";
+
+			// Barra Rápida de Votação abaixo da carta
+			if (state.players.length > 0) {
+				quickVoteBarEl.classList.add("visible");
+				quickVoteChipsEl.innerHTML = state.players.map(p => `
+          <button class="vote-chip" data-vote-id="${p.id}" title="Dar +1 ponto para ${escapeHtml(p.name)}">
+            <span>👉 ${escapeHtml(p.name)}</span>
+            <span class="pts">${p.score} 💩</span>
+          </button>
+        `).join("");
+			} else {
+				quickVoteBarEl.classList.remove("visible");
+			}
+
+			// Renderização das Laterais Visíveis da Tela (Esquerda e Direita)
+			if (cardsPlayersLeftEl && cardsPlayersRightEl) {
+				if (state.players.length === 0) {
+					const emptySideHtml = `
+						<div class="side-empty-card">
+							<div style="font-size:1.6rem;margin-bottom:4px;">💩</div>
+							<strong style="display:block;font-size:0.88rem;">Sem participantes</strong>
+							<p style="font-size:0.75rem;opacity:0.85;margin:4px 0 10px;line-height:1.35;">
+								Adicione a galera para os botões de +1 ponto ficarem aqui na lateral!
+							</p>
+							<button class="btn-side-add-player" style="font-size:0.78rem;padding:6px 12px;">+ Adicionar Amigos</button>
+						</div>
+					`;
+					cardsPlayersLeftEl.innerHTML = emptySideHtml;
+					cardsPlayersRightEl.innerHTML = emptySideHtml;
+				} else {
+					const maxScore = Math.max(...state.players.map(p => p.score));
+					const minScore = Math.min(...state.players.map(p => p.score));
+
+					let leftCardsHtml = "";
+					let rightCardsHtml = "";
+
+					state.players.forEach((p, idx) => {
+						const isTopMerda = p.score > 0 && p.score === maxScore;
+						const isSaint = totalPoints > 0 && p.score === minScore && maxScore !== minScore;
+						let statusTag = "";
+						if (isTopMerda) statusTag = "👑 Amigo de Merda";
+						else if (isSaint) statusTag = "😇 Alma Pura";
+
+						const cardMarkup = `
+							<div class="side-player-card ${isTopMerda ? "leader-merda" : ""}" id="sideCard_${p.id}">
+								<div class="side-player-top">
+									<div class="side-player-name-wrap">
+										<span class="side-player-icon">${isTopMerda ? "💩👑" : (isSaint ? "😇" : "👤")}</span>
+										<span class="side-player-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
+									</div>
+									<div class="side-player-score">${p.score} <span style="font-size:0.72rem;">💩</span></div>
+								</div>
+								${statusTag ? `<div class="side-player-tag">${statusTag}</div>` : ""}
+								<div class="side-player-actions">
+									<button class="btn-side-decrement" data-action="side-minus" data-id="${p.id}" title="Remover 1 ponto">−</button>
+									<button class="btn-side-increment" data-action="side-plus" data-id="${p.id}" title="Mais dedos apontados para ${escapeHtml(p.name)}! (+1 ponto)">
+										<span>👉 +1 PONTO</span>
+									</button>
+								</div>
+							</div>
+						`;
+
+						if (idx % 2 === 0) {
+							leftCardsHtml += cardMarkup;
+						} else {
+							rightCardsHtml += cardMarkup;
+						}
+					});
+
+					cardsPlayersLeftEl.innerHTML = leftCardsHtml;
+					cardsPlayersRightEl.innerHTML = rightCardsHtml || `
+						<div class="side-empty-card" style="padding:12px;">
+							<p style="font-size:0.78rem;opacity:0.85;margin-bottom:6px;">Mais alguém na roda?</p>
+							<button class="btn-side-add-player">+ Amigo</button>
+						</div>
+					`;
+				}
+			}
+
+			// Anima a entrada apenas de participantes recém-adicionados
+			if (knownPlayerIds && !prefersReducedMotion) {
+				state.players.forEach(p => {
+					if (knownPlayerIds.has(p.id)) return;
+					const el = document.getElementById(`sideCard_${p.id}`);
+					if (!el) return;
+					el.animate([
+						{ opacity: 0, transform: "translateY(18px) scale(0.85)" },
+						{ opacity: 1, transform: "translateY(-3px) scale(1.03)", offset: 0.6 },
+						{ opacity: 1, transform: "none" }
+					], { duration: 480, easing: "cubic-bezier(.22,1,.36,1)" });
+				});
+			}
+			knownPlayerIds = new Set(state.players.map(p => p.id));
+
+			// Lista na Gaveta Lateral (Menu Completo de Gerenciamento)
+			if (state.players.length === 0) {
+				playerListContainerEl.innerHTML = `
+          <div class="empty-players">
+            <div style="font-size:2rem;margin-bottom:8px;">💩</div>
+            <strong>Nenhum amigo cadastrado ainda!</strong><br>
+            Adicione os nomes acima para anotar os pontos aqui na tela e liberar os botões de incremento nas laterais.
+          </div>
+        `;
+				return;
+			}
+
+			const maxScore = Math.max(...state.players.map(p => p.score));
+			const minScore = Math.min(...state.players.map(p => p.score));
+
+			// Ordena do maior pontuador (Mais Amigo de Merda) para o menor na gaveta
+			const sorted = [...state.players].sort((a, b) => b.score - a.score);
+
+			playerListContainerEl.innerHTML = sorted.map(p => {
+				const isTopMerda = p.score > 0 && p.score === maxScore;
+				const isSaint = totalPoints > 0 && p.score === minScore && maxScore !== minScore;
+				let statusTag = "";
+				if (isTopMerda) statusTag = "👑 Líder Amigo de Merda";
+				else if (isSaint) statusTag = "😇 Alma Pura (Vencendo)";
+
+				return `
+          <div class="player-row ${isTopMerda ? "leader-merda" : ""}">
+            <div class="player-info">
+              <div class="player-name">
+                <span>${isTopMerda ? "💩" : (isSaint ? "😇" : "👤")}</span>
+                <span>${escapeHtml(p.name)}</span>
+              </div>
+              ${statusTag ? `<span class="player-status-tag">${statusTag}</span>` : ""}
+            </div>
+            <div class="player-controls">
+              <button class="btn-score-step" data-action="minus" data-id="${p.id}" title="Remover 1 ponto">−</button>
+              <span class="player-score-val">${p.score}</span>
+              <button class="btn-score-step plus" data-action="plus" data-id="${p.id}" title="Adicionar 1 ponto">+</button>
+              <button class="btn-score-step remove" data-action="delete" data-id="${p.id}" title="Excluir jogador">✕</button>
+            </div>
+          </div>
+        `;
+			}).join("");
+		}
+
+		function addPlayer(name) {
+			const clean = name.trim();
+			if (!clean) return;
+			state.players.push({
+				id: "p_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+				name: clean,
+				score: 0
+			});
+			saveState();
+			renderPlayers();
+		}
+
+		function changeScore(playerId, delta) {
+			const p = state.players.find(item => item.id === playerId);
+			if (!p) return;
+			p.score = Math.max(0, p.score + delta);
+			if (delta > 0) {
+				SoundFX.playPoint();
+				if (p.score === 5 || p.score === 10) {
+					const card = document.getElementById(`sideCard_${playerId}`);
+					const r = card ? card.getBoundingClientRect() : null;
+					ConfettiFX.burst(55, r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : undefined);
+					SoundFX.playFanfare();
+				}
+			}
+			saveState();
+			renderPlayers();
+
+			// "Pulo" no número da pontuação (no card lateral e no chip rápido)
+			if (!prefersReducedMotion) {
+				const targets = [
+					document.querySelector(`#sideCard_${playerId} .side-player-score`),
+					document.querySelector(`.vote-chip[data-vote-id="${playerId}"] .pts`)
+				];
+				targets.forEach(el => {
+					if (!el) return;
+					el.animate([
+						{ transform: `scale(${delta > 0 ? 1.6 : 0.7}) rotate(${delta > 0 ? -8 : 6}deg)` },
+						{ transform: "scale(0.95) rotate(0deg)", offset: 0.55 },
+						{ transform: "scale(1)" }
+					], { duration: 460, easing: "cubic-bezier(.22,1,.36,1)" });
+				});
+				const card = document.getElementById(`sideCard_${playerId}`);
+				if (card && delta > 0) {
+					card.animate([
+						{ transform: "translateY(0) scale(1)" },
+						{ transform: "translateY(-4px) scale(1.035)", offset: 0.35 },
+						{ transform: "translateY(0) scale(1)" }
+					], { duration: 380, easing: "cubic-bezier(.34,1.56,.64,1)" });
+				}
+			}
+		}
+
+		function escapeHtml(str) {
+			return String(str).replace(/[&<>"']/g, m => ({
+				"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+			}[m]));
+		}
+
+		/* ==========================================================================
+		   9. MODAL DE COROAÇÃO / PÓDIO FINAL
+		   ========================================================================== */
+		function openWinnerModal() {
+			const modal = document.getElementById("modalWinner");
+			const content = document.getElementById("winnerModalContent");
+
+			if (state.players.length === 0) {
+				content.innerHTML = `
+          <div style="font-size:3.5rem;margin-bottom:8px;">💩👑</div>
+          <h3 style="font-family:'Bungee',cursive;font-size:1.4rem;color:var(--yellow-acid);margin-bottom:8px;">
+            VOCÊS SÃO AMIGOS DE MERDA!
+          </h3>
+          <p style="color:#e9d5ff;font-size:0.95rem;line-height:1.45;">
+            Quem levou mais dedos apontados hoje merece o troféu da discórdia!
+          </p>
+        `;
+			} else {
+				const sorted = [...state.players].sort((a, b) => b.score - a.score);
+				const topMerda = sorted[0];
+				const topSaint = sorted[sorted.length - 1];
+
+				content.innerHTML = `
+          <div style="background:#3b0f7a;border:3px solid var(--ink-black);box-shadow:4px 4px 0 var(--ink-black);border-radius:20px;padding:18px;margin-bottom:14px;">
+            <div style="font-size:2.8rem;">💩👑</div>
+            <div style="font-size:0.76rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--pink-shock);margin-top:4px;">
+              O MAIOR AMIGO DE MERDA DA RODADA
+            </div>
+            <div style="font-family:'Bungee',cursive;font-size:1.7rem;color:var(--yellow-acid);margin:4px 0;">
+              ${escapeHtml(topMerda.name)}
+            </div>
+            <div style="font-weight:800;font-size:0.9rem;color:#fff;">
+              Acumulou ${topMerda.score} ponto(s) de pura discórdia!
+            </div>
+          </div>
+
+          ${sorted.length > 1 ? `
+            <div style="background:rgba(0,245,212,0.12);border:2.5px solid var(--ink-black);border-radius:16px;padding:12px;">
+              <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;color:var(--cyan-electric);">
+                😇 VENCEDOR(A) MORAL (MENOS PONTOS)
+              </div>
+              <div style="font-weight:800;font-size:1.1rem;color:#fff;margin-top:2px;">
+                ${escapeHtml(topSaint.name)} (${topSaint.score} pts)
+              </div>
+            </div>
+          ` : ""}
+        `;
+			}
+
+			ConfettiFX.burst(70);
+			SoundFX.playFanfare();
+			modal.classList.add("open");
+		}
+
+		/* ==========================================================================
+		   10. EVENTOS DE INTERFACE E ATALHOS
+		   ========================================================================== */
+		const screenHomeEl = document.getElementById("screenHome");
+		const screenGameEl = document.getElementById("screenGame");
+
+		function showGameScreen() {
+			screenHomeEl.classList.remove("active");
+			screenGameEl.classList.add("active");
+			if (!state.deckOrder.length || state.currentIndex < 0) {
+				buildShuffledDeck(state.mode);
+			}
+			renderCurrentCard(false);
+
+			// Entrada em cascata: laterais deslizam de fora para dentro e a carta "cai" na mesa
+			if (!prefersReducedMotion) {
+				document.querySelectorAll("#cardsPlayersLeft > *").forEach((el, i) => {
+					el.animate([
+						{ opacity: 0, transform: "translateX(-40px)" },
+						{ opacity: 1, transform: "none" }
+					], { duration: 520, delay: 120 + i * 60, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" });
+				});
+				document.querySelectorAll("#cardsPlayersRight > *").forEach((el, i) => {
+					el.animate([
+						{ opacity: 0, transform: "translateX(40px)" },
+						{ opacity: 1, transform: "none" }
+					], { duration: 520, delay: 120 + i * 60, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" });
+				});
+				card3dEl.animate([
+					{ opacity: 0, transform: "translate3d(0, -60px, 0) rotateX(25deg) scale(1.08)" },
+					{ opacity: 1, transform: "translate3d(0, 4px, 0) rotateX(-3deg) scale(0.99)", offset: 0.7 },
+					{ opacity: 1, transform: "none" }
+				], { duration: 700, delay: 60, easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" });
+			}
+		}
+
+		function showHomeScreen() {
+			screenGameEl.classList.remove("active");
+			screenHomeEl.classList.add("active");
+			syncModeButtonsUI();
+		}
+
+		function syncModeButtonsUI() {
+			document.querySelectorAll("#homeModeGrid .mode-option").forEach(el => {
+				el.classList.toggle("selected", el.dataset.mode === state.mode);
+			});
+			document.querySelectorAll("#gameFilterChips .chip-btn").forEach(el => {
+				el.classList.toggle("active", el.dataset.mode === state.mode);
+			});
+		}
+
+		function updateSoundButtonUI() {
+			const btn = document.getElementById("btnToggleSound");
+			btn.textContent = SoundFX.muted ? "🔇" : "🔊";
+		}
+
+		// Seleção de modo na Home
+		document.querySelectorAll("#homeModeGrid .mode-option").forEach(el => {
+			el.addEventListener("click", () => {
+				const newMode = el.dataset.mode;
+				buildShuffledDeck(newMode);
+				syncModeButtonsUI();
+				SoundFX.playFlip();
+			});
+		});
+
+		// Seleção de modo durante o jogo
+		document.querySelectorAll("#gameFilterChips .chip-btn").forEach(el => {
+			el.addEventListener("click", () => {
+				const newMode = el.dataset.mode;
+				if (newMode !== state.mode) {
+					buildShuffledDeck(newMode);
+					renderCurrentCard(true);
+				}
+			});
+		});
+
+		// Começar o Jogo
+		document.getElementById("btnStartGame").addEventListener("click", () => {
+			if (!state.deckOrder.length) {
+				buildShuffledDeck(state.mode);
+			}
+			showGameScreen();
+			SoundFX.playFlip();
+		});
+
+		// Voltar à Home clicando no Logo
+		document.getElementById("btnHomeLogo").addEventListener("click", showHomeScreen);
+
+		// Botões do Palco
+		document.getElementById("btnNextCard").addEventListener("click", nextCard);
+		document.getElementById("btnPrevCard").addEventListener("click", prevCard);
+		document.getElementById("btnResetDeck").addEventListener("click", () => {
+			buildShuffledDeck(state.mode);
+			renderCurrentCard(true);
+		});
+		document.getElementById("btnRandomReaction").addEventListener("click", () => {
+			ConfettiFX.burst(35);
+			SoundFX.playPoint();
+		});
+		document.getElementById("btnTriggerCountdown").addEventListener("click", (e) => {
+			e.stopPropagation();
+			triggerCountdown();
+		});
+
+		// Salvar texto na Carta em Branco (#53)
+		document.getElementById("btnApplyBlankCard").addEventListener("click", () => {
+			const val = blankCardInputEl.value.trim();
+			if (!val) return;
+			state.blankCardCustomText = val;
+			saveState();
+			renderCurrentCard(false);
+			SoundFX.playPoint();
+		});
+
+		// Som Mute/Unmute
+		document.getElementById("btnToggleSound").addEventListener("click", () => {
+			SoundFX.muted = !SoundFX.muted;
+			state.muted = SoundFX.muted;
+			saveState();
+			updateSoundButtonUI();
+		});
+
+		// Gaveta do Placar
+		const scoreDrawerEl = document.getElementById("scoreDrawer");
+		const drawerBackdropEl = document.getElementById("drawerBackdrop");
+
+		function toggleScoreDrawer(open) {
+			const isOpen = open !== undefined ? open : !scoreDrawerEl.classList.contains("open");
+			scoreDrawerEl.classList.toggle("open", isOpen);
+			drawerBackdropEl.classList.toggle("open", isOpen);
+			if (isOpen) {
+				setTimeout(() => document.getElementById("playerNameInput").focus(), 150);
+			}
+		}
+
+		document.getElementById("btnOpenScore").addEventListener("click", () => toggleScoreDrawer(true));
+		document.getElementById("btnCloseScore").addEventListener("click", () => toggleScoreDrawer(false));
+		drawerBackdropEl.addEventListener("click", () => toggleScoreDrawer(false));
+
+		document.getElementById("addPlayerForm").addEventListener("submit", (e) => {
+			e.preventDefault();
+			const input = document.getElementById("playerNameInput");
+			addPlayer(input.value);
+			input.value = "";
+			input.focus();
+		});
+
+		playerListContainerEl.addEventListener("click", (e) => {
+			const btn = e.target.closest("button[data-action]");
+			if (!btn) return;
+			const id = btn.dataset.id;
+			const action = btn.dataset.action;
+			if (action === "plus") changeScore(id, 1);
+			else if (action === "minus") changeScore(id, -1);
+			else if (action === "delete") {
+				state.players = state.players.filter(p => p.id !== id);
+				saveState();
+				renderPlayers();
+			}
+		});
+
+		quickVoteChipsEl.addEventListener("click", (e) => {
+			const chip = e.target.closest("button[data-vote-id]");
+			if (!chip) return;
+			FloatFX.pop(e.clientX, e.clientY, "+1 💩");
+			changeScore(chip.dataset.voteId, 1);
+		});
+
+		// Eventos das Laterais da Tela (Incremento, Decremento e Adicionar Amigo)
+		document.addEventListener("click", (e) => {
+			const incBtn = e.target.closest("button[data-action='side-plus']");
+			if (incBtn) {
+				const id = incBtn.dataset.id;
+				FloatFX.pop(e.clientX || incBtn.getBoundingClientRect().left + 40, e.clientY || incBtn.getBoundingClientRect().top, "+1 💩");
+				changeScore(id, 1);
+				return;
+			}
+
+			const decBtn = e.target.closest("button[data-action='side-minus']");
+			if (decBtn) {
+				const id = decBtn.dataset.id;
+				const pl = state.players.find(x => x.id === id);
+				if (pl && pl.score > 0) FloatFX.pop(e.clientX || decBtn.getBoundingClientRect().left, e.clientY || decBtn.getBoundingClientRect().top, "−1", true);
+				changeScore(id, -1);
+				return;
+			}
+
+			const addBtn = e.target.closest(".btn-side-add-player");
+			if (addBtn) {
+				toggleScoreDrawer(true);
+				return;
+			}
+		});
+
+		document.getElementById("btnResetScores").addEventListener("click", () => {
+			state.players.forEach(p => p.score = 0);
+			saveState();
+			renderPlayers();
+		});
+
+		document.getElementById("btnClearPlayers").addEventListener("click", () => {
+			state.players = [];
+			saveState();
+			renderPlayers();
+		});
+
+		document.getElementById("btnCrownWinner").addEventListener("click", () => {
+			toggleScoreDrawer(false);
+			openWinnerModal();
+		});
+
+		// Modal de Regras
+		const modalRulesEl = document.getElementById("modalRules");
+		document.getElementById("btnOpenRules").addEventListener("click", () => modalRulesEl.classList.add("open"));
+		document.getElementById("btnCloseRules").addEventListener("click", () => modalRulesEl.classList.remove("open"));
+		document.getElementById("btnGotItRules").addEventListener("click", () => modalRulesEl.classList.remove("open"));
+
+		// Modal de Criar Carta Customizada
+		const modalCustomEl = document.getElementById("modalCustomCard");
+		document.getElementById("btnOpenCustomModal").addEventListener("click", () => {
+			modalCustomEl.classList.add("open");
+			setTimeout(() => document.getElementById("customCardInput").focus(), 100);
+		});
+		document.getElementById("btnCloseCustomModal").addEventListener("click", () => modalCustomEl.classList.remove("open"));
+
+		document.getElementById("customCardForm").addEventListener("submit", (e) => {
+			e.preventDefault();
+			const textInput = document.getElementById("customCardInput");
+			const catSelect = document.getElementById("customCardCategory");
+			const text = textInput.value.trim();
+			if (!text) return;
+
+			const newId = 117 + state.customCards.length;
+			const newCard = {
+				id: newId,
+				cat: catSelect.value,
+				text
+			};
+
+			state.customCards.push(newCard);
+			// Insere logo na próxima posição do baralho e já exibe!
+			const insertPos = Math.max(0, state.currentIndex + 1);
+			state.deckOrder.splice(insertPos, 0, newId);
+			state.currentIndex = insertPos;
+			saveState();
+
+			textInput.value = "";
+			modalCustomEl.classList.remove("open");
+			showGameScreen();
+			renderCurrentCard(true);
+			ConfettiFX.burst(25);
+		});
+
+		// Modal de Vencedor
+		const modalWinnerEl = document.getElementById("modalWinner");
+		document.getElementById("btnContinuePlaying").addEventListener("click", () => {
+			modalWinnerEl.classList.remove("open");
+		});
+		document.getElementById("btnNewMatchModal").addEventListener("click", () => {
+			state.players.forEach(p => p.score = 0);
+			buildShuffledDeck(state.mode);
+			saveState();
+			renderPlayers();
+			modalWinnerEl.classList.remove("open");
+			showGameScreen();
+			renderCurrentCard(true);
+		});
+
+		// Fechar modais clicando fora
+		[modalRulesEl, modalCustomEl, modalWinnerEl].forEach(modal => {
+			modal.addEventListener("click", (e) => {
+				if (e.target === modal) modal.classList.remove("open");
+			});
+		});
+
+		// Atalhos de Teclado
+		window.addEventListener("keydown", (e) => {
+			const tag = document.activeElement ? document.activeElement.tagName : "";
+			if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+
+			if (e.code === "Space" || e.code === "ArrowRight") {
+				if (screenGameEl.classList.contains("active")) {
+					e.preventDefault();
+					nextCard();
+				}
+			} else if (e.code === "ArrowLeft") {
+				if (screenGameEl.classList.contains("active")) {
+					e.preventDefault();
+					prevCard();
+				}
+			} else if (e.key === "t" || e.key === "T") {
+				if (screenGameEl.classList.contains("active")) {
+					triggerCountdown();
+				}
+			} else if (e.key === "p" || e.key === "P") {
+				toggleScoreDrawer();
+			} else if (e.code === "Escape") {
+				toggleScoreDrawer(false);
+				modalRulesEl.classList.remove("open");
+				modalCustomEl.classList.remove("open");
+				modalWinnerEl.classList.remove("open");
+			}
+		});
+
+		// Inicialização
+		loadState();
+		if (!state.deckOrder || !state.deckOrder.length) {
+			buildShuffledDeck(state.mode || "all");
+		}
+		syncModeButtonsUI();
+		renderPlayers();
+	</script>
+</body>
+
+</html>

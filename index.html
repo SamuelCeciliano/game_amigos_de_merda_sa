@@ -11,6 +11,7 @@
 	<link
 		href="https://fonts.googleapis.com/css2?family=Bungee&family=Plus+Jakarta+Sans:wght@500;700;800&family=Space+Grotesk:wght@700&display=swap"
 		rel="stylesheet">
+	<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 	<style>
 		:root {
 			--bg-deep: #14052b;
@@ -2428,6 +2429,570 @@
 				max-height: 44vh;
 			}
 		}
+
+		/* ================= MODO ONLINE MULTIPLAYER (PeerJS WebRTC) ================= */
+		.play-mode-switch {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 12px;
+			margin: 0 auto 22px;
+			background: rgba(15, 7, 30, 0.65);
+			padding: 8px;
+			border-radius: 22px;
+			border: 3.5px solid var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+		}
+
+		.play-mode-btn {
+			font-family: 'Bungee', cursive;
+			font-size: clamp(0.82rem, 2.2vw, 0.98rem);
+			padding: 12px 14px;
+			border-radius: 15px;
+			border: 3px solid transparent;
+			background: transparent;
+			color: #e9d5ff;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			transition: all 0.2s var(--ease-spring);
+			line-height: 1.2;
+		}
+
+		.play-mode-btn:hover {
+			background: rgba(255, 255, 255, 0.08);
+			color: #ffffff;
+		}
+
+		.play-mode-btn.active[data-play-mode="local"] {
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			border-color: var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			transform: translate(-2px, -2px);
+		}
+
+		.play-mode-btn.active[data-play-mode="online"] {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+			border-color: var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			transform: translate(-2px, -2px);
+		}
+
+		.home-subpanel {
+			display: none;
+			width: 100%;
+		}
+
+		.home-subpanel.active {
+			display: block;
+			animation: popBannerIn 0.28s var(--ease-spring);
+		}
+
+		.online-role-tabs {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.online-tab-btn {
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.9rem;
+			padding: 11px 14px;
+			border-radius: 14px;
+			border: 3px solid var(--ink-black);
+			background: rgba(255, 255, 255, 0.08);
+			color: #ffffff;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			transition: all 0.18s var(--ease-spring);
+		}
+
+		.online-tab-btn:hover {
+			background: rgba(255, 255, 255, 0.16);
+			transform: translateY(-2px);
+		}
+
+		.online-tab-btn.active {
+			background: var(--pink-shock);
+			color: #ffffff;
+			box-shadow: 4px 4px 0px var(--ink-black);
+			transform: translate(-2px, -2px);
+		}
+
+		.online-tab-panel {
+			display: none;
+			background: rgba(15, 7, 30, 0.62);
+			border: 3.5px solid var(--ink-black);
+			box-shadow: var(--shadow-hard);
+			border-radius: 22px;
+			padding: 20px 18px;
+			text-align: left;
+		}
+
+		.online-tab-panel.active {
+			display: block;
+			animation: popBannerIn 0.25s var(--ease-spring);
+		}
+
+		.online-error-banner {
+			display: none;
+			align-items: center;
+			justify-content: space-between;
+			gap: 10px;
+			background: var(--pink-shock);
+			color: #ffffff;
+			border: 3px solid var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			border-radius: 16px;
+			padding: 11px 14px;
+			margin-bottom: 14px;
+			font-size: 0.85rem;
+			font-weight: 800;
+			text-align: left;
+		}
+
+		.online-error-banner.visible {
+			display: flex;
+			animation: popBannerIn 0.28s var(--ease-spring);
+		}
+
+		.online-form-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 12px;
+			margin-bottom: 14px;
+		}
+
+		.online-field-group {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+		}
+
+		.online-field-group.full-width {
+			grid-column: 1 / -1;
+		}
+
+		.online-field-label {
+			font-size: 0.76rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.8px;
+			color: var(--yellow-acid);
+		}
+
+		.online-room-credentials {
+			background: #1a0738;
+			border: 3px solid var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			border-radius: 18px;
+			padding: 14px 16px;
+			margin-bottom: 14px;
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+		}
+
+		.online-cred-item {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+
+		.online-cred-label {
+			font-size: 0.7rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.8px;
+			color: #c4b5fd;
+		}
+
+		.online-cred-value {
+			font-family: 'Bungee', cursive;
+			font-size: 1.45rem;
+			color: var(--yellow-acid);
+			letter-spacing: 1.5px;
+			line-height: 1.1;
+		}
+
+		.online-cred-pass {
+			font-family: 'Space Grotesk', sans-serif;
+			font-weight: 700;
+			font-size: 1.15rem;
+			color: var(--cyan-electric);
+		}
+
+		.online-connected-box {
+			background: rgba(255, 255, 255, 0.05);
+			border: 2.5px solid var(--ink-black);
+			border-radius: 16px;
+			padding: 12px 14px;
+			margin-bottom: 16px;
+		}
+
+		.online-connected-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 0.78rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.8px;
+			color: var(--cyan-electric);
+			margin-bottom: 10px;
+		}
+
+		.online-connected-list {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.online-connected-chip {
+			background: #2f0d63;
+			border: 2.5px solid var(--ink-black);
+			box-shadow: 2px 2px 0px var(--ink-black);
+			border-radius: var(--radius-pill);
+			padding: 6px 12px;
+			font-size: 0.84rem;
+			font-weight: 800;
+			color: #ffffff;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.online-connected-chip.is-host {
+			border-color: var(--yellow-acid);
+			background: linear-gradient(135deg, #4c119e 0%, #75124f 100%);
+		}
+
+		.online-role-tag {
+			font-size: 0.65rem;
+			font-weight: 900;
+			text-transform: uppercase;
+			padding: 2px 6px;
+			border-radius: 99px;
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+		}
+
+		.online-role-tag.you-tag {
+			background: var(--cyan-electric);
+			color: var(--ink-black);
+		}
+
+		/* Indicador de Sala Online no Topo e na Mesa (para Clientes e Host) */
+		.online-top-pill {
+			display: none;
+			align-items: center;
+			gap: 8px;
+			background: #1a0933;
+			border: 3px solid var(--cyan-electric);
+			box-shadow: 3px 3px 0px var(--ink-black);
+			border-radius: var(--radius-pill);
+			padding: 6px 12px;
+			font-size: 0.78rem;
+			font-weight: 800;
+			color: var(--cyan-electric);
+		}
+
+		.online-top-pill.visible {
+			display: inline-flex;
+		}
+
+		.online-client-sync-badge {
+			display: none;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			width: 100%;
+			max-width: 460px;
+			background: linear-gradient(135deg, #1a0933 0%, #2f0d63 100%);
+			border: 3.5px solid var(--cyan-electric);
+			box-shadow: 5px 5px 0px var(--ink-black);
+			border-radius: var(--radius-pill);
+			padding: 13px 20px;
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			font-weight: 800;
+			font-size: 0.92rem;
+			color: var(--cyan-electric);
+			text-align: center;
+		}
+
+		.online-sync-dot {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background: var(--cyan-electric);
+			box-shadow: 0 0 10px var(--cyan-electric);
+			animation: syncDotPulse 1.2s ease-in-out infinite alternate;
+			flex-shrink: 0;
+		}
+
+		@keyframes syncDotPulse {
+			from {
+				transform: scale(0.85);
+				opacity: 0.6;
+			}
+
+			to {
+				transform: scale(1.2);
+				opacity: 1;
+			}
+		}
+
+		/* Trava Estrita do Elenco em Modo Online */
+		body.online-mode #btnAddPlayerLeft,
+		body.online-mode #btnAddPlayerRight,
+		body.online-mode .btn-side-add-player,
+		body.online-mode #addPlayerForm,
+		body.online-mode #btnClearPlayers,
+		body.online-mode #playerListContainer .btn-score-step {
+			display: none !important;
+		}
+
+		/* Controles exclusivos do Host ocultos para Clientes */
+		body.online-client #btnPrevCard,
+		body.online-client #btnNextCard,
+		body.online-client #btnVoteCurrentCard,
+		body.online-client #btnTriggerCountdown,
+		body.online-client #btnResetDeck,
+		body.online-client #btnOpenCustomModal,
+		body.online-client #btnCrownWinner,
+		body.online-client #btnResetScores,
+		body.online-client #btnNewMatchModal,
+		body.online-client #btnRespinPunish,
+		body.online-client #blankCardEditor {
+			display: none !important;
+		}
+
+		body.online-client #onlineClientSyncBadge {
+			display: inline-flex;
+		}
+
+		body.online-client #gameFilterChips .chip-btn {
+			pointer-events: none;
+			cursor: default;
+		}
+
+		body.online-client .card-3d {
+			cursor: default;
+		}
+
+		/* ================= VOTAÇÃO ABERTA POR TURNOS (#modalOnlineBallot) ================= */
+		.online-ballot-box {
+			max-width: 600px;
+		}
+
+		.online-ballot-card-quote {
+			background: var(--card-cream);
+			color: var(--ink-black);
+			border: 3px solid var(--ink-black);
+			box-shadow: 3px 3px 0px var(--ink-black);
+			border-radius: 16px;
+			padding: 10px 14px;
+			font-family: 'Space Grotesk', sans-serif;
+			font-weight: 700;
+			font-size: 0.95rem;
+			line-height: 1.3;
+			margin-bottom: 12px;
+			text-align: center;
+		}
+
+		.online-turn-queue {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+			margin-bottom: 12px;
+			justify-content: center;
+		}
+
+		.turn-queue-pill {
+			background: rgba(15, 7, 30, 0.75);
+			border: 2px solid var(--ink-black);
+			border-radius: var(--radius-pill);
+			padding: 4px 10px;
+			font-size: 0.74rem;
+			font-weight: 800;
+			color: #c4b5fd;
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+		}
+
+		.turn-queue-pill.voted {
+			background: #14532d;
+			color: #bbf7d0;
+			border-color: #22c55e;
+		}
+
+		.turn-queue-pill.current {
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			border-color: var(--ink-black);
+			box-shadow: 2px 2px 0px var(--ink-black);
+			transform: scale(1.05);
+		}
+
+		.online-voter-banner {
+			border: 3px solid var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			border-radius: 16px;
+			padding: 12px 14px;
+			margin-bottom: 12px;
+			text-align: center;
+			font-weight: 800;
+			font-size: 0.92rem;
+		}
+
+		.online-voter-banner.my-turn {
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			font-family: 'Bungee', cursive;
+			font-size: 0.96rem;
+			letter-spacing: 0.4px;
+			animation: ballotLeaderPulse 0.85s ease-in-out infinite alternate;
+		}
+
+		.online-voter-banner.waiting-turn {
+			background: #1a0933;
+			color: var(--cyan-electric);
+			border-color: var(--cyan-electric);
+		}
+
+		.online-targets-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+			gap: 10px;
+			margin-bottom: 14px;
+			max-height: 34vh;
+			overflow-y: auto;
+			padding: 2px;
+		}
+
+		.online-target-btn {
+			background: #2f0d63;
+			color: #ffffff;
+			border: 3px solid var(--ink-black);
+			box-shadow: 4px 4px 0px var(--ink-black);
+			border-radius: 16px;
+			padding: 11px 12px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+			cursor: pointer;
+			font-family: inherit;
+			text-align: left;
+			transition: all 0.16s var(--ease-spring);
+		}
+
+		.online-target-btn:hover:not(:disabled) {
+			background: var(--pink-shock);
+			transform: translate(-2px, -2px);
+			box-shadow: 6px 6px 0px var(--ink-black);
+		}
+
+		.online-target-btn:active:not(:disabled) {
+			transform: translate(2px, 2px);
+			box-shadow: 1px 1px 0px var(--ink-black);
+		}
+
+		.online-target-btn:disabled {
+			cursor: default;
+			opacity: 0.88;
+			background: #1a0933;
+		}
+
+		.online-target-btn.leading-online {
+			border-color: var(--yellow-acid);
+			box-shadow: 4px 4px 0px var(--yellow-acid);
+		}
+
+		.online-target-action-pill {
+			background: var(--yellow-acid);
+			color: var(--ink-black);
+			border: 2px solid var(--ink-black);
+			border-radius: var(--radius-pill);
+			padding: 4px 9px;
+			font-family: 'Bungee', cursive;
+			font-size: 0.72rem;
+			white-space: nowrap;
+			flex-shrink: 0;
+		}
+
+		.online-target-btn:disabled .online-target-action-pill {
+			background: rgba(255, 255, 255, 0.12);
+			color: #ffffff;
+		}
+
+		.online-vote-feed-box {
+			background: rgba(15, 7, 30, 0.72);
+			border: 3px solid var(--ink-black);
+			border-radius: 16px;
+			padding: 10px 12px;
+			margin-bottom: 10px;
+			text-align: left;
+		}
+
+		.online-vote-feed-title {
+			font-size: 0.72rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.8px;
+			color: var(--yellow-acid);
+			margin-bottom: 6px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.online-vote-feed-list {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			max-height: 130px;
+			overflow-y: auto;
+		}
+
+		.online-vote-feed-item {
+			background: rgba(255, 255, 255, 0.07);
+			border-left: 4px solid var(--cyan-electric);
+			border-radius: 8px;
+			padding: 6px 10px;
+			font-size: 0.82rem;
+			font-weight: 700;
+			color: #f3e8ff;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+			animation: popBannerIn 0.25s var(--ease-spring);
+		}
+
+		@media (max-width: 640px) {
+
+			.play-mode-switch,
+			.online-form-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.online-targets-grid {
+				grid-template-columns: 1fr;
+			}
+		}
 	</style>
 </head>
 
@@ -2444,6 +3009,12 @@
 		</div>
 
 		<div class="top-actions">
+			<div class="online-top-pill" id="onlineTopPill" title="Status da Sala Online">
+				<span class="online-sync-dot"></span>
+				<span id="onlineTopPillText">🌐 Sala Online</span>
+				<button class="btn-neo pink" id="btnLeaveOnlineTop" type="button"
+					style="padding:3px 9px;font-size:0.7rem;border-width:2px;box-shadow:none;">Sair</button>
+			</div>
 			<button class="btn-neo cyan" id="btnOpenCustomModal" title="Criar nova carta personalizada">
 				✏️ +Carta
 			</button>
@@ -2494,30 +3065,233 @@
 				combina com a frase. Quem acumular mais pontos é coroado o <strong>Amigo de Merda</strong>!
 			</p>
 
-			<span class="mode-selector-label">Escolha o Modo do Baralho:</span>
-			<div class="mode-grid" id="homeModeGrid">
-				<div class="mode-option selected" data-mode="all">
-					<span class="mode-emoji">🎲</span>
-					<span class="mode-name">Tudo Misturado</span>
-					<span class="mode-desc">Todas as 126 cartas sem censura</span>
+			<span class="mode-selector-label">Como vocês vão jogar hoje?</span>
+			<div class="play-mode-switch" id="playModeSwitch" role="tablist" aria-label="Escolha o Modo de Jogo">
+				<button type="button" class="play-mode-btn active" id="btnSelectModeLocal" data-play-mode="local"
+					role="tab" aria-selected="true">
+					<span>📱 Só nessa tela (Local)</span>
+				</button>
+				<button type="button" class="play-mode-btn" id="btnSelectModeOnline" data-play-mode="online" role="tab"
+					aria-selected="false">
+					<span>🌐 Modo Online (Multiplayer)</span>
+				</button>
+			</div>
+
+			<!-- PAINEL 1: MODO LOCAL ("Só nessa tela") -->
+			<div class="home-subpanel active" id="homeLocalPanel">
+				<span class="mode-selector-label">Escolha o Modo do Baralho:</span>
+				<div class="mode-grid" id="homeModeGrid">
+					<div class="mode-option selected" data-mode="all">
+						<span class="mode-emoji">🎲</span>
+						<span class="mode-name">Tudo Misturado</span>
+						<span class="mode-desc">Todas as 126 cartas sem censura</span>
+					</div>
+					<div class="mode-option" data-mode="clean">
+						<span class="mode-emoji">😇</span>
+						<span class="mode-name">Sem +18</span>
+						<span class="mode-desc">Só tretas e caos (sem sexo)</span>
+					</div>
+					<div class="mode-option" data-mode="spicy">
+						<span class="mode-emoji">🔥</span>
+						<span class="mode-name">Só Proibidão +18</span>
+						<span class="mode-desc">Apenas as cartas mais pesadas</span>
+					</div>
 				</div>
-				<div class="mode-option" data-mode="clean">
-					<span class="mode-emoji">😇</span>
-					<span class="mode-name">Sem +18</span>
-					<span class="mode-desc">Só tretas e caos (sem sexo)</span>
-				</div>
-				<div class="mode-option" data-mode="spicy">
-					<span class="mode-emoji">🔥</span>
-					<span class="mode-name">Só Proibidão +18</span>
-					<span class="mode-desc">Apenas as cartas mais pesadas</span>
+
+				<div class="hero-cta-group">
+					<button class="btn-cta-big" id="btnStartGame">
+						<span>COMEÇAR O JOGO</span>
+						<span>👉</span>
+					</button>
 				</div>
 			</div>
 
-			<div class="hero-cta-group">
-				<button class="btn-cta-big" id="btnStartGame">
-					<span>COMEÇAR O JOGO</span>
-					<span>👉</span>
-				</button>
+			<!-- PAINEL 2: MODO ONLINE MULTIPLAYER (PeerJS P2P) -->
+			<div class="home-subpanel" id="homeOnlinePanel">
+				<!-- Banner de Erro / Rejeição Neo-Brutalista -->
+				<div class="online-error-banner" id="onlineErrorBanner" role="alert">
+					<span id="onlineErrorText">🚨 Erro ao conectar na sala.</span>
+					<button type="button" class="btn-neo dark" id="btnDismissOnlineError"
+						style="padding:4px 10px;font-size:0.75rem;">✕</button>
+				</div>
+
+				<div class="online-role-tabs" id="onlineRoleTabs">
+					<button type="button" class="online-tab-btn active" id="tabBtnCreateRoom" data-online-tab="host">
+						<span>👑 Criar Sala (Host)</span>
+					</button>
+					<button type="button" class="online-tab-btn" id="tabBtnJoinRoom" data-online-tab="client">
+						<span>🚪 Entrar na Sala (Cliente)</span>
+					</button>
+				</div>
+
+				<!-- ABA 1: CRIAR SALA (HOST) -->
+				<div class="online-tab-panel active" id="onlinePanelHost">
+					<!-- Formulário de Criação da Sala -->
+					<div id="hostCreateFormWrap">
+						<div class="online-form-grid">
+							<div class="online-field-group">
+								<label class="online-field-label" for="hostNicknameInput">👤 Seu Apelido (Host):</label>
+								<input type="text" class="input-neo" id="hostNicknameInput" placeholder="Ex: Samuel"
+									maxlength="22" autocomplete="off">
+							</div>
+							<div class="online-field-group">
+								<label class="online-field-label" for="hostPasswordInput">🔑 Senha da Sala:</label>
+								<input type="text" class="input-neo" id="hostPasswordInput" placeholder="Ex: treta123"
+									maxlength="20" autocomplete="off">
+							</div>
+						</div>
+
+						<span class="mode-selector-label" style="text-align:center;">Modo do Baralho da Sala:</span>
+						<div class="mode-grid" id="onlineHostModeGrid" style="margin-bottom:16px;">
+							<div class="mode-option selected" data-mode="all">
+								<span class="mode-emoji">🎲</span>
+								<span class="mode-name">Tudo Misturado</span>
+								<span class="mode-desc">126 cartas sem censura</span>
+							</div>
+							<div class="mode-option" data-mode="clean">
+								<span class="mode-emoji">😇</span>
+								<span class="mode-name">Sem +18</span>
+								<span class="mode-desc">Só tretas e caos</span>
+							</div>
+							<div class="mode-option" data-mode="spicy">
+								<span class="mode-emoji">🔥</span>
+								<span class="mode-name">Só Proibidão +18</span>
+								<span class="mode-desc">Cartas mais pesadas</span>
+							</div>
+						</div>
+
+						<button type="button" class="btn-cta-big" id="btnCreateOnlineRoom"
+							style="width:100%;justify-content:center;font-size:1.05rem;padding:14px 20px;">
+							<span>👑 CRIAR SALA ONLINE</span>
+						</button>
+					</div>
+
+					<!-- Lobby Ativo do Host (após criar a sala) -->
+					<div id="hostActiveLobbyWrap" style="display:none;">
+						<div class="online-room-credentials">
+							<div class="online-cred-item">
+								<span class="online-cred-label">🌐 ID DA SALA</span>
+								<span class="online-cred-value" id="hostRoomIdDisplay">-----</span>
+							</div>
+							<div class="online-cred-item">
+								<span class="online-cred-label">🔑 SENHA</span>
+								<span class="online-cred-pass" id="hostRoomPassDisplay">-----</span>
+							</div>
+							<button type="button" class="btn-neo cyan" id="btnCopyRoomInvite"
+								style="font-size:0.82rem;padding:10px 14px;">
+								📋 Copiar Convite (ID + Senha)
+							</button>
+						</div>
+
+						<span class="mode-selector-label" style="text-align:center;">Baralho da Sala
+							(Sincronizado):</span>
+						<div class="mode-grid" id="hostActiveModeGrid" style="margin-bottom:14px;">
+							<div class="mode-option selected" data-mode="all">
+								<span class="mode-emoji">🎲</span>
+								<span class="mode-name">Tudo</span>
+							</div>
+							<div class="mode-option" data-mode="clean">
+								<span class="mode-emoji">😇</span>
+								<span class="mode-name">Sem +18</span>
+							</div>
+							<div class="mode-option" data-mode="spicy">
+								<span class="mode-emoji">🔥</span>
+								<span class="mode-name">Só +18</span>
+							</div>
+						</div>
+
+						<div class="online-connected-box">
+							<div class="online-connected-header">
+								<span>👥 LISTA DE CONECTADOS NA SALA</span>
+								<span id="hostConnectedCountBadge">1 conectado(s)</span>
+							</div>
+							<div class="online-connected-list" id="hostConnectedPlayersList">
+								<!-- Injetado via JS -->
+							</div>
+						</div>
+
+						<p id="hostStartStatusHint"
+							style="font-size:0.8rem;color:#e9d5ff;text-align:center;margin-bottom:10px;font-weight:700;">
+							⏳ Aguardando pelo menos 2 jogadores conectados para iniciar...
+						</p>
+
+						<div style="display:flex;gap:10px;flex-wrap:wrap;">
+							<button type="button" class="btn-cta-big" id="btnStartOnlineMatch" disabled
+								style="flex:1;justify-content:center;font-size:1rem;padding:14px 18px;opacity:0.55;cursor:not-allowed;">
+								<span>🚀 INICIAR PARTIDA ONLINE</span>
+							</button>
+							<button type="button" class="btn-neo dark" id="btnCancelHostRoom"
+								style="justify-content:center;">
+								✕ Fechar Sala
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- ABA 2: ENTRAR NA SALA (CLIENTE) -->
+				<div class="online-tab-panel" id="onlinePanelClient">
+					<!-- Formulário de Entrada do Cliente -->
+					<div id="clientJoinFormWrap">
+						<div class="online-form-grid">
+							<div class="online-field-group">
+								<label class="online-field-label" for="joinRoomIdInput">🌐 ID da Sala:</label>
+								<input type="text" class="input-neo" id="joinRoomIdInput" placeholder="Ex: A7K9X"
+									maxlength="16" autocomplete="off"
+									style="text-transform:uppercase;letter-spacing:1.5px;font-family:'Bungee',cursive;">
+							</div>
+							<div class="online-field-group">
+								<label class="online-field-label" for="joinPasswordInput">🔑 Senha da Sala:</label>
+								<input type="text" class="input-neo" id="joinPasswordInput" placeholder="Senha da sala"
+									maxlength="20" autocomplete="off">
+							</div>
+							<div class="online-field-group full-width">
+								<label class="online-field-label" for="joinNicknameInput">👤 Seu Apelido na
+									Roda:</label>
+								<input type="text" class="input-neo" id="joinNicknameInput" placeholder="Ex: Lucas"
+									maxlength="22" autocomplete="off">
+							</div>
+						</div>
+
+						<button type="button" class="btn-cta-big" id="btnJoinOnlineRoom"
+							style="width:100%;justify-content:center;font-size:1.05rem;padding:14px 20px;background:var(--cyan-electric);">
+							<span>🚪 ENTRAR NA SALA</span>
+						</button>
+					</div>
+
+					<!-- Sala de Espera do Cliente (após autenticado no Host) -->
+					<div id="clientWaitingLobbyWrap" style="display:none;">
+						<div class="online-room-credentials">
+							<div class="online-cred-item">
+								<span class="online-cred-label">🌐 CONECTADO NA SALA</span>
+								<span class="online-cred-value" id="clientRoomIdDisplay">-----</span>
+							</div>
+							<div class="online-cred-item">
+								<span class="online-cred-label">🎲 MODO DO BARALHO</span>
+								<span class="online-cred-pass" id="clientRoomModeDisplay">Tudo Misturado</span>
+							</div>
+						</div>
+
+						<div class="online-connected-box">
+							<div class="online-connected-header">
+								<span>👥 LISTA DE CONECTADOS NA SALA</span>
+								<span id="clientConnectedCountBadge">2 conectado(s)</span>
+							</div>
+							<div class="online-connected-list" id="clientConnectedPlayersList">
+								<!-- Injetado via JS -->
+							</div>
+						</div>
+
+						<div
+							style="background:rgba(0,245,212,0.12);border:2.5px solid var(--cyan-electric);border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;font-weight:800;font-size:0.86rem;color:var(--cyan-electric);">
+							⏳ Conectado e sincronizado! Aguardando o Host iniciar a partida...
+						</div>
+
+						<button type="button" class="btn-neo pink" id="btnDisconnectClientLobby"
+							style="width:100%;justify-content:center;">
+							🚪 Sair da Sala
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</main>
@@ -2651,6 +3425,10 @@
 						<span>PRÓXIMA CARTA</span>
 						<span>🎲</span>
 					</button>
+					<div class="online-client-sync-badge" id="onlineClientSyncBadge" role="status">
+						<span class="online-sync-dot"></span>
+						<span id="onlineClientSyncText">🌐 Sala ----- • Sincronizado com Host</span>
+					</div>
 					<button class="btn-neo pink btn-icon-only" id="btnRandomReaction"
 						title="Soltar Chuva de Merda na tela!">
 						🎉
@@ -2926,6 +3704,80 @@
 			<button class="btn-neo yellow" id="btnConfirmBallot" type="button"
 				style="width:100%;justify-content:center;font-family:'Bungee',cursive;font-size:0.95rem;padding:12px 16px;">
 				CONFIRMAR RESULTADO DA RODA ⚖️
+			</button>
+		</div>
+	</div>
+
+	<!-- ================= MODAL: VOTAÇÃO ABERTA POR TURNOS (#modalOnlineBallot) ================= -->
+	<div class="modal-overlay" id="modalOnlineBallot">
+		<div class="modal-box online-ballot-box">
+			<div class="modal-title">
+				<span>🗳️ VOTAÇÃO ABERTA POR TURNOS</span>
+				<span class="score-pill-badge" id="onlineBallotProgressBadge"
+					style="font-size:0.82rem;padding:4px 10px;">0 / 0 votos</span>
+			</div>
+
+			<div class="online-ballot-card-quote" id="onlineBallotCardQuote">
+				"Pergunta da rodada..."
+			</div>
+
+			<div class="ballot-chaos-badge" id="onlineBallotChaosBadge">
+				<span id="onlineBallotChaosText">🔥 RODADA EM DOBRO (+2 PONTOS)</span>
+			</div>
+
+			<!-- Fila Visual de Turnos -->
+			<div class="online-turn-queue" id="onlineBallotTurnQueue" aria-label="Fila de Turnos de Votação">
+				<!-- Preenchido via JS -->
+			</div>
+
+			<!-- Banner Dinâmico: Sua Vez vs Aguardando Vez de [Nome] -->
+			<div class="online-voter-banner waiting-turn" id="onlineBallotTurnBanner" role="status" aria-live="polite">
+				⏳ Vez de ... votar...
+			</div>
+
+			<!-- Grade de Alvos para Votar -->
+			<div class="online-targets-grid" id="onlineBallotTargetsGrid">
+				<!-- Preenchido via JS -->
+			</div>
+
+			<!-- Painel de Desempate Online (Controlado pelo Host) -->
+			<div class="ballot-tie-box" id="onlineBallotTieBox">
+				<div class="ballot-tie-title">⚖️ EMPATE NA VOTAÇÃO ABERTA!</div>
+				<p class="ballot-tie-desc" id="onlineBallotTieDesc">
+					Empate no 1º lugar! O Host vai decidir o desempate da rodada.
+				</p>
+				<div class="ballot-tie-actions" id="onlineBallotTieActions">
+					<!-- Botões de desempate para o Host ou mensagem de espera para Clientes -->
+				</div>
+			</div>
+
+			<!-- Feed de Votos Abertos em Tempo Real -->
+			<div class="online-vote-feed-box">
+				<div class="online-vote-feed-title">
+					<span>📢 FEED DE VOTOS AO VIVO (VOTO ABERTO)</span>
+					<span id="onlineBallotFeedCount">0 voto(s)</span>
+				</div>
+				<ul class="online-vote-feed-list" id="onlineBallotFeedList">
+					<!-- Ex: 😈 Samuel votou em 🤡 Lucas -->
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-- ================= MODAL: DESCONEXÃO DO HOST (#modalHostDisconnected) ================= -->
+	<div class="modal-overlay" id="modalHostDisconnected">
+		<div class="modal-box" style="text-align:center;max-width:440px;">
+			<div class="modal-title" style="justify-content:center;">
+				<span>🔌 SALA ENCERRADA</span>
+			</div>
+			<div style="font-size:3.4rem;margin:6px 0 10px;">💥💩</div>
+			<p id="hostDisconnectedMsg"
+				style="font-size:0.96rem;color:#e9d5ff;line-height:1.5;margin-bottom:20px;font-weight:700;">
+				O Host encerrou a sala ou a conexão com o servidor da partida foi perdida.
+			</p>
+			<button type="button" class="btn-cta-big" id="btnReturnHomeFromDisconnect"
+				style="width:100%;justify-content:center;font-size:1rem;padding:14px 20px;">
+				<span>🏠 VOLTAR PARA A TELA INICIAL</span>
 			</button>
 		</div>
 	</div>
@@ -3543,7 +4395,42 @@
 			cardsAdvancedCount: 0,
 			activeChaosEvent: null, // null | 'double' | 'silent' | 'invert'
 			currentCardVoted: false, // Trava de voto único por carta na rodada atual
-			votedCardsByCardId: {} // Mapa { [cardId]: { winnerIds: [], winnerNames: [], delta: 1 } }
+			votedCardsByCardId: {}, // Mapa { [cardId]: { winnerIds: [], winnerNames: [], delta: 1 } }
+			resolvedCardText: "" // Texto já resolvido com {P1} e {P2} sincronizado pelo Host
+		};
+
+		/* Estado da Sessão Online Multiplayer (PeerJS WebRTC Host-Authoritative) */
+		const PEER_ROOM_PREFIX = "adm-sa-room-";
+		let onlineSession = {
+			active: false,
+			role: null, // 'host' | 'client' | null
+			roomId: "",
+			password: "",
+			myPlayerId: "",
+			myNickname: "",
+			peer: null,
+			hostConn: null,
+			peers: new Map(), // Map<playerId, DataConnection>
+			activeScreen: "home" // 'home' | 'game'
+		};
+
+		let localStateSnapshot = null;
+
+		let onlineBallot = {
+			open: false,
+			cardId: null,
+			cardText: "",
+			chaosEvent: null,
+			turnOrder: [],
+			currentVoterIndex: 0,
+			votes: [],
+			tallied: false,
+			tiePending: false,
+			tiedLeaderIds: [],
+			maxVotesCount: 0,
+			winnerIds: [],
+			winnerNames: [],
+			delta: 1
 		};
 
 		// Cache do texto resolvido da carta atual (para manter {P1} e {P2} consistentes na rodada)
@@ -3600,6 +4487,8 @@
 		}
 
 		function saveState() {
+			// Ignora gravações no localStorage durante sessões online para preservar partidas locais salvas
+			if (onlineSession.active) return;
 			try {
 				localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 			} catch (e) {
@@ -3643,7 +4532,12 @@
 			state.activeChaosEvent = null;
 			state.currentCardVoted = false;
 			state.votedCardsByCardId = {};
+			state.resolvedCardText = "";
 			currentDynamicCache.key = "";
+			const firstCard = getCurrentCardObj();
+			if (firstCard) {
+				state.resolvedCardText = resolveCardText(firstCard);
+			}
 			saveState();
 		}
 
@@ -3677,15 +4571,21 @@
 
 		function resolveCardText(card) {
 			if (!card) return "";
+			// Em Modo Online, Clientes usam exatamente o texto já resolvido pelo Host
+			if (onlineSession.active && onlineSession.role === "client" && state.resolvedCardText) {
+				return state.resolvedCardText;
+			}
 			const rawText = card.text || "";
 			if (!rawText.includes("{P1}") && !rawText.includes("{P2}")) {
 				currentDynamicCache = { key: `${card.id}_${state.currentIndex}`, resolvedText: rawText };
+				state.resolvedCardText = rawText;
 				return rawText;
 			}
 
 			const playerKey = state.players.map(p => p.id).join(",");
 			const cacheKey = `${card.id}_${state.currentIndex}_${playerKey}`;
 			if (currentDynamicCache.key === cacheKey && currentDynamicCache.resolvedText) {
+				state.resolvedCardText = currentDynamicCache.resolvedText;
 				return currentDynamicCache.resolvedText;
 			}
 
@@ -3705,6 +4605,7 @@
 				.replace(/\{P2\}/g, p2Name);
 
 			currentDynamicCache = { key: cacheKey, resolvedText: resolved };
+			state.resolvedCardText = resolved;
 			return resolved;
 		}
 
@@ -3814,6 +4715,7 @@
 		}
 
 		function nextCard(opts) {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			NarratorTTS.cancel();
 			if (state.currentIndex + 1 >= state.deckOrder.length) {
 				// Fim do baralho!
@@ -3822,9 +4724,15 @@
 				if (state.players.length > 0) {
 					resetCardDrag(true);
 					openWinnerModal();
+					if (onlineSession.active && onlineSession.role === "host") {
+						broadcastToPeers({ type: "OPEN_WINNER" });
+					}
 				} else {
 					buildShuffledDeck(state.mode);
 					renderCurrentCard(true, 1, opts);
+					if (onlineSession.active && onlineSession.role === "host") {
+						broadcastSyncState({ cardFlip: true, direction: 1 });
+					}
 				}
 				return;
 			}
@@ -3832,6 +4740,7 @@
 			state.currentIndex++;
 			state.cardsAdvancedCount = (state.cardsAdvancedCount || 0) + 1;
 			currentDynamicCache.key = "";
+			state.resolvedCardText = "";
 
 			// A cada 6 cartas avançadas, dispara um Evento Caótico de Rodada!
 			if (state.cardsAdvancedCount > 0 && state.cardsAdvancedCount % 6 === 0) {
@@ -3846,22 +4755,35 @@
 				state.activeChaosEvent = null;
 			}
 
+			const curCard = getCurrentCardObj();
+			if (curCard) resolveCardText(curCard);
+
 			syncCurrentCardVoteLock();
 			saveState();
 			renderPlayers();
 			renderCurrentCard(true, 1, opts);
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastSyncState({ cardFlip: true, direction: 1, chaosTriggered: !!state.activeChaosEvent });
+			}
 		}
 
 		function prevCard(opts) {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			NarratorTTS.cancel();
 			if (state.currentIndex > 0) {
 				state.currentIndex--;
 				state.activeChaosEvent = null;
 				currentDynamicCache.key = "";
+				state.resolvedCardText = "";
+				const curCard = getCurrentCardObj();
+				if (curCard) resolveCardText(curCard);
 				syncCurrentCardVoteLock();
 				saveState();
 				renderPlayers();
 				renderCurrentCard(true, -1, opts);
+				if (onlineSession.active && onlineSession.role === "host") {
+					broadcastSyncState({ cardFlip: true, direction: -1 });
+				}
 			} else {
 				// Feedback de "não dá pra voltar mais": balançadinha
 				resetCardDrag(true);
@@ -3975,6 +4897,7 @@
 		});
 
 		cardSceneEl.addEventListener("pointerdown", (e) => {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			if (e.button !== 0 || flyingOut) return;
 			if (e.target.closest("button, textarea, input, select")) return;
 			cardDrag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, locked: false, samples: [{ x: e.clientX, t: e.timeStamp }] };
@@ -4096,7 +5019,15 @@
 							countdownOverlayEl.classList.remove("active");
 							if (pendingBallotAfterCountdown) {
 								pendingBallotAfterCountdown = false;
-								openBallotModal();
+								if (onlineSession.active) {
+									if (onlineSession.role === "host") {
+										startOnlineTurnBallotOnHost();
+									} else if (onlineBallot.open) {
+										openOnlineBallotModalUI();
+									}
+								} else {
+									openBallotModal();
+								}
 							}
 						}, 580);
 					}
@@ -4109,6 +5040,7 @@
 		}
 
 		countdownOverlayEl.addEventListener("click", () => {
+			if (onlineSession.active) return; // No modo online a contagem é sincronizada até o fim
 			if (countdownTimer) clearInterval(countdownTimer);
 			countdownTimer = null;
 			countdownOverlayEl.classList.remove("active");
@@ -4197,6 +5129,7 @@
 		}
 
 		function startCardVotingFlow(triggerEvent) {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			syncCurrentCardVoteLock();
 			if (state.currentCardVoted) {
 				SoundFX.playBuzzer();
@@ -4204,11 +5137,16 @@
 			}
 			if (state.players.length < 2) {
 				SoundFX.playBuzzer();
-				toggleScoreDrawer(true);
+				if (!onlineSession.active) {
+					toggleScoreDrawer(true);
+				}
 				const cx = triggerEvent && triggerEvent.clientX ? triggerEvent.clientX : window.innerWidth / 2;
 				const cy = triggerEvent && triggerEvent.clientY ? triggerEvent.clientY : window.innerHeight / 2;
-				FloatFX.pop(cx, cy, "Cadastre 2+ amigos! 👥", true);
+				FloatFX.pop(cx, cy, onlineSession.active ? "Aguarde 2+ jogadores na sala! 👥" : "Cadastre 2+ amigos! 👥", true);
 				return;
+			}
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastToPeers({ type: "COUNTDOWN_3S", openBallotAfter: true });
 			}
 			triggerCountdown(true);
 		}
@@ -4373,6 +5311,7 @@
 		}
 
 		function addPlayer(name) {
+			if (onlineSession.active) return; // Elenco bloqueado no Modo Online
 			const clean = name.trim();
 			if (!clean) return;
 			const randomAvatar = PLAYER_AVATARS[Math.floor(Math.random() * PLAYER_AVATARS.length)];
@@ -4392,13 +5331,14 @@
 			}
 		}
 
-		function changeScore(playerId, delta) {
+		function changeScore(playerId, delta, opts = {}) {
 			const p = state.players.find(item => item.id === playerId);
-			if (!p) return;
+			if (!p) return false;
 			if (!Array.isArray(p.votedCards)) p.votedCards = [];
 
 			const prevScore = p.score;
 			p.score = Math.max(0, p.score + delta);
+			let triggeredFiveMultiple = false;
 
 			if (delta > 0) {
 				const currentCard = getCurrentCardObj();
@@ -4419,11 +5359,14 @@
 				);
 
 				if (crossedFiveMultiple) {
-					const card = document.getElementById(`sideCard_${playerId}`);
-					const r = card ? card.getBoundingClientRect() : null;
-					ConfettiFX.burst(55, r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : undefined);
-					SoundFX.playFanfare();
-					openPunishModal(p);
+					triggeredFiveMultiple = true;
+					if (!opts.suppressAutoPunish) {
+						const card = document.getElementById(`sideCard_${playerId}`);
+						const r = card ? card.getBoundingClientRect() : null;
+						ConfettiFX.burst(55, r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : undefined);
+						SoundFX.playFanfare();
+						openPunishModal(p);
+					}
 				}
 			} else if (delta < 0 && prevScore > 0) {
 				p.votedCards.pop();
@@ -4455,6 +5398,7 @@
 					], { duration: 380, easing: "cubic-bezier(.34,1.56,.64,1)" });
 				}
 			}
+			return triggeredFiveMultiple;
 		}
 
 		/* ==========================================================================
@@ -4649,8 +5593,9 @@
 		const punishSlotLabelEl = document.getElementById("punishSlotLabel");
 		const punishSlotTextEl = document.getElementById("punishSlotText");
 		let punishSpinTimer = null;
+		let currentPunishedPlayer = null;
 
-		function spinPunishSlot() {
+		function spinPunishSlot(forcedTargetIndex) {
 			if (punishSpinTimer) clearTimeout(punishSpinTimer);
 			punishSlotMachineEl.classList.remove("locked");
 			punishSlotMachineEl.classList.add("spinning");
@@ -4659,10 +5604,14 @@
 			const totalSteps = 16;
 			let currentStep = 0;
 			let lastIndex = -1;
+			const hasForced = typeof forcedTargetIndex === "number" && forcedTargetIndex >= 0;
 
 			const stepTick = () => {
 				let idx = Math.floor(Math.random() * PUNISHMENTS_LIST.length);
 				if (idx === lastIndex) idx = (idx + 1) % PUNISHMENTS_LIST.length;
+				if (hasForced && currentStep === totalSteps - 1) {
+					idx = forcedTargetIndex % PUNISHMENTS_LIST.length;
+				}
 				lastIndex = idx;
 
 				punishSlotTextEl.textContent = PUNISHMENTS_LIST[idx];
@@ -4685,12 +5634,13 @@
 			stepTick();
 		}
 
-		function openPunishModal(player) {
+		function openPunishModal(player, forcedTargetIndex) {
 			if (!player) return;
+			currentPunishedPlayer = player;
 			punishVictimAvatarEl.textContent = player.avatar || "😈";
 			punishVictimNameEl.textContent = `${player.name} (${player.score} pts)`;
 			modalPunishEl.classList.add("open");
-			spinPunishSlot();
+			spinPunishSlot(forcedTargetIndex);
 		}
 
 		/* ==========================================================================
@@ -5021,6 +5971,7 @@
 		const screenGameEl = document.getElementById("screenGame");
 
 		function showGameScreen() {
+			onlineSession.activeScreen = "game";
 			screenHomeEl.classList.remove("active");
 			screenGameEl.classList.add("active");
 			if (!state.deckOrder.length || state.currentIndex < 0) {
@@ -5051,14 +6002,22 @@
 		}
 
 		function showHomeScreen() {
+			if (onlineSession.active && onlineSession.role === "client" && onlineSession.activeScreen === "game") {
+				FloatFX.pop(window.innerWidth / 2, 70, "🌐 Tela sincronizada com o Host!");
+				return;
+			}
 			NarratorTTS.cancel();
+			onlineSession.activeScreen = "home";
 			screenGameEl.classList.remove("active");
 			screenHomeEl.classList.add("active");
 			syncModeButtonsUI();
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastSyncState();
+			}
 		}
 
 		function syncModeButtonsUI() {
-			document.querySelectorAll("#homeModeGrid .mode-option").forEach(el => {
+			document.querySelectorAll("#homeModeGrid .mode-option, #onlineHostModeGrid .mode-option, #hostActiveModeGrid .mode-option").forEach(el => {
 				el.classList.toggle("selected", el.dataset.mode === state.mode);
 			});
 			document.querySelectorAll("#gameFilterChips .chip-btn").forEach(el => {
@@ -5071,29 +6030,38 @@
 			btn.textContent = SoundFX.muted ? "🔇" : "🔊";
 		}
 
-		// Seleção de modo na Home
-		document.querySelectorAll("#homeModeGrid .mode-option").forEach(el => {
+		// Seleção de modo na Home (Local e Lobby Host)
+		document.querySelectorAll("#homeModeGrid .mode-option, #onlineHostModeGrid .mode-option, #hostActiveModeGrid .mode-option").forEach(el => {
 			el.addEventListener("click", () => {
+				if (onlineSession.active && onlineSession.role !== "host") return;
 				const newMode = el.dataset.mode;
 				buildShuffledDeck(newMode);
 				syncModeButtonsUI();
 				SoundFX.playFlip();
+				if (onlineSession.active && onlineSession.role === "host") {
+					renderOnlineLobbyUI();
+					broadcastSyncState({ cardFlip: true, direction: 1 });
+				}
 			});
 		});
 
 		// Seleção de modo durante o jogo
 		document.querySelectorAll("#gameFilterChips .chip-btn").forEach(el => {
 			el.addEventListener("click", () => {
+				if (onlineSession.active && onlineSession.role !== "host") return;
 				const newMode = el.dataset.mode;
 				if (newMode !== state.mode) {
 					buildShuffledDeck(newMode);
 					renderPlayers();
 					renderCurrentCard(true);
+					if (onlineSession.active && onlineSession.role === "host") {
+						broadcastSyncState({ cardFlip: true, direction: 1 });
+					}
 				}
 			});
 		});
 
-		// Começar o Jogo
+		// Começar o Jogo (Modo Local)
 		document.getElementById("btnStartGame").addEventListener("click", () => {
 			if (!state.deckOrder.length) {
 				buildShuffledDeck(state.mode);
@@ -5113,17 +6081,29 @@
 		document.getElementById("btnNextCard").addEventListener("click", nextCard);
 		document.getElementById("btnPrevCard").addEventListener("click", prevCard);
 		document.getElementById("btnResetDeck").addEventListener("click", () => {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			buildShuffledDeck(state.mode);
 			syncCurrentCardVoteLock();
 			renderPlayers();
 			renderCurrentCard(true);
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastSyncState({ cardFlip: true, direction: 1 });
+			}
 		});
 		document.getElementById("btnRandomReaction").addEventListener("click", () => {
 			ConfettiFX.burst(35);
 			SoundFX.playPoint();
+			if (onlineSession.active) {
+				if (onlineSession.role === "host") {
+					broadcastToPeers({ type: "CONFETTI_BURST", count: 35 });
+				} else if (onlineSession.hostConn && onlineSession.hostConn.open) {
+					onlineSession.hostConn.send({ type: "CLIENT_FX_REQUEST", fx: "confetti" });
+				}
+			}
 		});
 		document.getElementById("btnTriggerCountdown").addEventListener("click", (e) => {
 			e.stopPropagation();
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			if (state.currentCardVoted) {
 				SoundFX.playBuzzer();
 				return;
@@ -5131,11 +6111,14 @@
 			if (state.players.length >= 2) {
 				startCardVotingFlow(e);
 			} else {
+				if (onlineSession.active && onlineSession.role === "host") {
+					broadcastToPeers({ type: "COUNTDOWN_3S", openBallotAfter: false });
+				}
 				triggerCountdown(false);
 			}
 		});
 
-		// Eventos do Modal Urna da Discórdia (#modalBallot)
+		// Eventos do Modal Urna da Discórdia (#modalBallot - Modo Local)
 		document.getElementById("btnCloseBallot").addEventListener("click", () => {
 			modalBallotEl.classList.remove("open");
 		});
@@ -5181,12 +6164,21 @@
 		});
 
 		// Botões do Soundboard Rápido
-		function triggerSoundboardBtn(btnId, soundMethod) {
+		function triggerSoundboardBtn(btnId, soundMethod, fromRemote = false) {
 			const btn = document.getElementById(btnId);
-			SoundFX[soundMethod]();
+			if (typeof SoundFX[soundMethod] === "function") {
+				SoundFX[soundMethod]();
+			}
 			if (btn) {
 				btn.classList.add("playing");
 				setTimeout(() => btn.classList.remove("playing"), 260);
+			}
+			if (!fromRemote && onlineSession.active) {
+				if (onlineSession.role === "host") {
+					broadcastToPeers({ type: "PLAY_SOUNDBOARD", btnId, soundMethod });
+				} else if (onlineSession.hostConn && onlineSession.hostConn.open) {
+					onlineSession.hostConn.send({ type: "CLIENT_FX_REQUEST", fx: "soundboard", btnId, soundMethod });
+				}
 			}
 		}
 
@@ -5196,13 +6188,20 @@
 
 		// Salvar texto na Carta em Branco (#53)
 		document.getElementById("btnApplyBlankCard").addEventListener("click", () => {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			const val = blankCardInputEl.value.trim();
 			if (!val) return;
 			state.blankCardCustomText = val;
 			currentDynamicCache.key = "";
+			state.resolvedCardText = "";
+			const curCard = getCurrentCardObj();
+			if (curCard) resolveCardText(curCard);
 			saveState();
 			renderCurrentCard(false);
 			SoundFX.playPoint();
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastSyncState();
+			}
 		});
 
 		// Som Mute/Unmute
@@ -5222,7 +6221,7 @@
 			const isOpen = open !== undefined ? open : !scoreDrawerEl.classList.contains("open");
 			scoreDrawerEl.classList.toggle("open", isOpen);
 			drawerBackdropEl.classList.toggle("open", isOpen);
-			if (isOpen) {
+			if (isOpen && !onlineSession.active) {
 				setTimeout(() => document.getElementById("playerNameInput").focus(), 150);
 			}
 		}
@@ -5233,6 +6232,7 @@
 
 		document.getElementById("addPlayerForm").addEventListener("submit", (e) => {
 			e.preventDefault();
+			if (onlineSession.active) return;
 			const input = document.getElementById("playerNameInput");
 			addPlayer(input.value);
 			input.value = "";
@@ -5240,6 +6240,7 @@
 		});
 
 		playerListContainerEl.addEventListener("click", (e) => {
+			if (onlineSession.active) return; // Bloqueado no modo online
 			const btn = e.target.closest("button[data-action]");
 			if (!btn) return;
 			const id = btn.dataset.id;
@@ -5255,6 +6256,7 @@
 
 		// Eventos das Laterais da Tela (Adicionar Amigo)
 		document.addEventListener("click", (e) => {
+			if (onlineSession.active) return;
 			const addBtn = e.target.closest(".btn-side-add-player");
 			if (addBtn) {
 				toggleScoreDrawer(true);
@@ -5263,6 +6265,7 @@
 		});
 
 		document.getElementById("btnResetScores").addEventListener("click", () => {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			state.players.forEach(p => {
 				p.score = 0;
 				p.votedCards = [];
@@ -5272,9 +6275,13 @@
 			syncCurrentCardVoteLock();
 			saveState();
 			renderPlayers();
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastSyncState();
+			}
 		});
 
 		document.getElementById("btnClearPlayers").addEventListener("click", () => {
+			if (onlineSession.active) return; // Bloqueado no modo online
 			state.players = [];
 			state.currentCardVoted = false;
 			state.votedCardsByCardId = {};
@@ -5284,8 +6291,12 @@
 		});
 
 		document.getElementById("btnCrownWinner").addEventListener("click", () => {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			toggleScoreDrawer(false);
 			openWinnerModal();
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastToPeers({ type: "OPEN_WINNER" });
+			}
 		});
 
 		// Modal de Regras
@@ -5297,6 +6308,7 @@
 		// Modal de Criar Carta Customizada
 		const modalCustomEl = document.getElementById("modalCustomCard");
 		document.getElementById("btnOpenCustomModal").addEventListener("click", () => {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			modalCustomEl.classList.add("open");
 			setTimeout(() => document.getElementById("customCardInput").focus(), 100);
 		});
@@ -5304,6 +6316,7 @@
 
 		document.getElementById("customCardForm").addEventListener("submit", (e) => {
 			e.preventDefault();
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			const textInput = document.getElementById("customCardInput");
 			const catSelect = document.getElementById("customCardCategory");
 			const text = textInput.value.trim();
@@ -5326,6 +6339,9 @@
 			state.deckOrder.splice(insertPos, 0, newId);
 			state.currentIndex = insertPos;
 			currentDynamicCache.key = "";
+			state.resolvedCardText = "";
+			const curCard = getCurrentCardObj();
+			if (curCard) resolveCardText(curCard);
 			saveState();
 
 			textInput.value = "";
@@ -5333,19 +6349,39 @@
 			showGameScreen();
 			renderCurrentCard(true);
 			ConfettiFX.burst(25);
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastSyncState({ cardFlip: true, direction: 1 });
+			}
 		});
 
 		// Modal da Roleta do Castigo (#modalPunish)
 		document.getElementById("btnClosePunish").addEventListener("click", () => {
 			if (punishSpinTimer) clearTimeout(punishSpinTimer);
 			modalPunishEl.classList.remove("open");
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastToPeers({ type: "CLOSE_PUNISH" });
+			}
 		});
 		document.getElementById("btnAcceptPunish").addEventListener("click", () => {
 			if (punishSpinTimer) clearTimeout(punishSpinTimer);
 			modalPunishEl.classList.remove("open");
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastToPeers({ type: "CLOSE_PUNISH" });
+			}
 		});
 		document.getElementById("btnRespinPunish").addEventListener("click", () => {
-			spinPunishSlot();
+			if (onlineSession.active && onlineSession.role !== "host") return;
+			if (onlineSession.active && onlineSession.role === "host") {
+				const forcedIdx = Math.floor(Math.random() * PUNISHMENTS_LIST.length);
+				spinPunishSlot(forcedIdx);
+				broadcastToPeers({
+					type: "OPEN_PUNISH",
+					player: currentPunishedPlayer,
+					punishmentIndex: forcedIdx
+				});
+			} else {
+				spinPunishSlot();
+			}
 		});
 
 		// Modal de Vencedor e Download do Card da Vergonha
@@ -5353,8 +6389,12 @@
 		document.getElementById("btnDownloadShameCard").addEventListener("click", downloadShameCard);
 		document.getElementById("btnContinuePlaying").addEventListener("click", () => {
 			modalWinnerEl.classList.remove("open");
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastToPeers({ type: "CLOSE_WINNER" });
+			}
 		});
 		document.getElementById("btnNewMatchModal").addEventListener("click", () => {
+			if (onlineSession.active && onlineSession.role !== "host") return;
 			state.players.forEach(p => {
 				p.score = 0;
 				p.votedCards = [];
@@ -5366,9 +6406,13 @@
 			modalWinnerEl.classList.remove("open");
 			showGameScreen();
 			renderCurrentCard(true);
+			if (onlineSession.active && onlineSession.role === "host") {
+				broadcastToPeers({ type: "CLOSE_WINNER" });
+				broadcastSyncState({ cardFlip: true, direction: 1 });
+			}
 		});
 
-		// Fechar modais clicando fora
+		// Fechar modais clicando fora (exceto #modalOnlineBallot durante votação obrigatória)
 		[modalRulesEl, modalCustomEl, modalWinnerEl, modalPunishEl, modalBallotEl].forEach(modal => {
 			modal.addEventListener("click", (e) => {
 				if (e.target === modal) {
@@ -5378,23 +6422,30 @@
 			});
 		});
 
+		const modalOnlineBallotEl = document.getElementById("modalOnlineBallot");
+		const modalHostDisconnectedEl = document.getElementById("modalHostDisconnected");
+
 		// Atalhos de Teclado (incluindo 1, 2, 3 para o Soundboard e V/T para Votação)
 		window.addEventListener("keydown", (e) => {
 			const tag = document.activeElement ? document.activeElement.tagName : "";
 			if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+			const anyBallotOpen = modalBallotEl.classList.contains("open") || modalOnlineBallotEl.classList.contains("open");
 
 			if (e.code === "Space" || e.code === "ArrowRight") {
-				if (screenGameEl.classList.contains("active") && !modalBallotEl.classList.contains("open")) {
+				if (screenGameEl.classList.contains("active") && !anyBallotOpen) {
+					if (onlineSession.active && onlineSession.role !== "host") return;
 					e.preventDefault();
 					nextCard();
 				}
 			} else if (e.code === "ArrowLeft") {
-				if (screenGameEl.classList.contains("active") && !modalBallotEl.classList.contains("open")) {
+				if (screenGameEl.classList.contains("active") && !anyBallotOpen) {
+					if (onlineSession.active && onlineSession.role !== "host") return;
 					e.preventDefault();
 					prevCard();
 				}
 			} else if (e.key === "t" || e.key === "T" || e.key === "v" || e.key === "V") {
-				if (screenGameEl.classList.contains("active") && !modalBallotEl.classList.contains("open")) {
+				if (screenGameEl.classList.contains("active") && !anyBallotOpen) {
+					if (onlineSession.active && onlineSession.role !== "host") return;
 					startCardVotingFlow();
 				}
 			} else if (e.key === "1") {
@@ -5421,6 +6472,1328 @@
 			}
 		});
 
+		/* ==========================================================================
+		   11. MODO ONLINE MULTIPLAYER (PeerJS WebRTC) & VOTAÇÃO ABERTA POR TURNOS
+		   ========================================================================== */
+		const btnSelectModeLocalEl = document.getElementById("btnSelectModeLocal");
+		const btnSelectModeOnlineEl = document.getElementById("btnSelectModeOnline");
+		const homeLocalPanelEl = document.getElementById("homeLocalPanel");
+		const homeOnlinePanelEl = document.getElementById("homeOnlinePanel");
+		const onlineErrorBannerEl = document.getElementById("onlineErrorBanner");
+		const onlineErrorTextEl = document.getElementById("onlineErrorText");
+		const tabBtnCreateRoomEl = document.getElementById("tabBtnCreateRoom");
+		const tabBtnJoinRoomEl = document.getElementById("tabBtnJoinRoom");
+		const onlinePanelHostEl = document.getElementById("onlinePanelHost");
+		const onlinePanelClientEl = document.getElementById("onlinePanelClient");
+
+		const hostCreateFormWrapEl = document.getElementById("hostCreateFormWrap");
+		const hostActiveLobbyWrapEl = document.getElementById("hostActiveLobbyWrap");
+		const hostNicknameInputEl = document.getElementById("hostNicknameInput");
+		const hostPasswordInputEl = document.getElementById("hostPasswordInput");
+		const hostRoomIdDisplayEl = document.getElementById("hostRoomIdDisplay");
+		const hostRoomPassDisplayEl = document.getElementById("hostRoomPassDisplay");
+		const hostConnectedCountBadgeEl = document.getElementById("hostConnectedCountBadge");
+		const hostConnectedPlayersListEl = document.getElementById("hostConnectedPlayersList");
+		const hostStartStatusHintEl = document.getElementById("hostStartStatusHint");
+		const btnStartOnlineMatchEl = document.getElementById("btnStartOnlineMatch");
+
+		const clientJoinFormWrapEl = document.getElementById("clientJoinFormWrap");
+		const clientWaitingLobbyWrapEl = document.getElementById("clientWaitingLobbyWrap");
+		const joinRoomIdInputEl = document.getElementById("joinRoomIdInput");
+		const joinPasswordInputEl = document.getElementById("joinPasswordInput");
+		const joinNicknameInputEl = document.getElementById("joinNicknameInput");
+		const clientRoomIdDisplayEl = document.getElementById("clientRoomIdDisplay");
+		const clientRoomModeDisplayEl = document.getElementById("clientRoomModeDisplay");
+		const clientConnectedCountBadgeEl = document.getElementById("clientConnectedCountBadge");
+		const clientConnectedPlayersListEl = document.getElementById("clientConnectedPlayersList");
+
+		const onlineTopPillEl = document.getElementById("onlineTopPill");
+		const onlineTopPillTextEl = document.getElementById("onlineTopPillText");
+		const onlineClientSyncTextEl = document.getElementById("onlineClientSyncText");
+
+		const onlineBallotProgressBadgeEl = document.getElementById("onlineBallotProgressBadge");
+		const onlineBallotCardQuoteEl = document.getElementById("onlineBallotCardQuote");
+		const onlineBallotChaosBadgeEl = document.getElementById("onlineBallotChaosBadge");
+		const onlineBallotChaosTextEl = document.getElementById("onlineBallotChaosText");
+		const onlineBallotTurnQueueEl = document.getElementById("onlineBallotTurnQueue");
+		const onlineBallotTurnBannerEl = document.getElementById("onlineBallotTurnBanner");
+		const onlineBallotTargetsGridEl = document.getElementById("onlineBallotTargetsGrid");
+		const onlineBallotTieBoxEl = document.getElementById("onlineBallotTieBox");
+		const onlineBallotTieDescEl = document.getElementById("onlineBallotTieDesc");
+		const onlineBallotTieActionsEl = document.getElementById("onlineBallotTieActions");
+		const onlineBallotFeedCountEl = document.getElementById("onlineBallotFeedCount");
+		const onlineBallotFeedListEl = document.getElementById("onlineBallotFeedList");
+		let onlineBallotAutoCloseTimer = null;
+
+		function generateShortRoomId(len = 5) {
+			const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+			let out = "";
+			for (let i = 0; i < len; i++) {
+				out += chars.charAt(Math.floor(Math.random() * chars.length));
+			}
+			return out;
+		}
+
+		function showOnlineError(msg) {
+			onlineErrorTextEl.textContent = `🚨 ${msg}`;
+			onlineErrorBannerEl.classList.add("visible");
+			SoundFX.playBuzzer();
+		}
+
+		function hideOnlineError() {
+			onlineErrorBannerEl.classList.remove("visible");
+		}
+
+		document.getElementById("btnDismissOnlineError").addEventListener("click", hideOnlineError);
+
+		function switchHomePlayMode(playMode) {
+			hideOnlineError();
+			const isOnline = playMode === "online";
+			btnSelectModeLocalEl.classList.toggle("active", !isOnline);
+			btnSelectModeLocalEl.setAttribute("aria-selected", String(!isOnline));
+			btnSelectModeOnlineEl.classList.toggle("active", isOnline);
+			btnSelectModeOnlineEl.setAttribute("aria-selected", String(isOnline));
+
+			homeLocalPanelEl.classList.toggle("active", !isOnline);
+			homeOnlinePanelEl.classList.toggle("active", isOnline);
+			SoundFX.playFlip();
+		}
+
+		btnSelectModeLocalEl.addEventListener("click", () => {
+			if (onlineSession.active) {
+				leaveOnlineSession();
+			}
+			switchHomePlayMode("local");
+		});
+
+		btnSelectModeOnlineEl.addEventListener("click", () => {
+			switchHomePlayMode("online");
+		});
+
+		function switchOnlineRoleTab(tab) {
+			hideOnlineError();
+			const isHostTab = tab === "host";
+			tabBtnCreateRoomEl.classList.toggle("active", isHostTab);
+			tabBtnJoinRoomEl.classList.toggle("active", !isHostTab);
+			onlinePanelHostEl.classList.toggle("active", isHostTab);
+			onlinePanelClientEl.classList.toggle("active", !isHostTab);
+		}
+
+		tabBtnCreateRoomEl.addEventListener("click", () => {
+			if (onlineSession.active && onlineSession.role === "client") return;
+			switchOnlineRoleTab("host");
+		});
+
+		tabBtnJoinRoomEl.addEventListener("click", () => {
+			if (onlineSession.active && onlineSession.role === "host") return;
+			switchOnlineRoleTab("client");
+		});
+
+		function backupLocalStateBeforeOnline() {
+			if (!localStateSnapshot) {
+				localStateSnapshot = JSON.parse(JSON.stringify(state));
+			}
+		}
+
+		function restoreLocalStateAfterOnline() {
+			if (localStateSnapshot) {
+				state = JSON.parse(JSON.stringify(localStateSnapshot));
+				localStateSnapshot = null;
+			} else {
+				loadState();
+			}
+			currentDynamicCache.key = "";
+			syncModeButtonsUI();
+			syncCurrentCardVoteLock();
+			renderPlayers();
+			renderCurrentCard(false);
+		}
+
+		function syncOnlineBodyClassesAndBadges() {
+			document.body.classList.toggle("online-mode", onlineSession.active);
+			document.body.classList.toggle("online-host", onlineSession.active && onlineSession.role === "host");
+			document.body.classList.toggle("online-client", onlineSession.active && onlineSession.role === "client");
+
+			if (onlineSession.active) {
+				onlineTopPillEl.classList.add("visible");
+				const roleTag = onlineSession.role === "host" ? "👑 Host" : "🌐 Online";
+				onlineTopPillTextEl.textContent = `${roleTag} • Sala ${onlineSession.roomId} (${state.players.length})`;
+				if (onlineClientSyncTextEl) {
+					onlineClientSyncTextEl.textContent = `🌐 Sala ${onlineSession.roomId} • Sincronizado com Host`;
+				}
+			} else {
+				onlineTopPillEl.classList.remove("visible");
+			}
+		}
+
+		function getModeLabel(mode) {
+			if (mode === "clean") return "😇 Sem +18";
+			if (mode === "spicy") return "🔥 Só Proibidão +18";
+			return "🎲 Tudo Misturado";
+		}
+
+		function renderOnlineLobbyUI() {
+			syncOnlineBodyClassesAndBadges();
+			if (!onlineSession.active) {
+				hostCreateFormWrapEl.style.display = "block";
+				hostActiveLobbyWrapEl.style.display = "none";
+				clientJoinFormWrapEl.style.display = "block";
+				clientWaitingLobbyWrapEl.style.display = "none";
+				return;
+			}
+
+			const chipsHtml = state.players.map((p, idx) => {
+				const isHost = idx === 0 || !!p.isHost;
+				const isMe = p.id === onlineSession.myPlayerId;
+				return `
+					<div class="online-connected-chip ${isHost ? "is-host" : ""}">
+						<span>${p.avatar || "😈"}</span>
+						<span>${escapeHtml(p.name)}</span>
+						${isHost ? `<span class="online-role-tag">👑 HOST</span>` : ""}
+						${isMe ? `<span class="online-role-tag you-tag">VOCÊ</span>` : ""}
+					</div>
+				`;
+			}).join("");
+
+			if (onlineSession.role === "host") {
+				hostCreateFormWrapEl.style.display = "none";
+				hostActiveLobbyWrapEl.style.display = "block";
+				hostRoomIdDisplayEl.textContent = onlineSession.roomId;
+				hostRoomPassDisplayEl.textContent = onlineSession.password;
+				hostConnectedCountBadgeEl.textContent = `${state.players.length} conectado(s)`;
+				hostConnectedPlayersListEl.innerHTML = chipsHtml;
+
+				const canStart = state.players.length >= 2;
+				btnStartOnlineMatchEl.disabled = !canStart;
+				btnStartOnlineMatchEl.style.opacity = canStart ? "1" : "0.55";
+				btnStartOnlineMatchEl.style.cursor = canStart ? "pointer" : "not-allowed";
+				hostStartStatusHintEl.textContent = canStart
+					? `✅ ${state.players.length} jogadores prontos na sala! Clique abaixo para iniciar!`
+					: "⏳ Aguardando pelo menos 2 jogadores conectados para iniciar...";
+				hostStartStatusHintEl.style.color = canStart ? "var(--yellow-acid)" : "#e9d5ff";
+			} else if (onlineSession.role === "client") {
+				clientJoinFormWrapEl.style.display = "none";
+				clientWaitingLobbyWrapEl.style.display = "block";
+				clientRoomIdDisplayEl.textContent = onlineSession.roomId;
+				clientRoomModeDisplayEl.textContent = getModeLabel(state.mode);
+				clientConnectedCountBadgeEl.textContent = `${state.players.length} conectado(s)`;
+				clientConnectedPlayersListEl.innerHTML = chipsHtml;
+			}
+		}
+
+		function buildSyncStatePayload() {
+			const curCard = getCurrentCardObj();
+			if (curCard) resolveCardText(curCard);
+			return {
+				activeScreen: onlineSession.activeScreen || "home",
+				mode: state.mode,
+				deckOrder: state.deckOrder,
+				currentIndex: state.currentIndex,
+				customCards: state.customCards,
+				blankCardCustomText: state.blankCardCustomText,
+				resolvedCardText: state.resolvedCardText || "",
+				players: state.players,
+				cardsAdvancedCount: state.cardsAdvancedCount,
+				activeChaosEvent: state.activeChaosEvent,
+				currentCardVoted: state.currentCardVoted,
+				votedCardsByCardId: state.votedCardsByCardId
+			};
+		}
+
+		function broadcastToPeers(payload) {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+			onlineSession.peers.forEach((conn) => {
+				if (conn && conn.open) {
+					try { conn.send(payload); } catch (err) { }
+				}
+			});
+		}
+
+		function broadcastSyncState(meta = {}) {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+			broadcastToPeers({
+				type: "SYNC_STATE",
+				statePayload: buildSyncStatePayload(),
+				ballotPayload: onlineBallot,
+				meta
+			});
+		}
+
+		function applySyncedStateOnClient(statePayload, ballotPayload, meta = {}) {
+			if (!statePayload) return;
+			state.mode = statePayload.mode || "all";
+			state.deckOrder = Array.isArray(statePayload.deckOrder) ? statePayload.deckOrder : [];
+			state.currentIndex = typeof statePayload.currentIndex === "number" ? statePayload.currentIndex : 0;
+			state.customCards = Array.isArray(statePayload.customCards) ? statePayload.customCards : [];
+			state.blankCardCustomText = statePayload.blankCardCustomText || "";
+			state.resolvedCardText = statePayload.resolvedCardText || "";
+			state.players = Array.isArray(statePayload.players) ? statePayload.players : [];
+			state.cardsAdvancedCount = statePayload.cardsAdvancedCount || 0;
+			state.activeChaosEvent = statePayload.activeChaosEvent || null;
+			state.currentCardVoted = !!statePayload.currentCardVoted;
+			state.votedCardsByCardId = statePayload.votedCardsByCardId || {};
+
+			if (ballotPayload && typeof ballotPayload === "object") {
+				onlineBallot = { ...onlineBallot, ...ballotPayload };
+			}
+
+			const targetScreen = statePayload.activeScreen || "home";
+			const wasHome = screenHomeEl.classList.contains("active");
+			onlineSession.activeScreen = targetScreen;
+
+			renderOnlineLobbyUI();
+			syncModeButtonsUI();
+			syncCurrentCardVoteLock();
+			renderPlayers();
+
+			if (targetScreen === "game") {
+				if (wasHome) {
+					showGameScreen();
+					SoundFX.playFlip();
+				} else {
+					renderCurrentCard(!!meta.cardFlip, meta.direction || 1);
+				}
+			} else {
+				screenGameEl.classList.remove("active");
+				screenHomeEl.classList.add("active");
+				switchHomePlayMode("online");
+				switchOnlineRoleTab("client");
+			}
+
+			if (meta && meta.chaosTriggered) {
+				setTimeout(() => {
+					SoundFX.playSuspense();
+					ConfettiFX.burst(28);
+				}, 200);
+			}
+
+			if (meta && meta.notice) {
+				FloatFX.pop(window.innerWidth / 2, 80, meta.notice, true);
+			}
+
+			if (onlineBallot.open) {
+				openOnlineBallotModalUI();
+				renderOnlineBallotUI();
+			} else if (!onlineBallot.tallied) {
+				modalOnlineBallotEl.classList.remove("open");
+			}
+		}
+
+		/* ================= CRIAÇÃO DE SALA (HOST) ================= */
+		const btnCreateOnlineRoomEl = document.getElementById("btnCreateOnlineRoom");
+
+		btnCreateOnlineRoomEl.addEventListener("click", () => {
+			hideOnlineError();
+			const nickname = hostNicknameInputEl.value.trim();
+			const password = hostPasswordInputEl.value.trim();
+
+			if (!nickname) {
+				showOnlineError("Digite seu apelido para criar a sala!");
+				hostNicknameInputEl.focus();
+				return;
+			}
+			if (!password) {
+				showOnlineError("Defina uma senha para a sua sala!");
+				hostPasswordInputEl.focus();
+				return;
+			}
+			if (typeof window.Peer === "undefined") {
+				showOnlineError("PeerJS não pôde ser carregado. Verifique sua conexão com a internet.");
+				return;
+			}
+
+			btnCreateOnlineRoomEl.disabled = true;
+			btnCreateOnlineRoomEl.innerHTML = "<span>⏳ CRIANDO SALA...</span>";
+
+			const tryCreateHostPeer = (attempt = 0) => {
+				const roomId = generateShortRoomId(5);
+				const fullPeerId = PEER_ROOM_PREFIX + roomId;
+				const peer = new Peer(fullPeerId);
+
+				peer.on("open", () => {
+					btnCreateOnlineRoomEl.disabled = false;
+					btnCreateOnlineRoomEl.innerHTML = "<span>👑 CRIAR SALA ONLINE</span>";
+
+					backupLocalStateBeforeOnline();
+
+					const hostPlayerId = "p_host_" + Date.now();
+					onlineSession.active = true;
+					onlineSession.role = "host";
+					onlineSession.roomId = roomId;
+					onlineSession.password = password;
+					onlineSession.myPlayerId = hostPlayerId;
+					onlineSession.myNickname = nickname;
+					onlineSession.peer = peer;
+					onlineSession.peers = new Map();
+					onlineSession.activeScreen = "home";
+
+					state.players = [{
+						id: hostPlayerId,
+						name: nickname,
+						score: 0,
+						avatar: PLAYER_AVATARS[0],
+						votedCards: [],
+						isHost: true
+					}];
+					state.customCards = [];
+					state.blankCardCustomText = "";
+					buildShuffledDeck(state.mode || "all");
+
+					renderOnlineLobbyUI();
+					renderPlayers();
+					SoundFX.playFanfare();
+					ConfettiFX.burst(25);
+				});
+
+				peer.on("connection", (conn) => {
+					setupHostIncomingConnection(conn);
+				});
+
+				peer.on("error", (err) => {
+					if (err && err.type === "unavailable-id" && attempt < 4) {
+						try { peer.destroy(); } catch (e) { }
+						tryCreateHostPeer(attempt + 1);
+						return;
+					}
+					btnCreateOnlineRoomEl.disabled = false;
+					btnCreateOnlineRoomEl.innerHTML = "<span>👑 CRIAR SALA ONLINE</span>";
+					showOnlineError("Erro na rede PeerJS: " + (err && err.message ? err.message : "Tente novamente."));
+				});
+			};
+
+			tryCreateHostPeer(0);
+		});
+
+		function setupHostIncomingConnection(conn) {
+			conn.on("data", (msg) => {
+				if (!msg || typeof msg !== "object") return;
+
+				// 1) Autenticação Inicial do Cliente (JOIN_REQUEST)
+				if (msg.type === "JOIN_REQUEST") {
+					if (conn._playerId) return; // Já autenticado
+
+					const cleanName = String(msg.name || "").trim().slice(0, 22);
+					const cleanPass = String(msg.password || "").trim();
+
+					if (!cleanName) {
+						conn.send({ type: "JOIN_REJECTED", reason: "Apelido inválido ou vazio!" });
+						setTimeout(() => { try { conn.close(); } catch (e) { } }, 250);
+						return;
+					}
+
+					if (cleanPass !== onlineSession.password) {
+						conn.send({ type: "JOIN_REJECTED", reason: "Senha da sala incorreta! Confira com o Host." });
+						setTimeout(() => { try { conn.close(); } catch (e) { } }, 250);
+						return;
+					}
+
+					const isDuplicate = state.players.some(
+						p => p.name.trim().toLowerCase() === cleanName.toLowerCase()
+					);
+					if (isDuplicate) {
+						conn.send({
+							type: "JOIN_REJECTED",
+							reason: `O apelido "${cleanName}" já está em uso na sala! Escolha outro.`
+						});
+						setTimeout(() => { try { conn.close(); } catch (e) { } }, 250);
+						return;
+					}
+
+					// Autenticado com sucesso!
+					const newPlayerId = "p_peer_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+					const avatar = PLAYER_AVATARS[state.players.length % PLAYER_AVATARS.length];
+					const newPlayer = {
+						id: newPlayerId,
+						name: cleanName,
+						score: 0,
+						avatar,
+						votedCards: [],
+						isHost: false
+					};
+
+					conn._playerId = newPlayerId;
+					onlineSession.peers.set(newPlayerId, conn);
+					state.players.push(newPlayer);
+
+					// Se uma votação estiver aberta no momento em que o jogador entrou, inclui na fila final
+					if (onlineBallot.open && !onlineBallot.tallied && !onlineBallot.turnOrder.includes(newPlayerId)) {
+						onlineBallot.turnOrder.push(newPlayerId);
+					}
+
+					// Re-resolve {P1}/{P2} caso a carta atual precisasse de 2 jogadores
+					const curCard = getCurrentCardObj();
+					if (curCard && (curCard.text.includes("{P1}") || curCard.text.includes("{P2}"))) {
+						currentDynamicCache.key = "";
+						resolveCardText(curCard);
+						updateCardDOM(curCard);
+					}
+
+					conn.send({
+						type: "JOIN_ACCEPTED",
+						playerId: newPlayerId,
+						roomId: onlineSession.roomId,
+						statePayload: buildSyncStatePayload(),
+						ballotPayload: onlineBallot
+					});
+
+					renderOnlineLobbyUI();
+					renderPlayers();
+					SoundFX.playPoint();
+					FloatFX.pop(window.innerWidth / 2, 80, `🟢 ${cleanName} entrou na sala!`);
+					broadcastSyncState({ notice: `🟢 ${cleanName} entrou na sala!` });
+					return;
+				}
+
+				// 2) Validação estrita de remetente para mensagens pós-autenticação
+				const senderId = conn._playerId;
+				if (!senderId || onlineSession.peers.get(senderId) !== conn) return;
+
+				if (msg.type === "SUBMIT_VOTE") {
+					processOnlineVoteOnHost(senderId, String(msg.targetId || ""));
+				} else if (msg.type === "CLIENT_FX_REQUEST") {
+					if (msg.fx === "confetti") {
+						ConfettiFX.burst(35);
+						SoundFX.playPoint();
+						broadcastToPeers({ type: "CONFETTI_BURST", count: 35 });
+					} else if (msg.fx === "soundboard" && msg.btnId && msg.soundMethod) {
+						const allowedSounds = ["playBuzzer", "playRimshot", "playSuspense"];
+						if (allowedSounds.includes(msg.soundMethod)) {
+							triggerSoundboardBtn(msg.btnId, msg.soundMethod, true);
+							broadcastToPeers({ type: "PLAY_SOUNDBOARD", btnId: msg.btnId, soundMethod: msg.soundMethod });
+						}
+					}
+				}
+			});
+
+			const onDisconnect = () => {
+				const leftId = conn._playerId;
+				if (!leftId) return;
+				conn._playerId = null;
+				handleClientDisconnectedOnHost(leftId);
+			};
+
+			conn.on("close", onDisconnect);
+			conn.on("error", onDisconnect);
+		}
+
+		function handleClientDisconnectedOnHost(leftPlayerId) {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+			onlineSession.peers.delete(leftPlayerId);
+
+			const leftPlayer = state.players.find(p => p.id === leftPlayerId);
+			if (!leftPlayer) return;
+
+			const leftName = leftPlayer.name;
+			state.players = state.players.filter(p => p.id !== leftPlayerId);
+
+			FloatFX.pop(window.innerWidth / 2, 80, `🔌 ${leftName} desconectou`, true);
+			renderOnlineLobbyUI();
+			renderPlayers();
+
+			// Verifica se o jogador desconectou durante uma Votação Aberta por Turnos ativa
+			if (onlineBallot.open && !onlineBallot.tallied) {
+				if (state.players.length < 2) {
+					// Menos de 2 jogadores restantes na sala: encerra a votação sem travar
+					onlineBallot.open = false;
+					onlineBallot.tiePending = false;
+					modalOnlineBallotEl.classList.remove("open");
+					broadcastSyncState({ notice: `🔌 ${leftName} saiu (mínimo 2 jogadores)` });
+					return;
+				}
+
+				const idxInQueue = onlineBallot.turnOrder.indexOf(leftPlayerId);
+				if (idxInQueue !== -1) {
+					onlineBallot.turnOrder.splice(idxInQueue, 1);
+					if (idxInQueue < onlineBallot.currentVoterIndex) {
+						onlineBallot.currentVoterIndex = Math.max(0, onlineBallot.currentVoterIndex - 1);
+					}
+				}
+
+				// Se estava em desempate e o jogador desconectado estava entre os empatados
+				if (onlineBallot.tiePending) {
+					const connectedIds = new Set(state.players.map(p => p.id));
+					onlineBallot.tiedLeaderIds = onlineBallot.tiedLeaderIds.filter(id => connectedIds.has(id));
+					if (onlineBallot.tiedLeaderIds.length === 1) {
+						finalizeOnlineBallotWinners([onlineBallot.tiedLeaderIds[0]]);
+						return;
+					} else if (onlineBallot.tiedLeaderIds.length === 0) {
+						onlineBallot.tiePending = false;
+						tallyOnlineBallotOnHost();
+						return;
+					}
+				}
+
+				// Se todos os jogadores restantes já votaram, finaliza e apura imediatamente!
+				if (!onlineBallot.tiePending && onlineBallot.currentVoterIndex >= onlineBallot.turnOrder.length) {
+					tallyOnlineBallotOnHost();
+					return;
+				}
+
+				renderOnlineBallotUI();
+				broadcastToPeers({
+					type: "BALLOT_UPDATE",
+					event: "PLAYER_LEFT",
+					ballot: onlineBallot,
+					statePayload: buildSyncStatePayload()
+				});
+				return;
+			}
+
+			broadcastSyncState({ notice: `🔌 ${leftName} saiu da sala` });
+		}
+
+		// Copiar Convite (ID + Senha)
+		document.getElementById("btnCopyRoomInvite").addEventListener("click", (e) => {
+			if (!onlineSession.active) return;
+			const inviteText = `💩 AMIGOS DE MERDA S.A. — Partida Online!\n🌐 ID da Sala: ${onlineSession.roomId}\n🔑 Senha: ${onlineSession.password}`;
+			const btn = e.currentTarget;
+			const feedback = () => {
+				const orig = btn.innerHTML;
+				btn.innerHTML = "✅ Convite Copiado!";
+				SoundFX.playPoint();
+				FloatFX.pop(window.innerWidth / 2, window.innerHeight / 2, "📋 ID + Senha Copiados!");
+				setTimeout(() => { btn.innerHTML = orig; }, 1800);
+			};
+
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(inviteText).then(feedback).catch(() => {
+					fallbackCopyText(inviteText);
+					feedback();
+				});
+			} else {
+				fallbackCopyText(inviteText);
+				feedback();
+			}
+		});
+
+		function fallbackCopyText(text) {
+			const ta = document.createElement("textarea");
+			ta.value = text;
+			ta.style.position = "fixed";
+			ta.style.opacity = "0";
+			document.body.appendChild(ta);
+			ta.select();
+			try { document.execCommand("copy"); } catch (e) { }
+			ta.remove();
+		}
+
+		// Iniciar Partida Online (Host)
+		btnStartOnlineMatchEl.addEventListener("click", () => {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+			if (state.players.length < 2) {
+				showOnlineError("Aguarde pelo menos 2 jogadores conectados para iniciar a partida!");
+				return;
+			}
+			buildShuffledDeck(state.mode || "all");
+			showGameScreen();
+			SoundFX.playFlip();
+			ConfettiFX.burst(40);
+			broadcastSyncState({ cardFlip: true, direction: 1 });
+		});
+
+		/* ================= ENTRAR NA SALA (CLIENTE) ================= */
+		const btnJoinOnlineRoomEl = document.getElementById("btnJoinOnlineRoom");
+
+		btnJoinOnlineRoomEl.addEventListener("click", () => {
+			hideOnlineError();
+			const rawRoomId = joinRoomIdInputEl.value.trim().toUpperCase().replace(/^ADM-SA-ROOM-/i, "").replace(/[^A-Z0-9]/g, "");
+			const password = joinPasswordInputEl.value.trim();
+			const nickname = joinNicknameInputEl.value.trim();
+
+			if (!rawRoomId) {
+				showOnlineError("Informe o ID da Sala (5 caracteres)!");
+				joinRoomIdInputEl.focus();
+				return;
+			}
+			if (!password) {
+				showOnlineError("Informe a Senha da Sala!");
+				joinPasswordInputEl.focus();
+				return;
+			}
+			if (!nickname) {
+				showOnlineError("Informe seu Apelido para entrar na roda!");
+				joinNicknameInputEl.focus();
+				return;
+			}
+			if (typeof window.Peer === "undefined") {
+				showOnlineError("PeerJS não pôde ser carregado. Verifique sua conexão com a internet.");
+				return;
+			}
+
+			btnJoinOnlineRoomEl.disabled = true;
+			btnJoinOnlineRoomEl.innerHTML = "<span>⏳ CONECTANDO...</span>";
+
+			const peer = new Peer();
+			let resolvedJoin = false;
+			const joinTimeout = setTimeout(() => {
+				if (resolvedJoin) return;
+				resolvedJoin = true;
+				try { peer.destroy(); } catch (e) { }
+				btnJoinOnlineRoomEl.disabled = false;
+				btnJoinOnlineRoomEl.innerHTML = "<span>🚪 ENTRAR NA SALA</span>";
+				showOnlineError("Tempo esgotado! Verifique se o ID da Sala está correto e se o Host está online.");
+			}, 10000);
+
+			peer.on("open", () => {
+				const conn = peer.connect(PEER_ROOM_PREFIX + rawRoomId, { reliable: true });
+
+				conn.on("open", () => {
+					conn.send({
+						type: "JOIN_REQUEST",
+						name: nickname,
+						password
+					});
+				});
+
+				conn.on("data", (msg) => {
+					if (!msg || typeof msg !== "object") return;
+
+					if (msg.type === "JOIN_REJECTED") {
+						resolvedJoin = true;
+						clearTimeout(joinTimeout);
+						btnJoinOnlineRoomEl.disabled = false;
+						btnJoinOnlineRoomEl.innerHTML = "<span>🚪 ENTRAR NA SALA</span>";
+						showOnlineError(msg.reason || "Entrada recusada pelo Host.");
+						try { conn.close(); } catch (e) { }
+						try { peer.destroy(); } catch (e) { }
+						return;
+					}
+
+					if (msg.type === "JOIN_ACCEPTED") {
+						resolvedJoin = true;
+						clearTimeout(joinTimeout);
+						btnJoinOnlineRoomEl.disabled = false;
+						btnJoinOnlineRoomEl.innerHTML = "<span>🚪 ENTRAR NA SALA</span>";
+
+						backupLocalStateBeforeOnline();
+
+						onlineSession.active = true;
+						onlineSession.role = "client";
+						onlineSession.roomId = msg.roomId || rawRoomId;
+						onlineSession.password = password;
+						onlineSession.myPlayerId = msg.playerId;
+						onlineSession.myNickname = nickname;
+						onlineSession.peer = peer;
+						onlineSession.hostConn = conn;
+
+						SoundFX.playFanfare();
+						ConfettiFX.burst(25);
+						applySyncedStateOnClient(msg.statePayload, msg.ballotPayload);
+						return;
+					}
+
+					// Só aceita comandos da conexão oficial com o Host
+					if (conn !== onlineSession.hostConn) return;
+					handleHostMessageOnClient(msg);
+				});
+
+				const onHostConnClosed = () => {
+					if (!resolvedJoin) {
+						resolvedJoin = true;
+						clearTimeout(joinTimeout);
+						btnJoinOnlineRoomEl.disabled = false;
+						btnJoinOnlineRoomEl.innerHTML = "<span>🚪 ENTRAR NA SALA</span>";
+						showOnlineError("Não foi possível conectar à sala. Verifique o ID e a Senha.");
+						return;
+					}
+					if (onlineSession.active && onlineSession.role === "client") {
+						handleHostDisconnectedOnClient();
+					}
+				};
+
+				conn.on("close", onHostConnClosed);
+				conn.on("error", onHostConnClosed);
+			});
+
+			peer.on("error", (err) => {
+				if (!resolvedJoin) {
+					resolvedJoin = true;
+					clearTimeout(joinTimeout);
+					btnJoinOnlineRoomEl.disabled = false;
+					btnJoinOnlineRoomEl.innerHTML = "<span>🚪 ENTRAR NA SALA</span>";
+					const isNotFound = err && err.type === "peer-unavailable";
+					showOnlineError(
+						isNotFound
+							? `Sala "${rawRoomId}" não encontrada! Confira o ID com o Host.`
+							: "Erro ao conectar na sala: " + (err && err.message ? err.message : "Tente novamente.")
+					);
+					try { peer.destroy(); } catch (e) { }
+				} else if (onlineSession.active && onlineSession.role === "client") {
+					handleHostDisconnectedOnClient();
+				}
+			});
+		});
+
+		function handleHostMessageOnClient(msg) {
+			switch (msg.type) {
+				case "SYNC_STATE":
+					applySyncedStateOnClient(msg.statePayload, msg.ballotPayload, msg.meta || {});
+					break;
+
+				case "COUNTDOWN_3S":
+					triggerCountdown(!!msg.openBallotAfter);
+					break;
+
+				case "PLAY_SOUNDBOARD":
+					if (msg.btnId && msg.soundMethod) {
+						triggerSoundboardBtn(msg.btnId, msg.soundMethod, true);
+					}
+					break;
+
+				case "CONFETTI_BURST":
+					ConfettiFX.burst(msg.count || 35);
+					SoundFX.playPoint();
+					break;
+
+				case "OPEN_PUNISH":
+					if (msg.player) {
+						ConfettiFX.burst(55);
+						SoundFX.playFanfare();
+						openPunishModal(msg.player, msg.punishmentIndex);
+					}
+					break;
+
+				case "CLOSE_PUNISH":
+					if (punishSpinTimer) clearTimeout(punishSpinTimer);
+					modalPunishEl.classList.remove("open");
+					break;
+
+				case "OPEN_WINNER":
+					openWinnerModal();
+					break;
+
+				case "CLOSE_WINNER":
+					modalWinnerEl.classList.remove("open");
+					break;
+
+				case "BALLOT_UPDATE":
+					if (msg.statePayload) {
+						applySyncedStateOnClient(msg.statePayload, msg.ballot, {});
+					} else if (msg.ballot) {
+						onlineBallot = { ...onlineBallot, ...msg.ballot };
+					}
+					handleBallotEventFX(msg.event, msg.lastVote);
+					openOnlineBallotModalUI();
+					renderOnlineBallotUI();
+					break;
+
+				case "ROUND_TALLIED":
+					if (msg.statePayload) {
+						applySyncedStateOnClient(msg.statePayload, msg.ballot, {});
+					} else if (msg.ballot) {
+						onlineBallot = { ...onlineBallot, ...msg.ballot };
+					}
+					if (msg.lastVote) {
+						handleBallotEventFX("VOTE_CAST", msg.lastVote);
+					}
+					renderOnlineBallotUI();
+					applyOnlineRoundTalliedEffects(msg.winnerIds || [], msg.winnerNames || [], msg.delta || 1, msg.punishTrigger);
+					break;
+			}
+		}
+
+		function handleHostDisconnectedOnClient() {
+			cleanupOnlinePeerConnections();
+			restoreLocalStateAfterOnline();
+			syncOnlineBodyClassesAndBadges();
+
+			// Fecha outros modais abertos e mostra o Modal Neo-Brutalista de Sala Encerrada
+			if (countdownTimer) clearInterval(countdownTimer);
+			countdownOverlayEl.classList.remove("active");
+			modalOnlineBallotEl.classList.remove("open");
+			modalPunishEl.classList.remove("open");
+			modalWinnerEl.classList.remove("open");
+			toggleScoreDrawer(false);
+
+			SoundFX.playBuzzer();
+			modalHostDisconnectedEl.classList.add("open");
+		}
+
+		function cleanupOnlinePeerConnections() {
+			if (onlineBallotAutoCloseTimer) {
+				clearTimeout(onlineBallotAutoCloseTimer);
+				onlineBallotAutoCloseTimer = null;
+			}
+			onlineSession.peers.forEach((conn) => {
+				try { conn.close(); } catch (e) { }
+			});
+			onlineSession.peers.clear();
+
+			if (onlineSession.hostConn) {
+				try { onlineSession.hostConn.close(); } catch (e) { }
+				onlineSession.hostConn = null;
+			}
+			if (onlineSession.peer) {
+				try { onlineSession.peer.destroy(); } catch (e) { }
+				onlineSession.peer = null;
+			}
+
+			onlineSession.active = false;
+			onlineSession.role = null;
+			onlineSession.roomId = "";
+			onlineSession.password = "";
+			onlineSession.myPlayerId = "";
+			onlineSession.activeScreen = "home";
+			onlineBallot.open = false;
+			onlineBallot.tiePending = false;
+			onlineBallot.tallied = false;
+		}
+
+		function leaveOnlineSession() {
+			cleanupOnlinePeerConnections();
+			restoreLocalStateAfterOnline();
+			renderOnlineLobbyUI();
+			modalOnlineBallotEl.classList.remove("open");
+			modalPunishEl.classList.remove("open");
+			modalWinnerEl.classList.remove("open");
+			screenGameEl.classList.remove("active");
+			screenHomeEl.classList.add("active");
+		}
+
+		document.getElementById("btnCancelHostRoom").addEventListener("click", () => {
+			leaveOnlineSession();
+			SoundFX.playFlip();
+		});
+
+		document.getElementById("btnDisconnectClientLobby").addEventListener("click", () => {
+			leaveOnlineSession();
+			SoundFX.playFlip();
+		});
+
+		document.getElementById("btnLeaveOnlineTop").addEventListener("click", () => {
+			leaveOnlineSession();
+			switchHomePlayMode("online");
+			SoundFX.playFlip();
+		});
+
+		document.getElementById("btnReturnHomeFromDisconnect").addEventListener("click", () => {
+			modalHostDisconnectedEl.classList.remove("open");
+			screenGameEl.classList.remove("active");
+			screenHomeEl.classList.add("active");
+			switchHomePlayMode("online");
+			renderOnlineLobbyUI();
+			SoundFX.playFlip();
+		});
+
+		/* ================= VOTAÇÃO ABERTA POR TURNOS (#modalOnlineBallot) ================= */
+		function startOnlineTurnBallotOnHost() {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+			if (state.currentCardVoted || state.players.length < 2) return;
+
+			const card = getCurrentCardObj();
+			const cardText = card ? resolveCardText(card) : "";
+
+			onlineBallot = {
+				open: true,
+				cardId: card ? card.id : null,
+				cardText,
+				chaosEvent: state.activeChaosEvent || null,
+				turnOrder: state.players.map(p => p.id),
+				currentVoterIndex: 0,
+				votes: [],
+				tallied: false,
+				tiePending: false,
+				tiedLeaderIds: [],
+				maxVotesCount: 0,
+				winnerIds: [],
+				winnerNames: [],
+				delta: getActiveRoundVoteDelta()
+			};
+
+			openOnlineBallotModalUI();
+			renderOnlineBallotUI();
+			broadcastToPeers({
+				type: "BALLOT_UPDATE",
+				event: "OPEN",
+				ballot: onlineBallot,
+				statePayload: buildSyncStatePayload()
+			});
+		}
+
+		function openOnlineBallotModalUI() {
+			if (onlineBallotAutoCloseTimer) {
+				clearTimeout(onlineBallotAutoCloseTimer);
+				onlineBallotAutoCloseTimer = null;
+			}
+			countdownOverlayEl.classList.remove("active");
+			modalOnlineBallotEl.classList.add("open");
+		}
+
+		function handleBallotEventFX(eventType, lastVote) {
+			if (eventType === "VOTE_CAST" && lastVote) {
+				SoundFX.playPoint();
+				FloatFX.pop(
+					window.innerWidth / 2,
+					window.innerHeight / 2,
+					`${lastVote.voterAvatar || "😈"} ${lastVote.voterName} ➔ ${lastVote.targetAvatar || "🤡"} ${lastVote.targetName}`
+				);
+			} else if (eventType === "TIE") {
+				SoundFX.playSuspense();
+			}
+		}
+
+		function renderOnlineBallotUI() {
+			const totalVoters = onlineBallot.turnOrder.length;
+			const votesCast = onlineBallot.votes.length;
+			onlineBallotProgressBadgeEl.textContent = `${votesCast} de ${totalVoters} votos`;
+			onlineBallotCardQuoteEl.textContent = `"${onlineBallot.cardText || cardQuestionTextEl.textContent || ""}"`;
+
+			// Selo de Evento Caótico na Votação Online
+			const evt = onlineBallot.chaosEvent ? CHAOS_EVENTS[onlineBallot.chaosEvent] : null;
+			if (evt) {
+				onlineBallotChaosBadgeEl.setAttribute("data-event", evt.id);
+				onlineBallotChaosTextEl.textContent = `${evt.icon} ${evt.title}: ${evt.desc}`;
+				onlineBallotChaosBadgeEl.classList.add("visible");
+			} else {
+				onlineBallotChaosBadgeEl.classList.remove("visible");
+				onlineBallotChaosBadgeEl.removeAttribute("data-event");
+			}
+
+			// 1) Fila de Turnos
+			const votedSet = new Set(onlineBallot.votes.map(v => v.voterId));
+			const currentVoterId = (!onlineBallot.tiePending && !onlineBallot.tallied)
+				? (onlineBallot.turnOrder[onlineBallot.currentVoterIndex] || null)
+				: null;
+
+			onlineBallotTurnQueueEl.innerHTML = onlineBallot.turnOrder.map((pid, idx) => {
+				const pl = state.players.find(p => p.id === pid);
+				const name = pl ? pl.name : "Jogador";
+				const avatar = pl ? (pl.avatar || "😈") : "😈";
+				const hasVoted = votedSet.has(pid) || idx < onlineBallot.currentVoterIndex;
+				const isCurrent = pid === currentVoterId;
+				const cls = isCurrent ? "current" : (hasVoted ? "voted" : "");
+				const prefix = isCurrent ? "👉" : (hasVoted ? "✅" : "⏳");
+				return `
+					<span class="turn-queue-pill ${cls}">
+						<span>${prefix} ${avatar} ${escapeHtml(name)}</span>
+					</span>
+				`;
+			}).join("");
+
+			// 2) Banner de Status do Turno Atual (Votante da Vez vs Espectador)
+			const isMyTurn = Boolean(currentVoterId && currentVoterId === onlineSession.myPlayerId);
+			const currentVoterObj = state.players.find(p => p.id === currentVoterId);
+			const turnNumber = Math.min(onlineBallot.currentVoterIndex + 1, Math.max(1, totalVoters));
+
+			if (onlineBallot.tallied) {
+				onlineBallotTurnBannerEl.className = "online-voter-banner my-turn";
+				onlineBallotTurnBannerEl.textContent = `👑 VOTAÇÃO CONCLUÍDA! Coroado(s): ${(onlineBallot.winnerNames || []).join(" & ")}`;
+			} else if (onlineBallot.tiePending) {
+				onlineBallotTurnBannerEl.className = "online-voter-banner waiting-turn";
+				onlineBallotTurnBannerEl.textContent = `⚖️ Todos os ${totalVoters} votos computados! Empate no 1º lugar!`;
+			} else if (isMyTurn) {
+				onlineBallotTurnBannerEl.className = "online-voter-banner my-turn";
+				onlineBallotTurnBannerEl.textContent = "👉 SUA VEZ DE VOTAR! Escolha quem merece o ponto:";
+			} else {
+				const voterName = currentVoterObj ? currentVoterObj.name : "participante";
+				onlineBallotTurnBannerEl.className = "online-voter-banner waiting-turn";
+				onlineBallotTurnBannerEl.textContent = `⏳ Vez de ${voterName} votar... (${turnNumber} de ${totalVoters} votos)`;
+			}
+
+			// 3) Contagem de votos recebidos até agora por cada candidato
+			const tallyMap = {};
+			state.players.forEach(p => { tallyMap[p.id] = 0; });
+			onlineBallot.votes.forEach(v => {
+				if (v.targetId in tallyMap) tallyMap[v.targetId]++;
+			});
+			const maxReceived = Math.max(0, ...Object.values(tallyMap));
+
+			// 4) Grade de Botões dos Participantes (Interativa apenas para o votante da vez!)
+			onlineBallotTargetsGridEl.innerHTML = state.players.map(p => {
+				const received = tallyMap[p.id] || 0;
+				const isLeading = maxReceived > 0 && received === maxReceived;
+				const isSelf = p.id === onlineSession.myPlayerId;
+				const avatar = p.avatar || "😈";
+
+				return `
+					<button type="button"
+						class="online-target-btn ${isLeading ? "leading-online" : ""}"
+						data-online-target-id="${p.id}"
+						${isMyTurn ? "" : "disabled"}>
+						<div class="ballot-player-meta">
+							<span class="ballot-player-avatar">${avatar}</span>
+							<div class="ballot-player-text">
+								<span class="ballot-player-name" title="${escapeHtml(p.name)}">
+									${escapeHtml(p.name)}${isSelf ? " (Você)" : ""}
+								</span>
+								<span class="ballot-player-pts">
+									${p.score} pt(s) na partida • <strong>${received} voto(s)</strong>
+								</span>
+							</div>
+						</div>
+						<span class="online-target-action-pill">
+							${isMyTurn ? "👉 VOTAR" : `${received} 🗳️`}
+						</span>
+					</button>
+				`;
+			}).join("");
+
+			// 5) Painel de Desempate (caso haja empate após todos votarem)
+			if (onlineBallot.tiePending && Array.isArray(onlineBallot.tiedLeaderIds) && onlineBallot.tiedLeaderIds.length > 1) {
+				const tiedPlayers = state.players.filter(p => onlineBallot.tiedLeaderIds.includes(p.id));
+				const tiedNames = tiedPlayers.map(p => p.name).join(" e ");
+				const delta = onlineBallot.delta || getActiveRoundVoteDelta();
+				const deltaLabel = delta === 2 ? "+2 pontos" : (delta < 0 ? "−1 ponto" : "+1 ponto");
+
+				onlineBallotTieDescEl.textContent = `EMPATE entre ${tiedNames} (${onlineBallot.maxVotesCount} voto(s) cada)! Escolha como resolver (${deltaLabel}):`;
+
+				if (onlineSession.role === "host") {
+					const singleBtns = tiedPlayers.map(p => `
+						<button class="btn-neo cyan" type="button" data-online-tie-mode="single" data-winner-id="${p.id}" style="font-size:0.78rem;padding:8px 12px;">
+							👉 Só ${escapeHtml(p.name)}
+						</button>
+					`).join("");
+
+					onlineBallotTieActionsEl.innerHTML = `
+						<button class="btn-neo pink" type="button" data-online-tie-mode="all" style="font-size:0.8rem;padding:8px 14px;">
+							💥 Pontuar todos os empatados (${tiedPlayers.length})
+						</button>
+						<button class="btn-neo yellow" type="button" data-online-tie-mode="random" style="font-size:0.78rem;padding:8px 12px;">
+							🎲 Sorteio do Destino
+						</button>
+						${singleBtns}
+					`;
+				} else {
+					onlineBallotTieActionsEl.innerHTML = `
+						<div style="font-size:0.82rem;font-weight:800;color:var(--cyan-electric);padding:6px 10px;">
+							⏳ Aguardando o Host decidir o desempate para a sala...
+						</div>
+					`;
+				}
+				onlineBallotTieBoxEl.classList.add("visible");
+			} else {
+				onlineBallotTieBoxEl.classList.remove("visible");
+			}
+
+			// 6) Feed de Votos Abertos em Tempo Real
+			onlineBallotFeedCountEl.textContent = `${onlineBallot.votes.length} voto(s)`;
+			if (onlineBallot.votes.length === 0) {
+				onlineBallotFeedListEl.innerHTML = `
+					<li class="online-vote-feed-item" style="opacity:0.75;border-left-color:var(--yellow-acid);">
+						<span>👀 Os votos aparecerão aqui em tempo real assim que cada jogador votar!</span>
+					</li>
+				`;
+			} else {
+				onlineBallotFeedListEl.innerHTML = onlineBallot.votes.map((v, idx) => `
+					<li class="online-vote-feed-item">
+						<span>
+							${v.voterAvatar || "😈"} <strong>${escapeHtml(v.voterName)}</strong> votou em ${v.targetAvatar || "🤡"} <strong>${escapeHtml(v.targetName)}</strong>
+						</span>
+						<span class="score-pill-badge">#${idx + 1}</span>
+					</li>
+				`).join("");
+				onlineBallotFeedListEl.scrollTop = onlineBallotFeedListEl.scrollHeight;
+			}
+		}
+
+		// Clique em um candidato para votar no #modalOnlineBallot
+		onlineBallotTargetsGridEl.addEventListener("click", (e) => {
+			const btn = e.target.closest("button[data-online-target-id]");
+			if (!btn || btn.disabled) return;
+			const targetId = btn.dataset.onlineTargetId;
+			if (!targetId || !onlineSession.active) return;
+
+			const currentVoterId = onlineBallot.turnOrder[onlineBallot.currentVoterIndex];
+			if (currentVoterId !== onlineSession.myPlayerId) {
+				SoundFX.playBuzzer();
+				return;
+			}
+
+			if (onlineSession.role === "host") {
+				processOnlineVoteOnHost(onlineSession.myPlayerId, targetId);
+			} else if (onlineSession.hostConn && onlineSession.hostConn.open) {
+				btn.disabled = true;
+				onlineSession.hostConn.send({
+					type: "SUBMIT_VOTE",
+					targetId
+				});
+			}
+		});
+
+		// Clique nas ações de desempate do Host no #modalOnlineBallot
+		onlineBallotTieActionsEl.addEventListener("click", (e) => {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+			const btn = e.target.closest("button[data-online-tie-mode]");
+			if (!btn) return;
+			const mode = btn.dataset.onlineTieMode;
+			const tiedIds = (onlineBallot.tiedLeaderIds || []).filter(id => state.players.some(p => p.id === id));
+			if (!tiedIds.length) return;
+
+			if (mode === "all") {
+				finalizeOnlineBallotWinners(tiedIds);
+			} else if (mode === "random") {
+				const luckyId = tiedIds[Math.floor(Math.random() * tiedIds.length)];
+				finalizeOnlineBallotWinners([luckyId]);
+			} else if (mode === "single" && btn.dataset.winnerId) {
+				finalizeOnlineBallotWinners([btn.dataset.winnerId]);
+			}
+		});
+
+		function processOnlineVoteOnHost(voterId, targetId) {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+			if (!onlineBallot.open || onlineBallot.tallied || onlineBallot.tiePending) return;
+
+			const expectedVoterId = onlineBallot.turnOrder[onlineBallot.currentVoterIndex];
+			if (!expectedVoterId || voterId !== expectedVoterId) return;
+
+			// Impede voto duplicado do mesmo jogador na mesma rodada
+			if (onlineBallot.votes.some(v => v.voterId === voterId)) return;
+
+			const voter = state.players.find(p => p.id === voterId);
+			const target = state.players.find(p => p.id === targetId);
+			if (!voter || !target) return;
+
+			const voteRecord = {
+				voterId: voter.id,
+				voterName: voter.name,
+				voterAvatar: voter.avatar || "😈",
+				targetId: target.id,
+				targetName: target.name,
+				targetAvatar: target.avatar || "🤡"
+			};
+
+			onlineBallot.votes.push(voteRecord);
+			onlineBallot.currentVoterIndex++;
+
+			handleBallotEventFX("VOTE_CAST", voteRecord);
+
+			// Verifica se TODOS os participantes conectados já votaram
+			if (onlineBallot.currentVoterIndex >= onlineBallot.turnOrder.length) {
+				tallyOnlineBallotOnHost(voteRecord);
+			} else {
+				renderOnlineBallotUI();
+				broadcastToPeers({
+					type: "BALLOT_UPDATE",
+					event: "VOTE_CAST",
+					ballot: onlineBallot,
+					lastVote: voteRecord,
+					statePayload: buildSyncStatePayload()
+				});
+			}
+		}
+
+		function tallyOnlineBallotOnHost(lastVoteRecord = null) {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+
+			const counts = {};
+			state.players.forEach(p => { counts[p.id] = 0; });
+			onlineBallot.votes.forEach(v => {
+				if (v.targetId in counts) {
+					counts[v.targetId]++;
+				}
+			});
+
+			const maxVotes = Math.max(0, ...Object.values(counts));
+			if (maxVotes <= 0) {
+				// Caso extremo (ex: alvo desconectou após receber votos): encerra sem travar
+				onlineBallot.open = false;
+				onlineBallot.tallied = true;
+				modalOnlineBallotEl.classList.remove("open");
+				broadcastSyncState();
+				return;
+			}
+
+			const leaders = state.players.filter(p => (counts[p.id] || 0) === maxVotes);
+			if (leaders.length === 1) {
+				finalizeOnlineBallotWinners([leaders[0].id], lastVoteRecord);
+			} else {
+				// Empate no 1º lugar: exibe controles de desempate para o Host!
+				onlineBallot.tiePending = true;
+				onlineBallot.tiedLeaderIds = leaders.map(p => p.id);
+				onlineBallot.maxVotesCount = maxVotes;
+				SoundFX.playSuspense();
+				renderOnlineBallotUI();
+				broadcastToPeers({
+					type: "BALLOT_UPDATE",
+					event: "TIE",
+					ballot: onlineBallot,
+					lastVote: lastVoteRecord,
+					statePayload: buildSyncStatePayload()
+				});
+			}
+		}
+
+		function finalizeOnlineBallotWinners(winnerIds, lastVoteRecord = null) {
+			if (!onlineSession.active || onlineSession.role !== "host") return;
+			if (!Array.isArray(winnerIds) || winnerIds.length === 0) return;
+
+			const card = getCurrentCardObj();
+			const delta = getActiveRoundVoteDelta();
+			const winnerNames = [];
+			let punishTrigger = null;
+
+			winnerIds.forEach(id => {
+				const pl = state.players.find(p => p.id === id);
+				if (pl) {
+					winnerNames.push(pl.name);
+					const crossedFive = changeScore(id, delta, { suppressAutoPunish: true });
+					if (crossedFive && !punishTrigger) {
+						const punishIdx = Math.floor(Math.random() * PUNISHMENTS_LIST.length);
+						punishTrigger = {
+							player: { ...pl },
+							punishmentIndex: punishIdx,
+							punishmentText: PUNISHMENTS_LIST[punishIdx]
+						};
+					}
+				}
+			});
+
+			if (card) {
+				if (!state.votedCardsByCardId || typeof state.votedCardsByCardId !== "object") {
+					state.votedCardsByCardId = {};
+				}
+				state.votedCardsByCardId[card.id] = {
+					winnerIds: [...winnerIds],
+					winnerNames,
+					delta
+				};
+			}
+
+			state.currentCardVoted = true;
+			onlineBallot.open = false;
+			onlineBallot.tiePending = false;
+			onlineBallot.tallied = true;
+			onlineBallot.winnerIds = [...winnerIds];
+			onlineBallot.winnerNames = [...winnerNames];
+			onlineBallot.delta = delta;
+
+			renderOnlineBallotUI();
+
+			broadcastToPeers({
+				type: "ROUND_TALLIED",
+				statePayload: buildSyncStatePayload(),
+				ballot: onlineBallot,
+				lastVote: lastVoteRecord,
+				winnerIds,
+				winnerNames,
+				delta,
+				punishTrigger
+			});
+
+			applyOnlineRoundTalliedEffects(winnerIds, winnerNames, delta, punishTrigger);
+		}
+
+		function applyOnlineRoundTalliedEffects(winnerIds, winnerNames, delta, punishTrigger) {
+			syncCurrentCardVoteLock();
+			renderPlayers();
+
+			ConfettiFX.burst(60, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+			SoundFX.playFanfare();
+			const popLabel = delta === 2
+				? `👑 +2 🔥 ${winnerNames.join(", ")}`
+				: (delta < 0 ? `😇 −1 🔄 ${winnerNames.join(", ")}` : `👑 +1 💩 ${winnerNames.join(", ")}`);
+			FloatFX.pop(window.innerWidth / 2, window.innerHeight / 2, popLabel, delta < 0);
+
+			if (onlineBallotAutoCloseTimer) clearTimeout(onlineBallotAutoCloseTimer);
+			onlineBallotAutoCloseTimer = setTimeout(() => {
+				modalOnlineBallotEl.classList.remove("open");
+				onlineBallotAutoCloseTimer = null;
+				if (punishTrigger && punishTrigger.player) {
+					openPunishModal(punishTrigger.player, punishTrigger.punishmentIndex);
+				}
+			}, 950);
+		}
+
 		// Inicialização
 		loadState();
 		if (!state.deckOrder || !state.deckOrder.length) {
@@ -5429,6 +7802,7 @@
 		syncModeButtonsUI();
 		syncCurrentCardVoteLock();
 		renderPlayers();
+		renderOnlineLobbyUI();
 	</script>
 </body>
 
